@@ -1,0 +1,123 @@
+import {View, Text} from 'react-native';
+import React from 'react';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import SplashScreen from '../components/SplashScreen';
+import LoginScreen from '../components/LoginScreen';
+import SignUp from '../components/SignUp';
+import ForgotPassword from '../components/ForgotPassword';
+import HomeScreen from '../components/HomeScreen';
+import Notices from '../components/Notices';
+import OnBoardingScreen from '../components/OnBoardingScreen';
+import OtpScreen from '../components/OtpScreen';
+import SetNewPassword from '../components/SetNewPassword';
+import NoticeDetailScreen from '../components/NoticeDetailScreen';
+import CompaintList from '../components/CompaintList';
+import AddComplaints from '../components/Complaints/AddComplaints';
+import ImageViewScreen from '../components/ImageViewScreen';
+import ContactScreen from '../components/Contact/ContactScreen';
+import ProfileScreen from '../components/Profile/ProfileScreen';
+import EditProfileScreen from '../components/Profile/EditProfileScreen';
+import FaqScreen from '../components/Profile/FaqListScreen';
+import FaqDetailScreen from '../components/Profile/FaqDetailScreen';
+import TakePaymentScreen from '../components/Profile/TakePaymentScreen';
+import MainTainUserPayment from '../components/Profile/MainTainUserPayment';
+import ComplaintDetailScreen from '../components/Complaints/ComplaintDetailScreen';
+import ComplaintChatScreen from '../components/Complaints/ComplaintChatScreen';
+import ChangePassword from '../components/Profile/ChangePassword';
+import DocumentList from '../components/Document/DocumentList';
+import DocumentDetailScreen from '../components/Document/DocumentDetailScreen';
+import SocietyInfo from '../components/Society/SocietyInfo';
+import LoginOptionsScreen from '../components/Login/LoginOptionsScreen';
+import GuardHomeScreen from '../components/Guard/GuardHomeScreen';
+import GuardEditProfile from '../components/Guard/GuardEditProfile';
+
+const Stack = createNativeStackNavigator();
+
+const mainNavigation = () => {
+  const stackScreenWithNoHeader = (name, screen) => {
+    return (
+      <Stack.Screen
+        name={name}
+        component={screen}
+        options={{headerShown: false}}
+      />
+    );
+  };
+
+  // const NoticeNavigationStack = () => {
+  //   return (
+  //     <Stack.Navigator initialRouteName="SplashScreen">
+  //       {stackScreenWithNoHeader('SplashScreen', SplashScreen)}
+  //     </Stack.Navigator>
+  //   );
+  // };
+
+  function NoticeStackNavigator() {
+    return (
+      <Stack.Navigator>
+        {stackScreenWithNoHeader('NoticeList', Notices)}
+        {stackScreenWithNoHeader('NoticeDetailScreen', NoticeDetailScreen)}
+      </Stack.Navigator>
+    );
+  }
+
+  function ComplaintStackNavigator() {
+    return (
+      <Stack.Navigator>
+        {stackScreenWithNoHeader('ComplainList', CompaintList)}
+        {stackScreenWithNoHeader('ComplainDetailScreen', ComplaintDetailScreen)}
+        {stackScreenWithNoHeader('AddComplain', AddComplaints)}
+      </Stack.Navigator>
+    );
+  }
+
+  function ProfileStackNavigator() {
+    return (
+      <Stack.Navigator>
+        {stackScreenWithNoHeader('ProfileScreen', ProfileScreen)}
+        {stackScreenWithNoHeader('EditProfileScreen', EditProfileScreen)}
+        {stackScreenWithNoHeader('FaqListScreen', FaqScreen)}
+        {stackScreenWithNoHeader('FaqDetailScreen', FaqDetailScreen)}
+        {stackScreenWithNoHeader('ChangePasswordScreen', ChangePassword)}
+        {stackScreenWithNoHeader('GuardEditProfileScreen', GuardEditProfile)}
+      </Stack.Navigator>
+    );
+  }
+
+  function DocumentStackNavigator() {
+    return (
+      <Stack.Navigator>
+        {stackScreenWithNoHeader('DocumentList', DocumentList)}
+        {stackScreenWithNoHeader('DocumentDetail', DocumentDetailScreen)}
+      </Stack.Navigator>
+    );
+  }
+
+  return (
+    <Stack.Navigator initialRouteName="SplashScreen">
+      {stackScreenWithNoHeader('SplashScreen', SplashScreen)}
+      {stackScreenWithNoHeader('OnBoardingScreen', OnBoardingScreen)}
+      {stackScreenWithNoHeader('LoginOptionsScreen', LoginOptionsScreen)}
+      {stackScreenWithNoHeader('LoginScreen', LoginScreen)}
+      {stackScreenWithNoHeader('SignUpScreen', SignUp)}
+      {stackScreenWithNoHeader('ForgotPasswordScreen', ForgotPassword)}
+      {stackScreenWithNoHeader('SetNewPasswordScreen', SetNewPassword)}
+      {stackScreenWithNoHeader('OtpScreen', OtpScreen)}
+      {stackScreenWithNoHeader('HomeScreen', HomeScreen)}
+      {stackScreenWithNoHeader('GuardHomeScreen', GuardHomeScreen)}
+      {stackScreenWithNoHeader('NoticeScreen', NoticeStackNavigator)}
+      {stackScreenWithNoHeader('ComplaintScreen', ComplaintStackNavigator)}
+      {stackScreenWithNoHeader('ImageViewScreen', ImageViewScreen)}
+      {stackScreenWithNoHeader('ContactScreen', ContactScreen)}
+      {stackScreenWithNoHeader('ProfileStackScreen', ProfileStackNavigator)}
+      {stackScreenWithNoHeader('TakePaymentScreen', TakePaymentScreen)}
+      {stackScreenWithNoHeader('MainTainUserPayment', MainTainUserPayment)}
+      {stackScreenWithNoHeader('ComplaintChatScreen', ComplaintChatScreen)}
+      {stackScreenWithNoHeader('UpdateComplaint', AddComplaints)}
+      {stackScreenWithNoHeader('DocumentStack', DocumentStackNavigator)}
+      {stackScreenWithNoHeader('SocietyInfoScreen', SocietyInfo)}
+    </Stack.Navigator>
+  );
+};
+
+export default mainNavigation;
