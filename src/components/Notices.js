@@ -53,7 +53,7 @@ const Notices = ({navigation}) => {
                     </View>
                     <View style={style.detailCnt}>
                       <Text style={style.cardTitle}>{item.title}</Text>
-                      <Text style={style.cardDescription}>
+                      <Text style={style.cardDescription} numberOfLines={2}>
                         {item.description}
                       </Text>
                       <View style={style.createdCnt}>

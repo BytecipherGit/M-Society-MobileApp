@@ -16,15 +16,22 @@ import {API_URL, PostData} from '../assets/services';
 import {CommonActions} from '@react-navigation/native';
 import AuthHeader from '../ReUsableComponents/AuthHeader';
 import PhoneInput from 'react-native-phone-number-input';
+import {useRecoilState} from 'recoil';
+import {GlobalAppAlert} from '../assets/GlobalStates/RecoilGloabalState';
 
 const ForgotPassword = ({navigation}) => {
   const [loader, setLoader] = useState(false);
   const [phone, setPhone] = useState('');
+  const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
   const phoneInput = useRef(null);
 
   const sentOtp = async () => {
     if (phone.length !== 10) {
-      return Alert.alert('Please Enter Valid Phone Number');
+      return setAlertData({
+        visible: true,
+        message: 'Please Enter Valid Phone Number',
+        iconType: 'error',
+      });
     }
     const payload = {
       url: API_URL + 'user/sendOtp',
@@ -33,17 +40,30 @@ const ForgotPassword = ({navigation}) => {
         countryCode: '+' + phoneInput?.current?.state?.code,
       },
     };
-    const Result = await PostData(payload);
     setLoader(true);
-    if (Result && Result.data && Result.data.success) {
-      let obj = {
-        phone: phone,
-        otp: Result.data.data.otp,
-        countryCode: '+' + phoneInput?.current?.state?.code,
-      };
-      navigation.navigate('OtpScreen', {data: obj});
-    } else {
-      Alert.alert(Result.data.message);
+    try {
+      const Result = await PostData(payload);
+      console.log(payload);
+      if (Result && Result.data && Result.data.success) {
+        let obj = {
+          phone: phone,
+          otp: Result.data.data.otp,
+          countryCode: '+' + phoneInput?.current?.state?.code,
+        };
+        navigation.navigate('OtpScreen', {data: obj});
+      } else {
+        setAlertData({
+          visible: true,
+          message: Result?.data?.message,
+          iconType: 'error',
+        });
+      }
+    } catch (e) {
+      setAlertData({
+        visible: true,
+        message: 'Something Went wrong please try again later.',
+        iconType: 'error',
+      });
     }
     setLoader(false);
   };

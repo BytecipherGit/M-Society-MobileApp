@@ -1,7 +1,7 @@
-export const API_URL = 'https://34e2-223-236-67-161.in.ngrok.io/api/';
-// export const API_URL = 'https://a31f-182-77-10-77.in.ngrok.io/api/';
+// export const API_URL = 'https://4a03-223-236-26-121.in.ngrok.io/api/';
+export const API_URL = 'http://43.231.127.169:9001/api/';
 
-// swagger https://9aa3-223-236-67-161.in.ngrok.io/api-docs/#/
+// swagger https://34e2-223-236-67-161.in.ngrok.io/api-docs/#/
 
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -172,6 +172,40 @@ export const updatProfile = async payload => {
     })
     .catch(e => {
       return e;
+    });
+};
+
+export const addVisitorFormData = async payload => {
+  let Token = await getAsyncValue('user');
+  Token = JSON.parse(Token);
+  // var myHeaders = new Headers();
+  // myHeaders.append('Authorization', 'Bearer ' + Token);
+
+  var formData = new FormData();
+  formData.append('phoneNumber', payload.phoneNumber);
+  formData.append('name', payload.name);
+  formData.append('houseNumber', payload.houseNumber);
+  formData.append('reasone', payload.reasone);
+  formData.append('image', payload.image);
+
+  var requestOptions = {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + Token.accessToken,
+    },
+    body: formData,
+    redirect: 'follow',
+  };
+
+  return fetch(API_URL + 'visitor/', requestOptions)
+    .then(response => response.json())
+    .then(result => {
+      console.log(result);
+      return result;
+    })
+    .catch(error => {
+      console.log(error);
+      return error;
     });
 };
 

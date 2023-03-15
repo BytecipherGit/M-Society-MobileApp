@@ -16,14 +16,21 @@ import {loginType} from '../../assets/Jsons';
 import MiniRightIcon from '../../assets/images/MiniRightIcon.svg';
 import {useDispatch} from 'react-redux';
 import {LOGIN_OPTION} from '../../redux/Actions';
+import {useRecoilState} from 'recoil';
+import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 
 const LoginOptionsScreen = ({navigation, route}) => {
   const [selectLoginOption, setSelectLoginOption] = useState(null);
+  const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
   const dispatch = useDispatch();
 
   const loginWithOption = () => {
     if (!selectLoginOption) {
-      return Alert.alert('Please Select One Option For Login.');
+      return setAlertData({
+        visible: true,
+        message: 'please select one prefered option for login.',
+        iconType: 'error',
+      });
     }
     dispatch({type: LOGIN_OPTION, payload: selectLoginOption});
     navigation.navigate('LoginScreen');

@@ -17,6 +17,8 @@ const AuthCard = ({
   renderSecondDesign,
   btnLoader,
   hideButton,
+  withCancelButton,
+  onCancelPress,
 }) => {
   return (
     <View style={style.cnt}>
@@ -29,24 +31,48 @@ const AuthCard = ({
           {renderSecondDesign}
         </ScrollView>
         <View style={{flex: 1}} />
-        {!hideButton && (
-          <TouchableOpacity
-            style={style.button}
-            onPress={() => onSubmitPress()}>
-            {btnLoader ? (
-              <ActivityIndicator color={'white'} />
-            ) : (
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          {withCancelButton && (
+            <TouchableOpacity
+              style={[
+                style.button,
+                withCancelButton && {width: '49%'},
+                {
+                  backgroundColor: 'transparent',
+                  borderWidth: 1,
+                  borderColor: COLORS.buttonColor,
+                },
+              ]}
+              onPress={() => onCancelPress()}>
               <Text
                 style={{
                   fontSize: 16,
                   fontFamily: 'Inter-Medium',
-                  color: 'white',
+                  color: COLORS.buttonColor,
                 }}>
-                {buttonTitle}
+                {'Cancel'}
               </Text>
-            )}
-          </TouchableOpacity>
-        )}
+            </TouchableOpacity>
+          )}
+          {!hideButton && (
+            <TouchableOpacity
+              style={[style.button, withCancelButton && {width: '49%'}]}
+              onPress={() => onSubmitPress()}>
+              {btnLoader ? (
+                <ActivityIndicator color={'white'} />
+              ) : (
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: 'Inter-Medium',
+                    color: 'white',
+                  }}>
+                  {buttonTitle}
+                </Text>
+              )}
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </View>
   );

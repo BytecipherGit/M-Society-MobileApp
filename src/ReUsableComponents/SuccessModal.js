@@ -16,6 +16,8 @@ const SuccessModal = ({
   navigationScreenName,
   desc,
   type,
+  onlyClosePopup,
+  iconType,
 }) => {
   const navigation = useNavigation();
 
@@ -49,12 +51,12 @@ const SuccessModal = ({
             }}>
             <LogoutIcon />
           </View>
-        ) : (
+        ) : iconType === 'error' ? null : (
           <SuccessSvg style={{alignSelf: 'center'}} />
         )}
         <DescriptionText
           style={{
-            color: '#595959',
+            color: iconType === 'error' ? 'red' : '#595959',
             alignSelf: 'center',
             marginVertical: '4%',
             width: '60%',
@@ -87,7 +89,7 @@ const SuccessModal = ({
             onPress={() => {
               setIsVisible(false),
                 setTimeout(() => {
-                  navigation.replace(navigationScreenName);
+                  !onlyClosePopup && navigation.replace(navigationScreenName);
                 }, 500);
             }}
           />

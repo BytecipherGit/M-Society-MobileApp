@@ -7,13 +7,14 @@ import {
   Image,
   FlatList,
   Button,
+  Alert,
 } from 'react-native';
-import React, {Fragment} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
 import AppRoundAddActionButton from '../../ReUsableComponents/AppRoundAddActionButton';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import User from '../../assets/images/User.svg';
 import Moon from '../../assets/images/Moon.svg';
 import Sun from '../../assets/images/Sun.svg';
@@ -22,9 +23,102 @@ import DatePicker from 'react-native-date-picker';
 import {VisitorsFakeList} from '../../assets/Jsons';
 import moment from 'moment';
 import VisitorFilters from './VisitorFilters';
+import {API_URL, GetData, PostData} from '../../assets/services';
+import {
+  GET_VISITORS_LIST_REQUEST,
+  UPDATE_VISITORS_LIST,
+} from '../../redux/Actions';
+import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
+import {useRecoilState} from 'recoil';
+import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 
 const GuardHomeScreen = ({navigation}) => {
   const state = useSelector(state => state.AuthReducer);
+  const [filters, setFilters] = useState({
+    From: '',
+    To: '',
+  });
+  const [filter, setFilter] = useState({
+    loader: false,
+    data: [],
+  });
+  const [outIndex, setOutIndex] = useState(null);
+  const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
+
+  const dispatch = useDispatch();
+  const visitors = useSelector(state => state.GuardReducer);
+
+  useEffect(() => {
+    getVisitorsList();
+  }, []);
+
+  const getVisitorsList = async () => {
+    dispatch({type: GET_VISITORS_LIST_REQUEST});
+  };
+
+  const errorAlert = msg => {
+    setAlertData({
+      visible: true,
+      message: msg,
+      iconType: 'error',
+    });
+  };
+
+  const checkOutUser = async (item, index) => {
+    console.log(item);
+    setOutIndex(index);
+    const payload = {
+      url: API_URL + 'visitor/out',
+      body: {
+        visitorId: item._id,
+      },
+    };
+
+    try {
+      const Result = await PostData(payload);
+      if (Result.data.success) {
+        if (filter.data.length > 0) {
+          const arr = filter.data;
+          arr[index].outTime = moment().format('HH:MM a');
+          setFilter({...filter, data: [...arr]});
+        } else {
+          const arr = visitors.data;
+          arr[index].outTime = moment().format('HH:MM a');
+          dispatch({type: UPDATE_VISITORS_LIST, payload: arr});
+        }
+      } else {
+        errorAlert(Result.data.message);
+      }
+    } catch (e) {
+      errorAlert('Something went wrong please try again later.');
+    }
+    setOutIndex(null);
+
+    // const Result = await PostData(payload);
+  };
+
+  const applyFilter = async () => {
+    const payload = {
+      url:
+        API_URL +
+        `visitor/guard/all?fromDate=${moment(`${filters.From}`).format(
+          'YYYY-MM-DD',
+        )}&toDate=${moment(`${filters.To}`).format('YYYY-MM-DD')}`,
+    };
+    setFilter({...filter, loader: true});
+    try {
+      const Result = await GetData(payload);
+      if (Result.data.success) {
+        setFilter({loader: false, data: Result.data.data});
+      } else {
+        errorAlert(Result.data.message);
+        setFilter({...filter, loader: false});
+      }
+    } catch (e) {
+      errorAlert('Something went wrong please try again later.');
+      setFilter({...filter, loader: false});
+    }
+  };
 
   const visitorsListUI = ({item, index}) => {
     return (
@@ -35,11 +129,11 @@ const GuardHomeScreen = ({navigation}) => {
         ]}>
         {/* Basic Detail */}
         <View style={styles.cardBasicDetailCnt}>
-          <Image source={{uri: item.profilePic}} style={styles.profilePic} />
+          <Image source={{uri: item.image}} style={styles.profilePic} />
           <View style={styles.detailCnt}>
             <DescriptionText text={item.name} style={styles.userName} />
             <DescriptionText
-              text={`House No. ${item.block} - ${item.houseNumber}`}
+              text={`House No.${item.houseNumber}`}
               style={styles.userHouse}
             />
           </View>
@@ -49,14 +143,19 @@ const GuardHomeScreen = ({navigation}) => {
           {[
             {param: 'inTime', title: 'In Time'},
             {param: 'outTime', title: 'Out Time'},
-          ].map((button, index) => {
+          ].map((button, i) => {
             return (
-              <View key={index} style={styles.timeDetailCnt}>
+              <View key={i} style={styles.timeDetailCnt}>
                 <DescriptionText text={button.title} style={styles.timeTxt} />
                 <TouchableOpacity
                   activeOpacity={
                     !item['outTime'] && button.param === 'outTime' ? 0.5 : 1
                   }
+                  onPress={() => {
+                    !item['outTime'] &&
+                      button.param === 'outTime' &&
+                      checkOutUser(item, index);
+                  }}
                   style={[
                     styles.timeButton,
                     {
@@ -67,11 +166,7 @@ const GuardHomeScreen = ({navigation}) => {
                     },
                   ]}>
                   <TitleText
-                    text={
-                      item[button.param]
-                        ? moment(`${item[button.param]}`).format('HH:MM a')
-                        : 'Exit'
-                    }
+                    text={item[button.param] ? item[button.param] : 'Exit'}
                     style={{fontSize: 10, color: 'white'}}
                   />
                 </TouchableOpacity>
@@ -131,15 +226,59 @@ const GuardHomeScreen = ({navigation}) => {
               style={{fontSize: 18, color: COLORS.inputtext}}
             />
             {/* Filters */}
-            <VisitorFilters />
+            <VisitorFilters filters={filters} setFilters={setFilters} />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <TouchableOpacity
+                onPress={() => setFilter({loader: false, data: []})}>
+                <TitleText
+                  style={{
+                    fontSize: 14,
+                    color: 'red',
+                  }}
+                  text={filter.data.length > 0 ? 'Clear' : ''}
+                />
+              </TouchableOpacity>
+              {filters.From && filters.To && (
+                <TouchableOpacity
+                  style={{marginBottom: '2%'}}
+                  onPress={applyFilter}>
+                  <TitleText
+                    style={{
+                      fontSize: 14,
+                      color: 'red',
+                    }}
+                    text={'Apply Filter'}
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
             {/* Visitors Lists */}
             <FlatList
-              data={VisitorsFakeList}
+              data={
+                filter.loader
+                  ? []
+                  : filter.data.length > 0
+                  ? filter.data
+                  : visitors.data
+              }
+              ListEmptyComponent={() => (
+                <AppLoaderSrceen
+                  loader={visitors.loader || filter.loader}
+                  error={visitors.error}
+                />
+              )}
+              ListFooterComponent={() => <View style={{height: 70}} />}
               renderItem={visitorsListUI}
               extraData={item => item._id}
             />
           </View>
-          <AppRoundAddActionButton onPress={() => null} />
+          <AppRoundAddActionButton
+            onPress={() => navigation.navigate('AddVisitor')}
+          />
         </View>
       </SafeAreaView>
       <SafeAreaView style={{backgroundColor: '#F2FCFF'}} />

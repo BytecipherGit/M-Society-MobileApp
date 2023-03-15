@@ -34,6 +34,9 @@ import {
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import {editUserJson} from '../../assets/Jsons';
 import {USER_DATA} from '../../redux/Actions';
+import {useRecoilState} from 'recoil';
+import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
+import TitleText from "../../ReUsableComponents/Text's/TitleText";
 
 const EditProfileScreen = ({navigation, route}) => {
   const [visible, setVisible] = useState(false);
@@ -41,6 +44,7 @@ const EditProfileScreen = ({navigation, route}) => {
   const [loader, setLoader] = useState(false);
   const [saveLoader, setSaveLoader] = useState(false);
   const [profilePic, setProfilePic] = useState([]);
+  const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
 
   const User = useSelector(state => state.AuthReducer.userDetail);
   const dispatch = useDispatch();
@@ -49,6 +53,14 @@ const EditProfileScreen = ({navigation, route}) => {
     console.log(User.data._id);
     getUserData(User.data._id);
   }, []);
+
+  const errorAlert = msg => {
+    setAlertData({
+      visible: true,
+      message: msg,
+      iconType: 'error',
+    });
+  };
 
   const getUserData = async id => {
     setLoader(true);
@@ -62,10 +74,10 @@ const EditProfileScreen = ({navigation, route}) => {
         console.log(Result.data);
         setData(Result.data.data);
       } else {
-        Alert.alert(Result.data.message);
+        errorAlert(Result.data.message);
       }
     } catch (e) {
-      Alert.alert('Something Went Wrong Please Try Again Later');
+      errorAlert('Something went wrong, please try again later.');
     }
 
     setLoader(false);
@@ -123,10 +135,10 @@ const EditProfileScreen = ({navigation, route}) => {
         StoreData('user', JSON.stringify(obj));
         navigation.goBack();
       } else {
-        Alert.alert('Please Update Old Data First');
+        errorAlert('Please Update Old Data First');
       }
     } else {
-      Alert.alert('Something Went Wrong Please Try Again Later');
+      errorAlert('Something went wrong please try again later');
     }
     setSaveLoader(false);
   };
@@ -138,17 +150,14 @@ const EditProfileScreen = ({navigation, route}) => {
           showsVerticalScrollIndicator={false}
           automaticallyAdjustKeyboardInsets={true}
           contentContainerStyle={{flexGrow: 0.3}}>
-          <DescriptionText
-            style={[styles.profileText, {marginBottom: '4%'}]}
-            text="Edit Profile"
-          />
+          <TitleText style={styles.profileText} text="Edit Profile" />
           <View>
             {editUserJson.map((item, index) => {
               return (
                 <View key={index} style={{marginVertical: '2%'}}>
-                  <DescriptionText
+                  <TitleText
                     text={item.title}
-                    style={{color: '#384252'}}
+                    style={{fontSize: 14, color: COLORS.titleFont}}
                   />
                   <View style={styles.optionCards}>
                     <TextInput
@@ -164,6 +173,7 @@ const EditProfileScreen = ({navigation, route}) => {
                         fontWeight: '500',
                         fontSize: 14,
                         color: '#6B737F',
+                        flex: 1,
                       }}
                     />
                   </View>
@@ -181,7 +191,7 @@ const EditProfileScreen = ({navigation, route}) => {
               borderColor: COLORS.buttonColor,
             }}
             TextStyle={{color: COLORS.buttonColor}}
-            onPress={() => null}
+            onPress={() => navigation.goBack()}
             buttonTitle="Cancel"
           />
           <AppButton
@@ -213,9 +223,14 @@ const EditProfileScreen = ({navigation, route}) => {
                 anchor={
                   <ImageBackground
                     style={styles.profileImageCnt}
-                    imageStyle={{borderRadius: 1000}}
+                    imageStyle={[
+                      {borderRadius: 1000},
+                      !data.profileImage && {tintColor: COLORS.buttonColor},
+                    ]}
                     source={{
-                      uri: data.profileImage,
+                      uri: data.profileImage
+                        ? data.profileImage
+                        : 'https://cdn-icons-png.flaticon.com/512/2102/2102647.png',
                     }}>
                     <TouchableOpacity
                       onPress={showMenu}
@@ -258,10 +273,10 @@ const EditProfileScreen = ({navigation, route}) => {
                   )}
                 />
               </Menu>
-              <Text style={styles.userName}>Pawan Sharma</Text>
+              <Text style={styles.userName}>{data.name}</Text>
               <DescriptionText
                 style={styles.userContact}
-                text={'+91 7489289909'}
+                text={data.countryCode + ' ' + data.phoneNumber}
               />
             </View>
             <FullCardBackground
@@ -292,7 +307,7 @@ const styles = StyleSheet.create({
   },
   userContact: {color: '#E9F5F8', marginTop: 4},
   detailCardCnt: {padding: 16, backgroundColor: COLORS.themeBackground},
-  profileText: {fontSize: 16, color: COLORS.titleFont},
+  profileText: {color: '#384252', marginBottom: '2%'},
   optionCards: {
     ...shadow,
     shadowOpacity: 0.1,

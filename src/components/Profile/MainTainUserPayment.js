@@ -24,12 +24,15 @@ import {
   PRE_PAYMENT_DETAIL_REQUEST,
 } from '../../redux/Actions';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
+import {useRecoilState} from 'recoil';
+import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 
 const MainTainUserPayment = ({navigation, route}) => {
   const {name, houseNumber, _id} = route.params.user;
   const [paymentData, setPaymentData] = useState([]);
   const [lastSelectedIndex, setLastSelectedIndex] = useState(null);
   const payment = useSelector(state => state.PaymentReducer);
+  const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
 
   const dispatch = useDispatch();
 
@@ -71,14 +74,25 @@ const MainTainUserPayment = ({navigation, route}) => {
           body: payload,
         });
         if (Result.data.success) {
-          Alert.alert('Payment Received Succefully.');
-          console.log(Result.data);
+          setAlertData({
+            visible: true,
+            message: 'Payment Received Succefully.',
+            // iconType: 'error',
+          });
           navigation.goBack();
         } else {
-          Alert.alert(Result.data.message);
+          setAlertData({
+            visible: true,
+            message: Result.data.message,
+            iconType: 'error',
+          });
         }
       } catch (e) {
-        Alert.alert('Something went wrong please try again later.');
+        setAlertData({
+          visible: true,
+          message: 'Something went wrong please try again later.',
+          iconType: 'error',
+        });
       }
     }
   };

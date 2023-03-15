@@ -26,6 +26,8 @@ import SuccessModal from '../../ReUsableComponents/SuccessModal';
 import {useSelector} from 'react-redux';
 import {API_URL, postFormData} from '../../assets/services';
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
+import {useRecoilState} from 'recoil';
+import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 
 const buttonArray = [
   {id: 1, title: 'Cancel'},
@@ -47,6 +49,7 @@ const AddComplaints = ({route}) => {
     countryCode: '',
   });
   const [statusOption, setStatusOption] = useState('');
+  const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
 
   const user = useSelector(state => state.AuthReducer.userDetail.data);
 
@@ -98,7 +101,11 @@ const AddComplaints = ({route}) => {
         });
       }
     } else {
-      Alert.alert('Only one image is valid');
+      setAlertData({
+        visible: true,
+        message: 'You only select one image not more than 1.',
+        // iconType: 'error',
+      });
     }
   };
 
@@ -113,7 +120,11 @@ const AddComplaints = ({route}) => {
       navigation.goBack();
     } else {
       if (!data.complainTitle || !data.description) {
-        return Alert.alert('Please Enter Subject and Note First');
+        return setAlertData({
+          visible: true,
+          message: 'Please Enter Subject and Note First',
+          iconType: 'error',
+        });
       }
       if (route?.name === 'UpdateComplaint') {
         if (statusOption) {
@@ -131,13 +142,25 @@ const AddComplaints = ({route}) => {
 
           const Result = await postFormData(payload, 'PUT');
           if (Result.success) {
-            Alert.alert(Result.message);
+            setAlertData({
+              visible: true,
+              message: Result.message,
+              // iconType: 'error',
+            });
             navigation.popToTop();
           } else {
-            Alert.alert(Result.message);
+            setAlertData({
+              visible: true,
+              message: Result.message,
+              iconType: 'error',
+            });
           }
         } else {
-          return Alert.alert('Please Select Status First For This Complaint.');
+          return setAlertData({
+            visible: true,
+            message: 'Please Select Status First For This Complaint.',
+            iconType: 'error',
+          });
         }
       } else {
         try {
@@ -150,13 +173,25 @@ const AddComplaints = ({route}) => {
           console.log(Result.message);
           // Result = JSON.parse(Result);
           if (Result.success) {
-            Alert.alert(Result.message);
+            setAlertData({
+              visible: true,
+              message: Result.message,
+              // iconType: 'error',
+            });
             navigation.popToTop();
           } else {
-            Alert.alert(Result.message);
+            setAlertData({
+              visible: true,
+              message: Result.message,
+              iconType: 'error',
+            });
           }
         } catch (e) {
-          Alert.alert('Something Went Wrong, please Try Again Later.');
+          setAlertData({
+            visible: true,
+            message: 'Something went wrong please try again later.',
+            iconType: 'error',
+          });
         }
       }
     }

@@ -1,6 +1,7 @@
 import {View, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
 import React from 'react';
 import {COLORS} from '../assets/theme';
+import TitleText from "./Text's/TitleText";
 
 const AppButton = ({
   btnLoader,
@@ -13,7 +14,7 @@ const AppButton = ({
     <TouchableOpacity
       style={[
         {
-          height: 47,
+          height: 50,
           width: '100%',
           backgroundColor: COLORS.buttonColor,
           justifyContent: 'center',
@@ -27,13 +28,15 @@ const AppButton = ({
       {btnLoader ? (
         <ActivityIndicator color={'white'} />
       ) : (
-        <Text
+        <TitleText
+          text={buttonTitle}
           style={[
-            {fontSize: 16, fontWeight: '500', color: 'white'},
+            {
+              color: 'white',
+            },
             TextStyle && TextStyle,
-          ]}>
-          {buttonTitle}
-        </Text>
+          ]}
+        />
       )}
     </TouchableOpacity>
   );

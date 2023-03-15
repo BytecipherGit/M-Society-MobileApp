@@ -146,10 +146,16 @@ const HomeScreen = ({navigation}) => {
                               </Text>
                             </View>
                           </View>
-                          <Text
-                            style={styles.DetailViewMoreButton}
-                            numberOfLines={4}>
-                            {item.description}
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              flex: 1,
+                            }}>
+                            <Text
+                              style={styles.DetailViewMoreButton}
+                              numberOfLines={4}>
+                              {item.description}
+                            </Text>
                             <Text
                               style={{
                                 color: COLORS.buttonColor,
@@ -163,7 +169,7 @@ const HomeScreen = ({navigation}) => {
                               {' '}
                               Read more
                             </Text>
-                          </Text>
+                          </View>
                         </View>
                       )}
                       extraData={({item, index}) => index}

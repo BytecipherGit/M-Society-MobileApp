@@ -12,10 +12,13 @@ import AuthCard from '../ReUsableComponents/AuthCard';
 import AuthHeader from '../ReUsableComponents/AuthHeader';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {API_URL, PostData} from '../assets/services';
+import {useRecoilState} from 'recoil';
+import {GlobalAppAlert} from '../assets/GlobalStates/RecoilGloabalState';
 
 const OtpScreen = ({navigation, route}) => {
   const [loader, setLoader] = useState(false);
   const [OTP, setOTP] = useState(`${route?.params?.data?.otp}`);
+  const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
 
   const resendOtp = async () => {
     setLoader(true);
@@ -30,14 +33,22 @@ const OtpScreen = ({navigation, route}) => {
     if (Result.data.success) {
       setOTP(`${Result.data.data.otp}`);
     } else {
-      Alert.alert(Result.data.message);
+      setAlertData({
+        visible: true,
+        message: Result.data.message,
+        iconType: 'error',
+      });
     }
     setLoader(false);
   };
 
   const verifyOtp = () => {
     if (OTP.length !== 4) {
-      Alert.alert('Please Enter Otp First');
+      setAlertData({
+        visible: true,
+        message: 'Please Enter Otp First',
+        iconType: 'error',
+      });
     }
     navigation.navigate('SetNewPasswordScreen', {
       type: 'setNewPassword',

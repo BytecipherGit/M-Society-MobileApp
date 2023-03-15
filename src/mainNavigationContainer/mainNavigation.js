@@ -30,6 +30,7 @@ import SocietyInfo from '../components/Society/SocietyInfo';
 import LoginOptionsScreen from '../components/Login/LoginOptionsScreen';
 import GuardHomeScreen from '../components/Guard/GuardHomeScreen';
 import GuardEditProfile from '../components/Guard/GuardEditProfile';
+import AddVisitor from '../components/Guard/AddVisitor';
 
 const Stack = createNativeStackNavigator();
 
@@ -105,6 +106,7 @@ const mainNavigation = () => {
       {stackScreenWithNoHeader('OtpScreen', OtpScreen)}
       {stackScreenWithNoHeader('HomeScreen', HomeScreen)}
       {stackScreenWithNoHeader('GuardHomeScreen', GuardHomeScreen)}
+      {stackScreenWithNoHeader('AddVisitor', AddVisitor)}
       {stackScreenWithNoHeader('NoticeScreen', NoticeStackNavigator)}
       {stackScreenWithNoHeader('ComplaintScreen', ComplaintStackNavigator)}
       {stackScreenWithNoHeader('ImageViewScreen', ImageViewScreen)}

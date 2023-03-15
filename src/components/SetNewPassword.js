@@ -9,6 +9,8 @@ import {API_URL, PostData, StoreData} from '../assets/services';
 import LogoSvg from '../assets/images/LogoSvg.svg';
 import AuthHeader from '../ReUsableComponents/AuthHeader';
 import {CommonActions} from '@react-navigation/native';
+import {useRecoilState} from 'recoil';
+import {GlobalAppAlert} from '../assets/GlobalStates/RecoilGloabalState';
 
 const SetNewPassword = ({navigation, route}) => {
   const [data, setData] = useState({
@@ -20,9 +22,9 @@ const SetNewPassword = ({navigation, route}) => {
     rePassword: '',
   });
   const [loader, setLoader] = useState(false);
+  const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
 
   const login = async () => {
-    console.log('route ===>', route.params.data, data);
     if (!data.password) {
       return setError({...error, password: 'Please Enter Password First'});
     }
@@ -54,14 +56,14 @@ const SetNewPassword = ({navigation, route}) => {
       body: obj,
     };
 
-    console.log('payload =>', payload);
-
     const Result = await PostData(payload);
 
-    console.log('Result ===>', Result);
-
     if (Result && Result.data.success) {
-      Alert.alert('Password Changed Successfully.');
+      setAlertData({
+        visible: true,
+        message: 'Password changes successfully',
+        // iconType: 'error',
+      });
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -69,20 +71,18 @@ const SetNewPassword = ({navigation, route}) => {
         }),
       );
     } else {
-      Alert.alert(Result.data.message);
+      setAlertData({
+        visible: true,
+        message: Result.data.message,
+        iconType: 'error',
+      });
     }
     setLoader(false);
   };
 
   return (
     <View style={globalStyle.cnt}>
-      <StatusBar
-        animated={true}
-        backgroundColor="#61dafb"
-        // barStyle={statusBarStyle}
-        // showHideTransition={statusBarTransition}
-        // hidden={hidden}
-      />
+      <StatusBar animated={true} backgroundColor="#61dafb" />
       <AuthHeader />
       <AuthCard
         cardTitle={'Forgot Password'}
@@ -102,11 +102,7 @@ const SetNewPassword = ({navigation, route}) => {
                     ]}>
                     <AppTextInput
                       item={item}
-                      style={{
-                        fontFamily: 'Inter-Regular',
-                        fontSize: 14,
-                        color: '#6B737F',
-                      }}
+                      style={styles.inputText}
                       value={data[item.param]}
                       setValue={text => {
                         setData({...data, [item.param]: text});
@@ -117,13 +113,7 @@ const SetNewPassword = ({navigation, route}) => {
               );
             })}
             {(error.password || error.rePassword) && (
-              <Text
-                style={{
-                  marginTop: '5%',
-                  alignSelf: 'center',
-                  fontFamily: 'Inter-Bold',
-                  color: 'red',
-                }}>
+              <Text style={styles.errormsg}>
                 {error.password || error.rePassword}
               </Text>
             )}
@@ -165,6 +155,17 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     fontSize: 14,
     fontWeight: '400',
+    color: 'red',
+  },
+  inputText: {
+    fontFamily: 'Inter-Regular',
+    fontSize: 14,
+    color: '#6B737F',
+  },
+  errormsg: {
+    marginTop: '5%',
+    alignSelf: 'center',
+    fontFamily: 'Inter-Bold',
     color: 'red',
   },
 });

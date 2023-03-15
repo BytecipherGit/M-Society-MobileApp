@@ -11,6 +11,10 @@ import AuthHeader from '../ReUsableComponents/AuthHeader';
 import PhoneInput from 'react-native-phone-number-input';
 import {useDispatch, useSelector} from 'react-redux';
 import {USER_DATA} from '../redux/Actions';
+import {useRecoilState} from 'recoil';
+import {GlobalAppAlert} from '../assets/GlobalStates/RecoilGloabalState';
+import DescriptionText from "../ReUsableComponents/Text's/DescriptionText";
+import {CommonActions} from '@react-navigation/native';
 
 const LoginScreen = ({navigation}) => {
   const [data, setData] = useState({
@@ -22,13 +26,15 @@ const LoginScreen = ({navigation}) => {
     password: '',
   });
   const [loader, setLoader] = useState(false);
+  const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
+
   const phoneInput = useRef(null);
   const dispatch = useDispatch();
   loginOption = useSelector(state => state.AuthReducer);
 
   const login = async () => {
     if (!data.phoneNumber) {
-      return setError({...error, phoneNumber: 'Please Enter phoneNumber Id'});
+      return setError({...error, phoneNumber: 'Please Enter phoneNumber'});
     } else if (!data.password) {
       return setError({...error, password: 'Please Enter Password'});
     } else {
@@ -60,22 +66,40 @@ const LoginScreen = ({navigation}) => {
         if (Result && Result.data.success) {
           StoreData('user', JSON.stringify(Result.data));
           dispatch({type: USER_DATA, payload: Result.data});
-          loginOption.loginOption && loginOption.loginOption === 1
-            ? navigation.replace('HomeScreen')
-            : navigation.replace('GuardHomeScreen');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [
+                loginOption.loginOption && loginOption.loginOption === 1
+                  ? {name: 'HomeScreen'}
+                  : {name: 'GuardHomeScreen'},
+              ],
+            }),
+          );
         } else {
           if (Result.data.message === 'Your OTP Is Not Verified!') {
-            alert(
-              Result.data.message +
+            setAlertData({
+              visible: true,
+              message:
+                Result.data.message +
                 ' Please Enter Your mobile Number OTP and set new password for login.',
-            );
+              iconType: 'error',
+            });
             navigation.navigate('ForgotPasswordScreen');
           } else {
-            alert(Result.data.message);
+            setAlertData({
+              visible: true,
+              message: Result.data.message,
+              iconType: 'error',
+            });
           }
         }
       } catch (e) {
-        alert('Something went wrong please try again later.');
+        setAlertData({
+          visible: true,
+          message: 'Something went wrong please try again later.',
+          iconType: 'error',
+        });
       }
       setLoader(false);
     }
@@ -134,27 +158,41 @@ const LoginScreen = ({navigation}) => {
                         textContainerStyle={styles.textContainerStyle}
                         textInputStyle={styles.textInputStyle}
                       />
+                      {error[item.param] && (
+                        <DescriptionText
+                          style={{color: 'red', marginTop: '1%'}}
+                          text={error[item.param]}
+                        />
+                      )}
                     </>
                   ) : (
-                    <View
-                      style={[
-                        styles.inputView,
-                        error[item.param] && {
-                          borderWidth: 0.5,
-                          borderColor: 'red',
-                        },
-                      ]}>
-                      <AppTextInput
-                        item={item}
-                        value={data[item.param]}
-                        style={styles.inputStyle}
-                        setValue={text => {
-                          setData({...data, [item.param]: text});
-                          (error.phoneNumber || error.password) &&
-                            setError({phoneNumber: '', password: ''});
-                        }}
-                      />
-                    </View>
+                    <>
+                      <View
+                        style={[
+                          styles.inputView,
+                          error[item.param] && {
+                            borderWidth: 0.5,
+                            borderColor: 'red',
+                          },
+                        ]}>
+                        <AppTextInput
+                          item={item}
+                          value={data[item.param]}
+                          style={styles.inputStyle}
+                          setValue={text => {
+                            setData({...data, [item.param]: text});
+                            (error.phoneNumber || error.password) &&
+                              setError({phoneNumber: '', password: ''});
+                          }}
+                        />
+                      </View>
+                      {error[item.param] && (
+                        <DescriptionText
+                          style={{color: 'red', marginTop: '1%'}}
+                          text={error[item.param]}
+                        />
+                      )}
+                    </>
                   )}
                 </View>
               );

@@ -17,10 +17,14 @@ import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import CurveNextAerrow from '../../assets/images/CurveNextAerrow.svg';
 import {API_URL, GetData} from '../../assets/services';
 import moment from 'moment';
+import {useRecoilState} from 'recoil';
+import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 
 const ComplaintChatScreen = ({navigation, route}) => {
   const {complainTitle} = route?.params?.data;
   const [data, setData] = useState({});
+  const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
+
   useEffect(() => {
     const getChat = async () => {
       const payload = {
@@ -60,7 +64,11 @@ const ComplaintChatScreen = ({navigation, route}) => {
           ? navigation.navigate('ImageViewScreen', {
               img: item.attachedImage,
             })
-          : null;
+          : setAlertData({
+              visible: true,
+              message: 'No Image found.',
+              iconType: 'error',
+            });
       }
     } else {
       if (index === 0) {
@@ -68,7 +76,11 @@ const ComplaintChatScreen = ({navigation, route}) => {
           ? navigation.navigate('ImageViewScreen', {
               img: item.attachedImage,
             })
-          : null;
+          : setAlertData({
+              visible: true,
+              message: 'No Image Found.',
+              iconType: 'error',
+            });
       } else {
         return null;
       }
@@ -96,7 +108,11 @@ const ComplaintChatScreen = ({navigation, route}) => {
         },
       });
     } else {
-      Alert.alert('Complaint Is Resolved for new now create a New Complaint.');
+      setAlertData({
+        visible: true,
+        message: 'Complaint Is Resolved, for new now create a New Complaint.',
+        iconType: 'error',
+      });
       navigation.navigate('UpdateComplaint', {
         data: {
           id: route?.params?.data?._id,

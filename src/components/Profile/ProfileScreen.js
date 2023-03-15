@@ -27,7 +27,7 @@ const ProfileScreen = ({navigation, route}) => {
   const renderOptions = () => {
     return (
       <View>
-        <DescriptionText style={styles.profileText} text="Profile" />
+        <TitleText style={styles.profileText} text="Profile" />
         <FlatList
           data={
             User.data.userType === 'guard'
@@ -69,9 +69,16 @@ const ProfileScreen = ({navigation, route}) => {
         <AppHeader title={'Profile'} navigation={navigation} />
         <View style={{flex: 0.34, alignItems: 'center'}}>
           <ImageBackground
-            style={styles.profileImageCnt}
-            imageStyle={{borderRadius: 1000}}
-            source={{uri: User.data.profileImage}}
+            style={[styles.profileImageCnt]}
+            imageStyle={[
+              {borderRadius: 1000},
+              !User.data.profileImage && {tintColor: COLORS.buttonColor},
+            ]}
+            source={{
+              uri: User.data.profileImage
+                ? User.data.profileImage
+                : 'https://cdn-icons-png.flaticon.com/512/2102/2102647.png',
+            }}
           />
           <Text style={styles.userName}>{User.data.name}</Text>
           <DescriptionText
@@ -106,14 +113,14 @@ const styles = StyleSheet.create({
   },
   userContact: {color: '#E9F5F8', marginTop: 4},
   detailCardCnt: {padding: 16, backgroundColor: COLORS.themeBackground},
-  profileText: {fontSize: 16, color: COLORS.titleFont},
+  profileText: {color: '#384252', marginBottom: '1.5%'},
   optionCards: {
     ...shadow,
     shadowOpacity: 0.4,
     shadowRadius: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: '4%',
+    marginVertical: '2.5%',
     marginHorizontal: '.5%',
     padding: 10,
     backgroundColor: 'white',

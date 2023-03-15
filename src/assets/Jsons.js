@@ -368,3 +368,36 @@ export const VisitorsFakeList = [
       'https://media.istockphoto.com/id/1311084168/photo/overjoyed-pretty-asian-woman-look-at-camera-with-sincere-laughter.jpg?b=1&s=170667a&w=0&k=20&c=XPuGhP9YyCWquTGT-tUFk6TwI-HZfOr1jNkehKQ17g0=',
   },
 ];
+
+export const AddVisitorFields = [
+  {
+    id: 1,
+    title: 'Phone No.',
+    keyboardType: 'number-pad', //default
+    param: 'phoneNumber',
+  },
+  {
+    id: 2,
+    title: 'Enter Name',
+    keyboardType: 'default',
+    param: 'name',
+  },
+  {
+    id: 3,
+    title: 'House No',
+    keyboardType: 'default',
+    param: 'houseNumber',
+  },
+  {
+    id: 4,
+    title: 'Enter Reason',
+    keyboardType: 'default',
+    param: 'reasone',
+  },
+  {
+    id: 5,
+    title: 'Attach Photo',
+    keyboardType: 'image-Picker',
+    param: 'image',
+  },
+];

@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
-  Alert,
   Linking,
   Platform,
+  StyleSheet,
 } from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
@@ -18,11 +18,15 @@ import LocationIcon from '../../assets/images/LocationIcon.svg';
 import PhoneIcon from '../../assets/images/PhoneIcon.svg';
 import {API_URL, GetData} from '../../assets/services';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
+import {useRecoilState} from 'recoil';
+import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 
 const ContactScreen = ({navigation, route}) => {
   const [loader, setLoader] = useState(false);
   const [data, setData] = useState([]);
   const [error, setError] = useState('');
+  const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
+
   useEffect(() => {
     const getContactDetails = async () => {
       setLoader(true);
@@ -40,7 +44,11 @@ const ContactScreen = ({navigation, route}) => {
             setError('No Contact Found');
           }
         } else {
-          Alert.alert(Result.data.message);
+          setAlertData({
+            visible: true,
+            message: Result.data.message,
+            iconType: 'error',
+          });
           setError(Result.data.message);
         }
       } catch (e) {
@@ -59,29 +67,11 @@ const ContactScreen = ({navigation, route}) => {
           styles={{backgroundColor: COLORS.themeBackground, padding: 16}}
           RenderUI={() => (
             <View>
-              <View
-                style={{
-                  ...shadow,
-                  shadowOpacity: 0.4,
-                  shadowRadius: 1.5,
-                  padding: Platform.OS === 'android' ? 0 : 15,
-                  paddingHorizontal: 15,
-                  borderRadius: 4,
-                  backgroundColor: COLORS.themeBackground,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: '3%',
-                }}>
+              <View style={style.container}>
                 <TextInput
                   placeholder="Search"
                   placeholderTextColor={'#595959'}
-                  style={{
-                    fontSize: 16,
-                    fontWeight: '400',
-                    color: '#595959',
-                    width: '93%',
-                  }}
+                  style={style.search}
                 />
                 <TouchableOpacity
                   activeOpacity={1}
@@ -105,86 +95,26 @@ const ContactScreen = ({navigation, route}) => {
                 renderItem={({item, index}) => (
                   <TouchableOpacity
                     onPress={() => Linking.openURL(`tel:${item.phoneNumber}`)}
-                    style={{
-                      ...shadow,
-                      shadowOpacity: 0.4,
-                      shadowRadius: 1.5,
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginVertical: '4%',
-                      padding: 10,
-                      backgroundColor: 'white',
-                      borderRadius: 8,
-                      marginHorizontal: 1,
-                    }}>
-                    <View
-                      style={{
-                        height: 50,
-                        width: 50,
-                        backgroundColor: COLORS.themeColor,
-                        borderRadius: 1000,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        alignSelf: 'center',
-                      }}>
-                      {/* <Image
-                        source={{uri: 'www.google.com'}}
-                        style={{
-                          height: '96%',
-                          width: '96%',
-                          backgroundColor: 'white',
-                          borderRadius: 1000,
-                        }}
-                      /> */}
+                    style={style.detailCard}>
+                    <View style={style.phoneIconView}>
                       <PhoneIcon />
                     </View>
                     <View style={{width: '82%'}}>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          fontWeight: '400',
-                          color: '#4C5564',
-                          marginBottom: '1%',
-                        }}>
+                      <Text style={style.contactDetail}>
                         {item.name + ' - ' + item.profession}
                       </Text>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontWeight: '400',
-                          color: '#4C5564',
-                          marginBottom: '1%',
-                        }}>
+                      <Text style={style.contactNumber}>
                         {item.phoneNumber}
                       </Text>
                       <View
                         style={{flexDirection: 'row', alignItems: 'center'}}>
                         <LocationIcon />
-                        <Text
-                          style={{
-                            fontWeight: '400',
-                            fontSize: 12,
-                            color: '#6B737F',
-                            marginBottom: '1%',
-                          }}>
+                        <Text style={style.contactAddress}>
                           {' '}
                           {item.address}
                         </Text>
                       </View>
                     </View>
-                    {/* <TouchableOpacity
-                      onPress={() => Linking.openURL(`tel:${item.phoneNumber}`)}
-                      style={{
-                        height: 34,
-                        width: 34,
-                        backgroundColor: COLORS.buttonColor,
-                        alignSelf: 'center',
-                        borderRadius: 1000,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <PhoneIcon />
-                    </TouchableOpacity> */}
                   </TouchableOpacity>
                 )}
               />
@@ -198,3 +128,64 @@ const ContactScreen = ({navigation, route}) => {
 };
 
 export default ContactScreen;
+
+const style = StyleSheet.create({
+  container: {
+    ...shadow,
+    shadowOpacity: 0.4,
+    shadowRadius: 1.5,
+    padding: Platform.OS === 'android' ? 0 : 15,
+    paddingHorizontal: 15,
+    borderRadius: 4,
+    backgroundColor: COLORS.themeBackground,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '3%',
+  },
+  search: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#595959',
+    width: '93%',
+  },
+  detailCard: {
+    ...shadow,
+    shadowOpacity: 0.4,
+    shadowRadius: 1.5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: '4%',
+    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    marginHorizontal: 1,
+  },
+  phoneIconView: {
+    height: 50,
+    width: 50,
+    backgroundColor: COLORS.themeColor,
+    borderRadius: 1000,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  contactDetail: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#4C5564',
+    marginBottom: '1%',
+  },
+  contactNumber: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: '#4C5564',
+    marginBottom: '1%',
+  },
+  contactAddress: {
+    fontWeight: '400',
+    fontSize: 12,
+    color: '#6B737F',
+    marginBottom: '1%',
+  },
+});
