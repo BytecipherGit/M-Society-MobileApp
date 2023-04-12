@@ -82,7 +82,7 @@ const OnboardingScreen = ({navigation, route}) => {
                 color: COLORS.titleFont,
                 marginVertical: '2%',
               }}>
-              {item?.title}
+              {item.title}
             </Text>
             <Text
               style={{
