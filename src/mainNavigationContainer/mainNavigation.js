@@ -31,6 +31,11 @@ import LoginOptionsScreen from '../components/Login/LoginOptionsScreen';
 import GuardHomeScreen from '../components/Guard/GuardHomeScreen';
 import GuardEditProfile from '../components/Guard/GuardEditProfile';
 import AddVisitor from '../components/Guard/AddVisitor';
+import PaymentHistory from '../components/PaymentHistory';
+import ResidentList from '../components/Resident/ResidentList';
+import AddNewResident from '../components/Resident/AddNewResident';
+import GuardList from '../components/Guard/GuardList';
+import VisitorsList from '../components/Guard/VisitorsList';
 
 const Stack = createNativeStackNavigator();
 
@@ -81,6 +86,8 @@ const mainNavigation = () => {
         {stackScreenWithNoHeader('FaqDetailScreen', FaqDetailScreen)}
         {stackScreenWithNoHeader('ChangePasswordScreen', ChangePassword)}
         {stackScreenWithNoHeader('GuardEditProfileScreen', GuardEditProfile)}
+        {stackScreenWithNoHeader('GuardListScreen', GuardList)}
+        {stackScreenWithNoHeader('VisitorsListScreen', VisitorsList)}
       </Stack.Navigator>
     );
   }
@@ -90,6 +97,15 @@ const mainNavigation = () => {
       <Stack.Navigator>
         {stackScreenWithNoHeader('DocumentList', DocumentList)}
         {stackScreenWithNoHeader('DocumentDetail', DocumentDetailScreen)}
+      </Stack.Navigator>
+    );
+  }
+
+  function ResidentStackScreens() {
+    return (
+      <Stack.Navigator>
+        {stackScreenWithNoHeader('ResidentList', ResidentList)}
+        {stackScreenWithNoHeader('AddNewResident', AddNewResident)}
       </Stack.Navigator>
     );
   }
@@ -112,6 +128,8 @@ const mainNavigation = () => {
       {stackScreenWithNoHeader('ImageViewScreen', ImageViewScreen)}
       {stackScreenWithNoHeader('ContactScreen', ContactScreen)}
       {stackScreenWithNoHeader('ProfileStackScreen', ProfileStackNavigator)}
+      {stackScreenWithNoHeader('PaymentHistoryScreen', PaymentHistory)}
+      {stackScreenWithNoHeader('ResidentStack', ResidentStackScreens)}
       {stackScreenWithNoHeader('TakePaymentScreen', TakePaymentScreen)}
       {stackScreenWithNoHeader('MainTainUserPayment', MainTainUserPayment)}
       {stackScreenWithNoHeader('ComplaintChatScreen', ComplaintChatScreen)}

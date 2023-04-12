@@ -43,5 +43,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'Inter-Medium',
     letterSpacing: 0.5,
+    // flex: 1,
   },
 });

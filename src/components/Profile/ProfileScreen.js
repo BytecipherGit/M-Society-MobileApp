@@ -34,6 +34,7 @@ const ProfileScreen = ({navigation, route}) => {
               ? GuardprofileOptions
               : profileOptions
           }
+          showsVerticalScrollIndicator={false}
           renderItem={({item, index}) => (
             <TouchableOpacity
               style={styles.optionCards}
@@ -50,6 +51,7 @@ const ProfileScreen = ({navigation, route}) => {
               <ForwardAerrow />
             </TouchableOpacity>
           )}
+          ListFooterComponent={() => <View style={{height: 10}} />}
           extraData={({item, index}) => item.id}
         />
       </View>

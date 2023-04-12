@@ -3,12 +3,13 @@ import {images} from './images/image';
 
 export const COLORS = {
   primary: '#177085',
-  titleFont: '#4C5564',
+  titleFont: '#4C4C4C',
+  descFont: '#9B9B9B',
   inputBorder: '#9CA2AD',
   inputtext: '#384252',
   bluetext: '#0038FF',
   buttonColor: '#FFAA00',
-  themeColor: '#219EBC',
+  themeColor: '#CAE7FF',
   themeBackground: '#F6FDFF',
   listCardBackTheme: '#E9F5F8',
   blackFont: '#262626',

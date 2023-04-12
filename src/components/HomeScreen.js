@@ -48,13 +48,23 @@ const HomeScreen = ({navigation}) => {
 
     if (Result.data.isAdmin === 1 || Result.data.isAdmin === '1') {
       setIsAdmin(true);
-      if (SocietyOptions.length !== 6) {
+      if (SocietyOptions.length !== 8) {
         SocietyOptions.push({
           id: 6,
           title: 'TAKE PAYMENT',
           navigationScreen: 'TakePaymentScreen',
           image: <TakePayment />,
         });
+      }
+    } else {
+      // remove the take payment and resident here.
+
+      const index = SocietyOptions.findIndex(
+        item => item.title === 'TAKE PAYMENT',
+      );
+
+      if (index > 0) {
+        SocietyOptions.splice(index, 1);
       }
     }
 
@@ -146,30 +156,30 @@ const HomeScreen = ({navigation}) => {
                               </Text>
                             </View>
                           </View>
-                          <View
+                          <TouchableOpacity
+                            activeOpacity={1}
                             style={{
-                              flexDirection: 'row',
                               flex: 1,
-                            }}>
+                            }}
+                            onPress={() =>
+                              navigation.navigate('NoticeScreen', {
+                                screen: 'NoticeDetailScreen',
+                                params: {item: item},
+                              })
+                            }>
                             <Text
                               style={styles.DetailViewMoreButton}
                               numberOfLines={4}>
                               {item.description}
+                              <Text
+                                style={{
+                                  color: COLORS.buttonColor,
+                                }}>
+                                {' '}
+                                Read more
+                              </Text>
                             </Text>
-                            <Text
-                              style={{
-                                color: COLORS.buttonColor,
-                              }}
-                              onPress={() =>
-                                navigation.navigate('NoticeScreen', {
-                                  screen: 'NoticeDetailScreen',
-                                  params: {item: item},
-                                })
-                              }>
-                              {' '}
-                              Read more
-                            </Text>
-                          </View>
+                          </TouchableOpacity>
                         </View>
                       )}
                       extraData={({item, index}) => index}

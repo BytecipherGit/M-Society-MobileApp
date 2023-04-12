@@ -13,7 +13,7 @@ import {
 } from '../Actions';
 
 function* getMaintananceUser(action) {
-  let url = API_URL + 'maintance/user';
+  let url = API_URL + 'maintenance/user';
   try {
     let payload = {
       url: url,
@@ -35,7 +35,7 @@ function* getMaintananceUser(action) {
 }
 
 function* getPaymentDetail(action) {
-  let url = API_URL + `maintance/userTakePaymentMonthList/${action.payload}`;
+  let url = API_URL + `maintenance/userTakePaymentMonthList/${action.payload}`;
   // userTakePaymentMonthList
   try {
     let payload = {
@@ -74,7 +74,7 @@ function* getPaymentDetail(action) {
 }
 
 function* getPrePaymentDetail(action) {
-  let url = API_URL + `maintance/previousMonth`;
+  let url = API_URL + `maintenance/previousMonth`;
 
   try {
     let payload = {

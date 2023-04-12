@@ -8,6 +8,7 @@ import HistoryIcon from '.././assets/images/HistoryIcon.svg';
 import {GetData} from '../assets/services';
 import {API_URL} from '../assets/services';
 import {useSelector} from 'react-redux';
+import AppLoaderSrceen from '../ReUsableComponents/AppLoaderSrceen';
 
 const PaymentHistory = ({navigation}) => {
   const state = useSelector(state => state.AuthReducer);
@@ -29,7 +30,8 @@ const PaymentHistory = ({navigation}) => {
     try {
       const payload = {
         url:
-          API_URL + `maintance/userPaymentHistory/${state.userDetail.data._id}`,
+          API_URL +
+          `maintenance/userPaymentHistory/${state.userDetail.data._id}`,
       };
       const Result = await GetData(payload);
       if (Result.data.success) {
@@ -66,12 +68,19 @@ const PaymentHistory = ({navigation}) => {
               <FlatList
                 data={data.data}
                 showsVerticalScrollIndicator={false}
+                ListEmptyComponent={() => (
+                  <AppLoaderSrceen loader={data.loader} error={data.error} />
+                )}
                 renderItem={({item, index}) => (
                   <View style={style.card}>
+                    {console.log(item)}
                     <View style={style.cardHeader}>
                       <HistoryIcon />
                       <View style={style.detailCnt}>
-                        <TitleText style={style.cardPrice} text="₹ 1800" />
+                        <TitleText
+                          style={style.cardPrice}
+                          text={`₹ ${item.amount}`}
+                        />
                         <View style={style.historyCnt}>
                           <Text style={style.paidTxt}>
                             Paid-{' '}

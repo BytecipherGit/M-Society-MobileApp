@@ -29,7 +29,7 @@ const ComplaintDetailScreen = ({navigation, route}) => {
   return (
     <Fragment>
       <SafeAreaView style={globalStyle.cntWithTheme}>
-        <AppHeader navigation={navigation} title="Water Problem" />
+        <AppHeader navigation={navigation} title={complainTitle} />
         <FullCardBackground
           styles={{backgroundColor: COLORS.themeBackground}}
           RenderUI={() => (

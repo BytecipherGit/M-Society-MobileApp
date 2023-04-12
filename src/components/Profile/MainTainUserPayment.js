@@ -70,7 +70,7 @@ const MainTainUserPayment = ({navigation, route}) => {
 
       try {
         const Result = await PostData({
-          url: API_URL + 'maintance/takePayment',
+          url: API_URL + 'maintenance/takePayment',
           body: payload,
         });
         if (Result.data.success) {

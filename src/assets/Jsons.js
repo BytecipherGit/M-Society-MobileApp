@@ -3,7 +3,7 @@ import Complaints from '../assets/images/Compaints.svg';
 import Contact from '../assets/images/Contact.svg';
 import SocietyInfo from '../assets/images/SocietyInfo.svg';
 import Document from '../assets/images/Document.svg';
-import User from '../assets/images/User.svg';
+import User from '../assets/images/ProfileIcon.svg';
 import QuestionIcon from '../assets/images/QuestionIcon.svg';
 import LockIcon from '../assets/images/LockIcon.svg';
 import MoneyIcon from '../assets/images/MoneyIcon.svg';
@@ -13,6 +13,7 @@ import CalendotWithTheme from '../assets/images/CalendorWithTheme.svg';
 import GuardProfileLocation from '../assets/images/guard/GuardProfileLocation.svg';
 import GuardShiftIcon from '../assets/images/guard/GuardShiftIcon.svg';
 import GuardProfileIcon from '../assets/images/guard/GuardProfileIcon.svg';
+import TakePayment from '../assets/images/TakePayment.svg';
 
 export const inputFields = [
   {
@@ -208,6 +209,18 @@ export let SocietyOptions = [
     navigationScreen: 'DocumentStack',
     image: <Document />,
   },
+  {
+    id: 8,
+    title: 'HISTORY',
+    navigationScreen: 'PaymentHistoryScreen',
+    image: <TakePayment />,
+  },
+  {
+    id: 7,
+    title: 'RESIDENT',
+    navigationScreen: 'ResidentStack',
+    image: <TakePayment />,
+  },
 ];
 
 export const profileOptions = [
@@ -235,6 +248,25 @@ export const profileOptions = [
   //   navigationScreen: 'TakePaymentScreen',
   //   icon: <MoneyIcon />,
   // },
+
+  {
+    id: 6,
+    title: 'Society Guards',
+    navigationScreen: 'GuardListScreen',
+    icon: <User />,
+  },
+  {
+    id: 7,
+    title: 'Visitors',
+    navigationScreen: 'VisitorsListScreen',
+    icon: <User />,
+  },
+  {
+    id: 8,
+    title: 'Maintainance Setting',
+    navigationScreen: 'LoginOptionsScreen',
+    icon: <MoneyIcon />,
+  },
   {
     id: 5,
     title: 'Logout',
@@ -399,5 +431,63 @@ export const AddVisitorFields = [
     title: 'Attach Photo',
     keyboardType: 'image-Picker',
     param: 'image',
+  },
+];
+
+export let AddResidenceUserJson = [
+  {
+    id: 1,
+    title: 'Name',
+    keyboardType: 'default',
+    param: 'name',
+    type: 'Input',
+  },
+  {
+    id: 2,
+    title: 'Email',
+    keyboardType: 'email-address',
+    param: 'email',
+    type: 'Input',
+  },
+  {
+    id: 3,
+    title: 'Phone Number',
+    keyboardType: 'number-pad',
+    param: 'phoneNumber',
+    type: 'phoneNumber',
+  },
+  {
+    id: 4,
+    title: 'House / Flat Number',
+    keyboardType: 'number-pad',
+    param: 'houseNumber',
+    type: 'Input',
+  },
+  {
+    id: 5,
+    title: 'Profession',
+    keyboardType: 'default',
+    param: 'profession',
+    type: 'dropDown',
+    value: [],
+  },
+  {
+    id: 6,
+    title: 'Role',
+    keyboardType: 'default',
+    param: 'role',
+    type: 'dropDown',
+    value: [],
+  },
+  {
+    id: 7,
+    title: 'Resident Type',
+    keyboardType: 'default',
+    param: 'residentType',
+    type: 'dropDown',
+    value: [
+      {label: 'Rental', value: 'rental'},
+      {label: 'Owner', value: 'owner'},
+    ],
   },
 ];

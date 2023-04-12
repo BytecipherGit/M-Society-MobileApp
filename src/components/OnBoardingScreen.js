@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,9 @@ import {
   StatusBar,
   Alert,
   TouchableOpacity,
+  ImageBackground,
+  SafeAreaView,
+  Dimensions,
 } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import HomeSvg from '../assets/images/HomeSvg';
@@ -14,29 +17,31 @@ import SearchSvg from '../assets/images/SearchSvg';
 import WalkSvg from '../assets/images/WalkSvg';
 import {StoreData} from '../assets/services';
 import {COLORS} from '../assets/theme';
+import LinearGradient from 'react-native-linear-gradient';
 
 const slides = [
   {
     key: '1',
     title: 'Our Society',
     text: 'On the other hand, we denounce with righteous indignation and dislike men who are so beguiled ',
-    Icon: <HomeSvg />,
+    Icon: <HomeSvg width={370} />,
   },
   {
     key: '2',
     title: 'online society services',
     text: 'On the other hand, we denounce with righteous indignation and dislike men who are so beguiled ',
-    Icon: <SearchSvg />,
+    Icon: <SearchSvg width={370} />,
   },
   {
     key: '3',
     title: 'Playing and walking',
     text: 'On the other hand, we denounce with righteous indignation and dislike men who are so beguiled ',
-    Icon: <WalkSvg />,
+    Icon: <WalkSvg width={330} />,
   },
 ];
 
 const OnboardingScreen = ({navigation, route}) => {
+  const sliderRef = useRef(null);
   const onSkip = () => {
     StoreData('OnBoard', 'true');
     navigation.replace('LoginOptionsScreen');
@@ -44,74 +49,146 @@ const OnboardingScreen = ({navigation, route}) => {
 
   const _renderItem = ({item}) => (
     <View style={styles.cnt}>
-      <View style={styles.topImageCnt}>
-        <Image
-          source={require('../assets/images/registerTop.png')}
-          style={{height: '100%', width: '100%'}}
-        />
-      </View>
-      <View style={styles.detailCnt}>
-        {item.Icon}
-        <View style={styles.textCnt}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.desc}>{item.text}</Text>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <View
+          style={{
+            width: '100%',
+            height: 450,
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            // backgroundColor: 'red',
+          }}>
+          {item.Icon}
+        </View>
+        <View style={{height: 235, paddingHorizontal: 15, width: '100%'}}>
+          <View
+            style={{
+              height: 200,
+              width: '100%',
+              backgroundColor: 'white',
+              padding: 14,
+              borderRadius: 25,
+            }}>
+            <Text
+              style={{
+                fontFamily: 'Axiforma-SemiBold',
+                fontSize: 26,
+                color: COLORS.titleFont,
+                marginVertical: '2%',
+              }}>
+              {item?.title}
+            </Text>
+            <Text
+              style={{
+                fontFamily: 'Axiforma-Regular',
+                fontSize: 13,
+                lineHeight: 22,
+                color: COLORS.descFont,
+              }}
+              numberOfLines={4}>
+              {item?.text}
+            </Text>
+          </View>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              const currentSlide = sliderRef.current.state.activeIndex;
+
+              if (currentSlide === 2) {
+                return onSkip();
+              }
+
+              sliderRef.current.goToSlide(currentSlide + 1);
+            }}>
+            <LinearGradient
+              colors={['#FFA13C', '#FF7334']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 1}}
+              angle={210.29}
+              style={{
+                height: 80,
+                width: 80,
+                alignSelf: 'center',
+                marginTop: '-12%',
+                borderRadius: 1000,
+                borderWidth: 10,
+                borderColor: COLORS.themeColor,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={require('../assets/images/NextAerrow.png')}
+                style={{width: 22.09, height: 24}}
+                resizeMode="contain"
+              />
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
   );
 
-  const skipUI = () => {
-    return (
-      <TouchableOpacity
-        onPress={onSkip}
-        style={{
-          marginTop: '60%',
-          marginRight: '2%',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text style={{color: '#FFAA00', fontSize: 16, fontWeight: '500'}}>
-          Skip{' '}
-        </Text>
-        <Image
-          source={require('../assets/images/nextAerrow.png')}
-          style={{height: 12, width: 12}}
-        />
-      </TouchableOpacity>
-    );
-  };
-
   return (
-    <>
-      <AppIntroSlider
-        renderItem={_renderItem}
-        data={slides}
-        nextLabel={''}
-        doneLabel={''}
-        renderDoneButton={skipUI}
-        renderNextButton={skipUI}
-        activeDotStyle={styles.acriveDot}
-        dotStyle={styles.inActiveDot}
-      />
-    </>
+    <SafeAreaView style={styles.cnt}>
+      <ImageBackground
+        style={styles.cnt}
+        source={require('../assets/images/gridBackground.png')}>
+        <TouchableOpacity
+          style={{
+            alignSelf: 'flex-end',
+            borderBottomWidth: 1,
+            marginHorizontal: 10,
+            borderColor: COLORS.titleFont,
+          }}
+          onPress={onSkip}>
+          <Text
+            style={{
+              // marginHorizontal: 10,
+              fontFamily: 'Axiforma-Regular',
+              fontSize: 16,
+              color: COLORS.titleFont,
+              borderBottomWidth: 1,
+            }}>
+            SKIP
+          </Text>
+        </TouchableOpacity>
+        {console.log(sliderRef)}
+        <AppIntroSlider
+          ref={sliderRef}
+          renderItem={_renderItem}
+          data={slides}
+          nextLabel={''}
+          doneLabel={''}
+          renderDoneButton={() => null}
+          renderNextButton={() => null}
+          activeDotStyle={styles.acriveDot}
+          dotStyle={styles.inActiveDot}
+        />
+      </ImageBackground>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   acriveDot: {
-    backgroundColor: '#49AFC8',
+    backgroundColor: '#5FB6FF',
     width: 25,
-    height: 8,
-    marginBottom: '5%',
+    height: 6,
+    marginBottom: Dimensions.get('window').height / 1.8,
   },
   inActiveDot: {
     width: 16,
-    height: 8,
-    backgroundColor: '#CAE8EF',
-    marginBottom: '5%',
+    height: 6,
+    backgroundColor: '#D1D1D1',
+    marginBottom: Dimensions.get('window').height / 1.8,
   },
-  cnt: {flex: 1, backgroundColor: 'white'},
+  cnt: {flex: 1, backgroundColor: COLORS.themeColor},
   topImageCnt: {width: '100%', height: '17%'},
   detailCnt: {flex: 1, justifyContent: 'space-around', alignItems: 'center'},
   textCnt: {width: '70%', alignSelf: 'center'},

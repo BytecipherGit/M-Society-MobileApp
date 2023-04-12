@@ -1,7 +1,7 @@
-// export const API_URL = 'https://4a03-223-236-26-121.in.ngrok.io/api/';
+// export const API_URL = 'https://bbcf-122-168-227-157.in.ngrok.io/api/';
 export const API_URL = 'http://43.231.127.169:9001/api/';
 
-// swagger https://34e2-223-236-67-161.in.ngrok.io/api-docs/#/
+// swagger https://e1b6-122-168-229-41.in.ngrok.io/api-docs/#/
 
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -71,20 +71,46 @@ export const PutData = async payload => {
 export const DeleteData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
-  return axios
-    .delete(
-      payload.url,
-      Token && {
-        headers: {
-          Authorization: 'Bearer ' + Token.accessToken,
-        },
-      },
-    )
-    .then(res => {
-      return res;
+  console.log(payload.url);
+  console.log(payload.body);
+  console.log(Token);
+  // return axios
+  //   .delete(
+  //     payload.url,
+  //     payload.body,
+  //     Token && {
+  //       headers: {
+  //         Authorization: 'Bearer ' + Token.accessToken,
+  //       },
+  //     },
+  //   )
+  //   .then(res => {
+  //     return res;
+  //   })
+  //   .catch(e => {
+  //     return e;
+  //   });
+
+  var myHeaders = new Headers();
+  myHeaders.append('Authorization', 'Bearer ' + Token.accessToken);
+  myHeaders.append('Content-Type', 'application/json');
+
+  var raw = JSON.stringify(payload.body);
+
+  var requestOptions = {
+    method: 'DELETE',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow',
+  };
+
+  return fetch(payload.url, requestOptions)
+    .then(response => response.json())
+    .then(result => {
+      return result;
     })
-    .catch(e => {
-      return e;
+    .catch(error => {
+      return error;
     });
 };
 

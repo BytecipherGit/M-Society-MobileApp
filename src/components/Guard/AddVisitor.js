@@ -38,6 +38,7 @@ const AddVisitor = ({navigation, route}) => {
     houseNumber: '',
     reasone: '',
     image: {},
+    countyCode: '+91',
   });
   const [loader, setLoader] = useState(false);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);

@@ -24,6 +24,7 @@
     "react-native-element-dropdown": "^2.5.3",
     "react-native-image-pan-zoom": "^2.1.12",
     "react-native-image-picker": "^5.1.0",
+    "react-native-linear-gradient": "^2.6.2",
     "react-native-material-menu": "^2.0.0",
     "react-native-modal": "^13.0.1",
     "react-native-phone-number-input": "^2.1.0",
@@ -35,7 +36,8 @@
     "react-redux": "^8.0.5",
     "recoil": "^0.7.7",
     "redux": "^4.2.0",
-    "redux-saga": "^1.2.2"
+    "redux-saga": "^1.2.2",
+    "toggle-switch-react-native": "^3.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

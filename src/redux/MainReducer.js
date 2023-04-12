@@ -5,6 +5,8 @@ import {ComplaintReducer} from './reducers/ComplaintReducer';
 import {SocietyReducer} from './reducers/SocietyReducer';
 import {PaymentReducer} from './reducers/PaymentReducer';
 import {GuardReducer} from './reducers/GuardReducer';
+import {ResidentReducer} from './reducers/ResidentReducer';
+
 export const allReducer = combineReducers({
   AuthReducer,
   NoticeReducer,
@@ -12,4 +14,5 @@ export const allReducer = combineReducers({
   SocietyReducer,
   PaymentReducer,
   GuardReducer,
+  ResidentReducer,
 });

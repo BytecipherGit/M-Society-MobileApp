@@ -26,8 +26,7 @@ const CompaintList = ({navigation}) => {
 
   const dispatch = useDispatch();
   const comlaintList = useSelector(state => state.ComplaintReducer);
-
-  console.log(comlaintList.data.other);
+  const User = useSelector(state => state.AuthReducer);
 
   useEffect(() => {
     navigation.addListener('focus', () => {
@@ -36,6 +35,12 @@ const CompaintList = ({navigation}) => {
       getComplaintList();
     });
   }, []);
+
+  useEffect(() => {
+    if (User.isAdmin) {
+      setDefaultComplaint('Residents');
+    }
+  }, [User]);
 
   const getComplaintList = async () => {
     dispatch({type: COMPLAINT_LIST_REQUEST});
@@ -54,7 +59,7 @@ const CompaintList = ({navigation}) => {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
-                  {['My', 'Residents'].map((item, index) => {
+                  {/* {['My', 'Residents'].map((item, index) => {
                     return (
                       <TouchableOpacity
                         key={index}
@@ -78,7 +83,7 @@ const CompaintList = ({navigation}) => {
                         />
                       </TouchableOpacity>
                     );
-                  })}
+                  })} */}
                 </View>
                 <FlatList
                   data={
