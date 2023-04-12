@@ -1,20 +1,30 @@
-import {View, Text, StyleSheet, Image, StatusBar, Platform} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Platform,
+  ImageBackground,
+  TouchableOpacity,
+  ActivityIndicator,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import React, {useRef, useState} from 'react';
-import {AuthThemeImage, COLORS, globalStyle, shadow} from '../assets/theme';
+import {COLORS, globalStyle} from '../assets/theme';
 import {images} from '../assets/images/image';
 import AuthCard from '../ReUsableComponents/AuthCard';
 import AppTextInput from '../ReUsableComponents/AppTextInput';
 import {inputFields} from '../assets/Jsons';
 import {API_URL, PostData, StoreData} from '../assets/services';
-import LogoSvg from '../assets/images/LogoSvg.svg';
-import AuthHeader from '../ReUsableComponents/AuthHeader';
-import PhoneInput from 'react-native-phone-number-input';
 import {useDispatch, useSelector} from 'react-redux';
 import {USER_DATA} from '../redux/Actions';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../assets/GlobalStates/RecoilGloabalState';
 import DescriptionText from "../ReUsableComponents/Text's/DescriptionText";
 import {CommonActions} from '@react-navigation/native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import LinearGradient from 'react-native-linear-gradient';
 
 const LoginScreen = ({navigation}) => {
   const [data, setData] = useState({
@@ -27,8 +37,7 @@ const LoginScreen = ({navigation}) => {
   });
   const [loader, setLoader] = useState(false);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
-
-  const phoneInput = useRef(null);
+  const [inputFieldsClone, setInputFieldsClone] = useState(inputFields);
   const dispatch = useDispatch();
   loginOption = useSelector(state => state.AuthReducer);
 
@@ -43,7 +52,7 @@ const LoginScreen = ({navigation}) => {
       let obj = {
         phoneNumber: data.phoneNumber,
         password: data.password,
-        countryCode: '+' + phoneInput?.current?.state?.code,
+        countryCode: '+' + inputFieldsClone[0].countryCode,
       };
 
       const payload =
@@ -78,211 +87,175 @@ const LoginScreen = ({navigation}) => {
           );
         } else {
           if (Result.data.message === 'Your OTP Is Not Verified!') {
-            setAlertData({
-              visible: true,
-              message:
+            errorAlert(
+              true,
+              `${
                 Result.data.message +
-                ' Please Enter Your mobile Number OTP and set new password for login.',
-              iconType: 'error',
-            });
+                ' Please Enter Your mobile Number OTP and set new password for login.'
+              }`,
+            );
             navigation.navigate('ForgotPasswordScreen');
           } else {
-            setAlertData({
-              visible: true,
-              message: Result.data.message,
-              iconType: 'error',
-            });
+            errorAlert(true, Result.data.message);
           }
         }
       } catch (e) {
-        setAlertData({
-          visible: true,
-          message: 'Something went wrong please try again later.',
-          iconType: 'error',
-        });
+        errorAlert(true, 'Something went wrong please try again later.');
       }
       setLoader(false);
     }
   };
 
+  const errorAlert = (visible, message) => {
+    setAlertData({
+      visible: true,
+      message: 'Something went wrong please try again later.',
+      iconType: 'error',
+    });
+  };
+
   return (
-    <View style={globalStyle.cnt}>
-      <StatusBar
-        animated={true}
-        backgroundColor="#61dafb"
-        // barStyle={statusBarStyle}
-        // showHideTransition={statusBarTransition}
-        // hidden={hidden}
-      />
-      <AuthHeader />
-      <AuthCard
-        cardTitle={'Sign In'}
-        buttonTitle={'Next'}
-        btnLoader={loader}
-        onSubmitPress={() => login()}
-        renderSecondDesign={
-          <View style={{marginTop: '7%'}}>
-            {inputFields.map((item, index) => {
-              return (
-                <View style={styles.inputCnt} key={index}>
-                  <Text style={styles.title}>{item.title}</Text>
-                  {item.id === 1 ? (
-                    <>
-                      <PhoneInput
-                        ref={phoneInput}
-                        defaultValue={phoneInput?.current?.state?.number}
-                        // value={phone}
-                        defaultCode="IN"
-                        layout="second"
-                        textInputProps={{placeholderTextColor: '#6B737F'}}
-                        onChangeText={text => {
-                          setData({...data, [item.param]: text});
-                          (error.phoneNumber || error.password) &&
-                            setError({phoneNumber: '', password: ''});
-                        }}
-                        onChangeFormattedText={text => {
-                          // setFormattedValue(text);
-                          null;
-                        }}
-                        // withDarkTheme
-                        withShadow
-                        // autoFocus
-                        containerStyle={[
-                          styles.containerStyle,
-                          error[item.param] && {
-                            borderWidth: 1,
-                            borderColor: 'red',
-                          },
-                        ]}
-                        codeTextStyle={styles.codeTextStyle}
-                        textContainerStyle={styles.textContainerStyle}
-                        textInputStyle={styles.textInputStyle}
-                      />
-                      {error[item.param] && (
-                        <DescriptionText
-                          style={{color: 'red', marginTop: '1%'}}
-                          text={error[item.param]}
-                        />
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <View
-                        style={[
-                          styles.inputView,
-                          error[item.param] && {
-                            borderWidth: 0.5,
-                            borderColor: 'red',
-                          },
-                        ]}>
-                        <AppTextInput
-                          item={item}
-                          value={data[item.param]}
-                          style={styles.inputStyle}
-                          setValue={text => {
-                            setData({...data, [item.param]: text});
-                            (error.phoneNumber || error.password) &&
-                              setError({phoneNumber: '', password: ''});
-                          }}
-                        />
-                      </View>
-                      {error[item.param] && (
-                        <DescriptionText
-                          style={{color: 'red', marginTop: '1%'}}
-                          text={error[item.param]}
-                        />
-                      )}
-                    </>
-                  )}
-                </View>
-              );
-            })}
-            {loginOption.loginOption && loginOption.loginOption === 1 && (
-              <Text
-                style={styles.actionbtn}
-                onPress={() => navigation.navigate('ForgotPasswordScreen')}>
-                Forgot Password
-              </Text>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      automaticallyAdjustKeyboardInsets={true}
+      contentContainerStyle={{height: Dimensions.get('window').height}}>
+      <ImageBackground
+        style={[
+          globalStyle.cntWithTheme,
+          {justifyContent: 'center', alignItems: 'center'},
+        ]}
+        source={require('..//assets/images/gridBackground.png')}>
+        <Image
+          source={require('../assets/images/LoginPng.png')}
+          style={styles.mainImage}
+          resizeMode="contain"
+        />
+        <View style={styles.card}>
+          <Text style={styles.singInTxt}>Sign In</Text>
+          {inputFieldsClone.map((item, index) => {
+            return (
+              <View style={styles.inputCnt} key={index}>
+                <Text style={styles.title}>{item.title}</Text>
+                <AppTextInput
+                  item={item}
+                  value={data[item.param]}
+                  style={styles.inputStyle}
+                  countryCode={item.countryCode}
+                  showEyeIcon={item.showEyeIcon}
+                  onSelectCountry={e => {
+                    let arr = inputFieldsClone;
+                    arr[index].countryCode = `${e.callingCode}`;
+                    setInputFieldsClone([...arr]);
+                  }}
+                  renderIcon={item.renderIcon}
+                  onPressEye={() => {
+                    let arr = inputFieldsClone;
+                    arr[index].secureTextEntry = !arr[index].secureTextEntry;
+                    setInputFieldsClone([...arr]);
+                  }}
+                  setValue={text => {
+                    setData({...data, [item.param]: text});
+                    (error.phoneNumber || error.password) &&
+                      setError({phoneNumber: '', password: ''});
+                  }}
+                />
+                {error[item.param] && (
+                  <DescriptionText
+                    style={{color: 'red', marginTop: '1%'}}
+                    text={error[item.param]}
+                  />
+                )}
+              </View>
+            );
+          })}
+          {loginOption.loginOption && loginOption.loginOption === 1 && (
+            <TouchableOpacity
+              style={styles.forgotpassword}
+              onPress={() => navigation.navigate('ForgotPasswordScreen')}>
+              <Text style={styles.actionbtn}>Forgot Password?</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+        <TouchableOpacity activeOpacity={0.8} onPress={login}>
+          <LinearGradient
+            colors={['#FFA13C', '#FF7334']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            angle={210.29}
+            style={styles.loginButtonStyle}>
+            {loader ? (
+              <ActivityIndicator size={'small'} color={'white'} />
+            ) : (
+              <Image
+                source={require('../assets/images/NextAerrow.png')}
+                style={{width: 22.09, height: 24}}
+                resizeMode="contain"
+              />
             )}
-          </View>
-        }
-      />
-    </View>
+          </LinearGradient>
+        </TouchableOpacity>
+      </ImageBackground>
+    </ScrollView>
   );
 };
 
 export default LoginScreen;
 
 const styles = StyleSheet.create({
-  inputCnt: {marginVertical: 10},
+  inputCnt: {marginVertical: 5},
   title: {
     fontSize: 14,
-    fontFamily: 'Inter-Medium',
-    color: COLORS.inputTitleBlack,
-  },
-  inputView: {
-    // borderWidth: 1,
-    borderRadius: 5,
-    padding: Platform.OS === 'ios' ? 5 : 0,
-    marginTop: '3%',
-    borderColor: COLORS.inputBorder,
-    backgroundColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.6,
-    shadowRadius: 1.2,
-    elevation: 5,
-    margin: 2,
+    fontFamily: 'Axiforma-Medium',
+    color: COLORS.descFont,
+    marginBottom: '1%',
   },
   actionbtn: {
     alignSelf: 'flex-end',
     fontSize: 14,
-    fontFamily: 'Inter-Regular',
-    color: 'red',
+    fontFamily: 'Axiforma-Regular',
+    color: '#707070',
+    marginTop: '0%',
   },
   inputStyle: [
     {
-      fontFamily: 'Inter-Regular',
+      fontFamily: 'Axiforma-Regular',
       fontSize: 14,
-      color: '#6B737F',
+      color: COLORS.titleFont,
     },
-    Platform.OS === 'android' && {marginHorizontal: '2%'},
   ],
-  containerStyle: {
-    borderRadius: 10,
-    width: '99%',
-    marginRight: 10,
-    marginTop: '3%',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 1,
-    shadowRadius: 1.5,
-    elevation: 5,
-    marginLeft: 2,
+  mainImage: {
+    width: 345,
+    height: 345,
+    marginBottom: '5%',
+    marginTop: '6%',
+  },
+  card: {
+    padding: 20,
     backgroundColor: 'white',
-    height: Platform.OS === 'ios' ? 52 : 70,
+    width: '94%',
+    borderRadius: 20,
   },
-  codeTextStyle: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    color: '#6B737F',
+  singInTxt: {
+    fontFamily: 'Axiforma-SemiBold',
+    fontSize: 20,
+    color: COLORS.titleFont,
+    marginBottom: '7%',
   },
-  textContainerStyle: {
-    borderTopEndRadius: 10,
-    borderBottomEndRadius: 10,
-    backgroundColor: 'white',
-    borderLeftWidth: 1,
-    borderColor: '#D2D5DC',
+  forgotpassword: {
+    borderBottomWidth: 1,
+    alignSelf: 'flex-end',
+    borderColor: '#707070',
+    marginBottom: '13%',
   },
-  textInputStyle: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    color: '#6B737F',
-    marginRight: '10%',
+  loginButtonStyle: {
+    height: 80,
+    width: 80,
+    alignSelf: 'center',
+    marginTop: '-12%',
+    borderRadius: 1000,
+    borderWidth: 10,
+    borderColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

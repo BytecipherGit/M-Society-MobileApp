@@ -14,6 +14,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1819D4C829E6CB400002B746 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 1819D4C729E6CB400002B746 /* Fonts */; };
 		1864BF4129962FAB00D87F81 /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 1864BF4029962FAB00D87F81 /* splash.png */; };
 		6C71F793688C4816AC92EA2B /* Axiforma-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B842BA9F379E4944A74F4D10 /* Axiforma-Medium.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-Msociety-MsocietyTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Msociety-MsocietyTests.a */; };
@@ -46,6 +47,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Msociety/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Msociety/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Msociety/main.m; sourceTree = "<group>"; };
+		1819D4C729E6CB400002B746 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = "../node_modules/react-native-vector-icons/Fonts"; sourceTree = "<group>"; };
 		1864BF4029962FAB00D87F81 /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = splash.png; path = ../../../../Downloads/splash.png; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-Msociety-MsocietyTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Msociety-MsocietyTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-Msociety.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Msociety.debug.xcconfig"; path = "Target Support Files/Pods-Msociety/Pods-Msociety.debug.xcconfig"; sourceTree = "<group>"; };
@@ -53,13 +55,13 @@
 		583C47C949684114BA585185 /* Inter-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Medium.ttf"; path = "../src/assets/fonts/Inter-Medium.ttf"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-Msociety-MsocietyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Msociety-MsocietyTests.debug.xcconfig"; path = "Target Support Files/Pods-Msociety-MsocietyTests/Pods-Msociety-MsocietyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-Msociety.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Msociety.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		629E95E7F3F149A3B053BA6D /* Axiforma-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Axiforma-SemiBold.ttf"; path = "../src/assets/fonts/Axiforma-SemiBold.ttf"; sourceTree = "<group>"; };
+		629E95E7F3F149A3B053BA6D /* Axiforma-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Axiforma-SemiBold.ttf"; path = "../src/assets/fonts/Axiforma-SemiBold.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Msociety/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Msociety-MsocietyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Msociety-MsocietyTests.release.xcconfig"; path = "Target Support Files/Pods-Msociety-MsocietyTests/Pods-Msociety-MsocietyTests.release.xcconfig"; sourceTree = "<group>"; };
-		9F9C7F0A43F641688A559E90 /* Axiforma-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Axiforma-Bold.ttf"; path = "../src/assets/fonts/Axiforma-Bold.ttf"; sourceTree = "<group>"; };
-		A16EBE20E724499394E783D5 /* Axiforma-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Axiforma-Regular.ttf"; path = "../src/assets/fonts/Axiforma-Regular.ttf"; sourceTree = "<group>"; };
+		9F9C7F0A43F641688A559E90 /* Axiforma-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Axiforma-Bold.ttf"; path = "../src/assets/fonts/Axiforma-Bold.ttf"; sourceTree = "<group>"; };
+		A16EBE20E724499394E783D5 /* Axiforma-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Axiforma-Regular.ttf"; path = "../src/assets/fonts/Axiforma-Regular.ttf"; sourceTree = "<group>"; };
 		B15DB77F5BE34B5FB7362AF9 /* Inter-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Regular.ttf"; path = "../src/assets/fonts/Inter-Regular.ttf"; sourceTree = "<group>"; };
-		B842BA9F379E4944A74F4D10 /* Axiforma-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Axiforma-Medium.ttf"; path = "../src/assets/fonts/Axiforma-Medium.ttf"; sourceTree = "<group>"; };
+		B842BA9F379E4944A74F4D10 /* Axiforma-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Axiforma-Medium.ttf"; path = "../src/assets/fonts/Axiforma-Medium.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F476DD07959949F1A48751CB /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-SemiBold.ttf"; path = "../src/assets/fonts/Inter-SemiBold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -104,6 +106,7 @@
 		13B07FAE1A68108700A75B9A /* Msociety */ = {
 			isa = PBXGroup;
 			children = (
+				1819D4C729E6CB400002B746 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -280,6 +283,7 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				1864BF4129962FAB00D87F81 /* splash.png in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				1819D4C829E6CB400002B746 /* Fonts in Resources */,
 				E4E98B70E6744A0FADEB72AE /* Inter-Bold.ttf in Resources */,
 				090A9CBC6EE343168F8029BE /* Inter-Medium.ttf in Resources */,
 				BA8D012E94C6476E89444F14 /* Inter-Regular.ttf in Resources */,

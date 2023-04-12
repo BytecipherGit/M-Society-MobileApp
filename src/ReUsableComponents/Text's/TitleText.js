@@ -9,7 +9,7 @@ const TitleText = ({text, style, numberOfLines}) => {
         style={[
           {
             fontSize: 16,
-            fontFamily: 'Inter-Medium',
+            fontFamily: 'Axiforma-SemiBold',
             color: COLORS.inputtext,
           },
           style && style,

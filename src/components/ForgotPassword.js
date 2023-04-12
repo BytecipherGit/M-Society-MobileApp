@@ -6,6 +6,9 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  ScrollView,
+  Dimensions,
+  ImageBackground,
 } from 'react-native';
 import React, {useRef, useState} from 'react';
 import {AuthThemeImage, COLORS, globalStyle, shadow} from '../assets/theme';
@@ -18,11 +21,13 @@ import AuthHeader from '../ReUsableComponents/AuthHeader';
 import PhoneInput from 'react-native-phone-number-input';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../assets/GlobalStates/RecoilGloabalState';
+import AppButton from '../ReUsableComponents/AppButton';
 
 const ForgotPassword = ({navigation}) => {
   const [loader, setLoader] = useState(false);
   const [phone, setPhone] = useState('');
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
+  const [ForgotFieldClone, setForgotFieldClone] = useState(ForgotField);
   const phoneInput = useRef(null);
 
   const sentOtp = async () => {
@@ -37,24 +42,24 @@ const ForgotPassword = ({navigation}) => {
       url: API_URL + 'user/sendOtp',
       body: {
         phoneNumber: phone,
-        countryCode: '+' + phoneInput?.current?.state?.code,
+        countryCode: '+' + ForgotFieldClone[0].countryCode,
       },
     };
     setLoader(true);
     try {
       const Result = await PostData(payload);
-      console.log(payload);
+      console.log(payload, Result);
       if (Result && Result.data && Result.data.success) {
         let obj = {
           phone: phone,
           otp: Result.data.data.otp,
-          countryCode: '+' + phoneInput?.current?.state?.code,
+          countryCode: '+' + ForgotFieldClone[0].countryCode,
         };
         navigation.navigate('OtpScreen', {data: obj});
       } else {
         setAlertData({
           visible: true,
-          message: Result?.data?.message,
+          message: 'Enter valid phone number',
           iconType: 'error',
         });
       }
@@ -69,7 +74,130 @@ const ForgotPassword = ({navigation}) => {
   };
 
   return (
-    <View style={globalStyle.cnt}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      automaticallyAdjustKeyboardInsets={true}
+      contentContainerStyle={{
+        height: Dimensions.get('window').height,
+      }}>
+      <ImageBackground
+        style={[
+          globalStyle.cntWithTheme,
+          {justifyContent: 'center', alignItems: 'center'},
+        ]}
+        source={require('..//assets/images/gridBackground.png')}>
+        <Image
+          source={require('../assets/images/SecureImage.png')}
+          style={{
+            width: 290,
+            height: 345,
+            marginBottom: '5%',
+            marginTop: '6%',
+          }}
+          resizeMode="contain"
+        />
+        <View
+          style={{
+            padding: 20,
+            backgroundColor: 'white',
+            width: '94%',
+            borderRadius: 20,
+          }}>
+          <Text
+            style={{
+              fontFamily: 'Axiforma-SemiBold',
+              fontSize: 20,
+              color: COLORS.titleFont,
+              marginBottom: '3%',
+            }}>
+            Enter Your Mobile Number
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'Axiforma-Regular',
+              fontSize: 14,
+              color: COLORS.descFont,
+              marginBottom: '7%',
+              lineHeight: 22,
+            }}>
+            Please enter your register Mobile Number to get OTP to recover your
+            password.
+          </Text>
+
+          {ForgotFieldClone.map((item, index) => {
+            return (
+              <View key={index}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: 'Axiforma-Medium',
+                    color: COLORS.descFont,
+                    marginBottom: '1%',
+                  }}>
+                  {item?.title}
+                </Text>
+                <AppTextInput
+                  item={item}
+                  countryCode={item.countryCode}
+                  onSelectCountry={e => {
+                    let arr = ForgotField;
+                    arr[index].countryCode = `${e.callingCode}`;
+                    setForgotFieldClone([...arr]);
+                  }}
+                  renderIcon={() => item.renderIcon()}
+                  setValue={text => {
+                    setPhone(text);
+                  }}
+                  style={{
+                    fontFamily: 'Axiforma-Regular',
+                    fontSize: 14,
+                    color: COLORS.titleFont,
+                  }}
+                />
+              </View>
+            );
+          })}
+          <AppButton
+            buttonStyle={{
+              marginTop: '7%',
+            }}
+            buttonTitle={'Send OTP'}
+            btnLoader={loader}
+            onPress={sentOtp}
+          />
+        </View>
+      </ImageBackground>
+    </ScrollView>
+  );
+};
+
+export default ForgotPassword;
+
+const styles = StyleSheet.create({
+  inputCnt: {marginVertical: 14},
+  title: {
+    fontSize: 14,
+    fontFamily: 'Inter-Medium',
+    color: COLORS.inputTitleBlack,
+    marginTop: '3%',
+  },
+  inputView: {
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 5,
+    marginTop: '3%',
+    borderColor: COLORS.inputBorder,
+  },
+  actionbtn: {
+    alignSelf: 'flex-end',
+    fontSize: 14,
+    fontWeight: '400',
+    color: COLORS.bluetext,
+  },
+});
+
+{
+  /* <View style={globalStyle.cnt}>
       <AuthHeader />
       <AuthCard
         cardTitle={'Forgot Password'}
@@ -161,31 +289,5 @@ const ForgotPassword = ({navigation}) => {
           </>
         }
       />
-    </View>
-  );
-};
-
-export default ForgotPassword;
-
-const styles = StyleSheet.create({
-  inputCnt: {marginVertical: 14},
-  title: {
-    fontSize: 14,
-    fontFamily: 'Inter-Medium',
-    color: COLORS.inputTitleBlack,
-    marginTop: '3%',
-  },
-  inputView: {
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 5,
-    marginTop: '3%',
-    borderColor: COLORS.inputBorder,
-  },
-  actionbtn: {
-    alignSelf: 'flex-end',
-    fontSize: 14,
-    fontWeight: '400',
-    color: COLORS.bluetext,
-  },
-});
+    </View> */
+}

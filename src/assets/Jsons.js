@@ -1,3 +1,4 @@
+import {View} from 'react-native';
 import CardImage from '../assets/images/CardImage.svg';
 import Complaints from '../assets/images/Compaints.svg';
 import Contact from '../assets/images/Contact.svg';
@@ -14,6 +15,9 @@ import GuardProfileLocation from '../assets/images/guard/GuardProfileLocation.sv
 import GuardShiftIcon from '../assets/images/guard/GuardShiftIcon.svg';
 import GuardProfileIcon from '../assets/images/guard/GuardProfileIcon.svg';
 import TakePayment from '../assets/images/TakePayment.svg';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {COLORS} from './theme';
+import PhoneSvg from '../assets/images/PhoneSvg.svg';
 
 export const inputFields = [
   {
@@ -22,6 +26,16 @@ export const inputFields = [
     param: 'phoneNumber',
     keyboardType: 'number-pad',
     secureTextEntry: false,
+    showEyeIcon: false,
+    countryCode: '91',
+    renderIcon: () => (
+      <View
+        style={{
+          marginRight: 10,
+        }}>
+        <PhoneSvg />
+      </View>
+    ),
   },
   {
     id: 2,
@@ -29,6 +43,18 @@ export const inputFields = [
     param: 'password',
     keyboardType: 'default',
     secureTextEntry: true,
+    countryCode: null,
+    showEyeIcon: true,
+    renderIcon: () => (
+      <MaterialCommunityIcons
+        name="lock-outline"
+        style={{
+          fontSize: 20,
+          marginRight: 10,
+          color: COLORS.descFont,
+        }}
+      />
+    ),
   },
 ];
 
@@ -175,6 +201,15 @@ export const ForgotField = [
     param: 'phoneNumber',
     keyboardType: 'number-pad',
     secureTextEntry: false,
+    countryCode: '91',
+    renderIcon: () => (
+      <View
+        style={{
+          marginRight: 10,
+        }}>
+        <PhoneSvg />
+      </View>
+    ),
   },
 ];
 

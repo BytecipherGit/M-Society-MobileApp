@@ -158,7 +158,6 @@ const OnboardingScreen = ({navigation, route}) => {
             SKIP
           </Text>
         </TouchableOpacity>
-        {console.log(sliderRef)}
         <AppIntroSlider
           ref={sliderRef}
           renderItem={_renderItem}

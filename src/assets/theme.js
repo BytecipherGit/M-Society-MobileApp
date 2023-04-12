@@ -14,6 +14,8 @@ export const COLORS = {
   listCardBackTheme: '#E9F5F8',
   blackFont: '#262626',
   inputTitleBlack: '#111827',
+  inputBackground: '#F4F6F8',
+  inputPlaceholder: '#BABABA',
 };
 
 export const globalStyle = StyleSheet.create({
