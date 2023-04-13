@@ -11,6 +11,7 @@ import AuthHeader from '../ReUsableComponents/AuthHeader';
 import {CommonActions} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../assets/GlobalStates/RecoilGloabalState';
+import ForgotPasswordCard from '../ReUsableComponents/ForgotPasswordCard';
 
 const SetNewPassword = ({navigation, route}) => {
   const [data, setData] = useState({
@@ -24,7 +25,7 @@ const SetNewPassword = ({navigation, route}) => {
   const [loader, setLoader] = useState(false);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
 
-  const login = async () => {
+  const setNewPassword = async () => {
     if (!data.password) {
       return setError({...error, password: 'Please Enter Password First'});
     }
@@ -81,7 +82,53 @@ const SetNewPassword = ({navigation, route}) => {
   };
 
   return (
-    <View style={globalStyle.cnt}>
+    <ForgotPasswordCard
+      title={'Set New Password'}
+      desc={'Please enter your password.'}
+      buttonTitle={'Done'}
+      loader={loader}
+      onPressButton={setNewPassword}
+      renderUI={() => {
+        return ChangePassword.map((item, index) => {
+          return (
+            <View key={index}>
+              <Text style={styles.inputTitle}>{item?.title}</Text>
+              <View
+                style={[
+                  styles.inputView,
+                  error[item.param] && {borderColor: 'red'},
+                ]}>
+                <AppTextInput
+                  item={item}
+                  style={styles.inputText}
+                  value={data[item.param]}
+                  setValue={text => {
+                    setData({...data, [item.param]: text});
+                  }}
+                />
+              </View>
+            </View>
+          );
+        });
+      }}
+    />
+  );
+};
+
+export default SetNewPassword;
+
+const styles = StyleSheet.create({
+  inputTitle: {
+    fontSize: 14,
+    fontFamily: 'Axiforma-Medium',
+    color: COLORS.descFont,
+    marginVertical: '1%',
+    marginTop: '3%',
+  },
+});
+
+{
+  /* <View style={globalStyle.cnt}>
       <StatusBar animated={true} backgroundColor="#61dafb" />
       <AuthHeader />
       <AuthCard
@@ -120,52 +167,5 @@ const SetNewPassword = ({navigation, route}) => {
           </View>
         }
       />
-    </View>
-  );
-};
-
-export default SetNewPassword;
-
-const styles = StyleSheet.create({
-  inputCnt: {marginVertical: 10},
-  title: {
-    fontSize: 14,
-    fontFamily: 'Inter-Medium',
-    color: COLORS.inputTitleBlack,
-    marginTop: '1%',
-  },
-  inputView: {
-    // borderWidth: 1,
-    borderRadius: 5,
-    padding: 5,
-    marginTop: '3%',
-    borderColor: COLORS.inputBorder,
-    backgroundColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.6,
-    shadowRadius: 1.2,
-    elevation: 5,
-    margin: 2,
-  },
-  actionbtn: {
-    alignSelf: 'flex-end',
-    fontSize: 14,
-    fontWeight: '400',
-    color: 'red',
-  },
-  inputText: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    color: '#6B737F',
-  },
-  errormsg: {
-    marginTop: '5%',
-    alignSelf: 'center',
-    fontFamily: 'Inter-Bold',
-    color: 'red',
-  },
-});
+    </View> */
+}

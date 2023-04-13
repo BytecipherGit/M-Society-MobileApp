@@ -16,6 +16,7 @@ import IButton from '../assets/images/IButton.svg';
 import TitleText from "../ReUsableComponents/Text's/TitleText";
 import DescriptionText from "../ReUsableComponents/Text's/DescriptionText";
 import moment from 'moment';
+import BellIcon from '../assets/images/Caledor.svg';
 
 const NoticeDetailScreen = ({navigation, route}) => {
   console.log(route.params.item);
@@ -76,13 +77,94 @@ const NoticeDetailScreen = ({navigation, route}) => {
   };
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <AppHeader title={'Notice'} navigation={navigation} />
-        <FullCardBackground RenderUI={renderDetail} />
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: 'white'}} />
-    </Fragment>
+    <View style={[globalStyle.cnt]}>
+      <AppHeader title={'Notice'} navigation={navigation} />
+      <View
+        style={{
+          margin: 20,
+          padding: 15,
+          backgroundColor: 'white',
+          borderRadius: 10,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 1,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 1.84,
+
+          elevation: 5,
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <BellIcon />
+          <Text
+            style={{
+              fontFamily: 'Inter-Regular',
+              fontSize: 12,
+              color: '#ABACB0',
+            }}>
+            {moment(`${createdDate}`).format('DD/MMM/YYYY')}
+          </Text>
+        </View>
+        <Text
+          style={{
+            fontFamily: 'Axiforma-Medium',
+            fontSize: 18,
+            color: '#262626',
+            marginTop: '7%',
+            marginBottom: '2%',
+          }}>
+          {title}
+        </Text>
+        <Text
+          style={{
+            fontFamily: 'Inter-Regular',
+            fontSize: 16,
+            color: '#72767C',
+            marginBottom: '2%',
+            lineHeight: 25,
+          }}>
+          {description}
+        </Text>
+        <Text
+          style={{
+            fontFamily: 'Axiforma-Medium',
+            fontSize: 16,
+            color: '#9b9b9b',
+            marginTop: '2%',
+          }}>
+          {'Secretory'}
+        </Text>
+        <Text
+          style={{
+            fontFamily: 'Axiforma-Medium',
+            fontSize: 16,
+            color: '#262626',
+            marginTop: '1.5%',
+          }}>
+          {societyAdminId.name}
+        </Text>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('ImageViewScreen', {
+              img: attachedFile,
+            })
+          }
+          style={style.imgCnt}>
+          <Image
+            source={{
+              uri: attachedFile,
+            }}
+            style={{height: '100%', width: '100%', borderRadius: 8}}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
@@ -109,11 +191,13 @@ const style = StyleSheet.create({
     justifyContent: 'space-between',
   },
   imgCnt: {
-    height: 60,
-    width: 60,
+    height: 260,
+    width: '100%',
     backgroundColor: COLORS.themeColor,
-    marginLeft: 10,
+    // marginLeft: 10,
     marginTop: 20,
     borderRadius: 8,
+    borderWidth: 0.5,
+    borderColor: 'grey',
   },
 });

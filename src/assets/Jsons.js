@@ -85,14 +85,14 @@ export let ChangePasswordFields = [
 export const ChangePassword = [
   {
     id: 1,
-    title: 'Password',
+    title: 'New Password',
     param: 'password',
     keyboardType: 'default',
     secureTextEntry: true,
   },
   {
     id: 2,
-    title: 'Re-enter Password',
+    title: 'Confirm Password',
     param: 'rePassword',
     keyboardType: 'default',
     secureTextEntry: true,
@@ -248,13 +248,13 @@ export let SocietyOptions = [
     id: 8,
     title: 'HISTORY',
     navigationScreen: 'PaymentHistoryScreen',
-    image: <TakePayment />,
+    image: <Document />,
   },
   {
     id: 7,
     title: 'RESIDENT',
     navigationScreen: 'ResidentStack',
-    image: <TakePayment />,
+    image: <SocietyInfo />,
   },
 ];
 

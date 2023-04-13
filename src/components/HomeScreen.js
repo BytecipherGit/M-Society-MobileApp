@@ -11,6 +11,7 @@ import {
   Image,
   ActivityIndicator,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../assets/theme';
@@ -24,9 +25,13 @@ import {NOTICE_LIST_REQUEST, SET_USER_TYPE} from '../redux/Actions';
 import moment from 'moment';
 import {getAsyncValue} from '../assets/services';
 import TakePayment from '../assets/images/TakePayment.svg';
+import LinearGradient from 'react-native-linear-gradient';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
 
 const HomeScreen = ({navigation}) => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const state = useSelector(state => state.AuthReducer);
   const Notice = useSelector(state => state.NoticeReducer);
   const dispatch = useDispatch();
@@ -74,158 +79,265 @@ const HomeScreen = ({navigation}) => {
   };
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <StatusBar
-          backgroundColor={COLORS.themeColor}
-          barStyle={'light-content'}
-        />
-        {/* Header */}
-        <View style={styles.headerCnt}>
-          <TitleText
-            text={`Hello, ${state?.userDetail?.data?.name}`}
-            style={styles.headerTitle}
-          />
-          <View style={styles.actionBtnCnt}>
-            {[<User />].map((item, index) => {
-              return (
+    <LinearGradient
+      colors={['#AFDBFF80', '#F9F9F9', '#F9F9F9']}
+      style={{
+        flex: 1,
+      }}>
+      <SafeAreaView style={{flex: 1}}>
+        <View
+          style={{
+            height:
+              Notice.data.length > 0
+                ? Notice.data.length === 1
+                  ? Dimensions.get('window').height / 3
+                  : Dimensions.get('window').height / 2.4
+                : '5%',
+          }}>
+          <ImageBackground
+            source={require('../assets/images/gridBackground.png')}
+            style={{flex: 0.8, marginHorizontal: 15}}>
+            {/* Header */}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+              {/* User normal Detail */}
+              <View
+                style={{flexDirection: 'row', flex: 1, alignItems: 'center'}}>
                 <TouchableOpacity
-                  key={index}
-                  style={[styles.actionBtn]}
                   onPress={() => navigation.navigate('ProfileStackScreen')}>
-                  {item}
+                  <Image
+                    source={{
+                      uri: state?.userDetail?.data.profileImage
+                        ? state?.userDetail?.data.profileImage
+                        : 'https://static.vecteezy.com/system/resources/thumbnails/001/840/612/small_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg',
+                    }}
+                    style={{
+                      height: 40,
+                      width: 40,
+                      borderRadius: 1000,
+                      backgroundColor: 'grey',
+                    }}
+                  />
                 </TouchableOpacity>
-              );
-            })}
-          </View>
-        </View>
-
-        <View style={{flex: 1, backgroundColor: 'white'}}>
-          <FlatList
-            data={[1]}
-            // Society Notice Sections with horizontal Cards
-            ListHeaderComponent={() => (
-              <View style={styles.HeaderCnt}>
-                {Notice.data.length > 0 && (
-                  <>
-                    <View style={styles.HeaderDetailCnt}>
-                      <TitleText text={'Society Notice'} />
-                    </View>
-                    {/* Horizontal Card */}
-                    <FlatList
-                      horizontal
-                      data={Notice?.data}
-                      showsHorizontalScrollIndicator={false}
-                      style={styles.horizonalCnt}
-                      ListEmptyComponent={() => {
-                        return (
-                          <View style={styles.loaderView}>
-                            {Notice.loader ? (
-                              <ActivityIndicator color={COLORS.themeColor} />
-                            ) : (
-                              <Text
-                                style={{
-                                  fontFamily: 'Inter-Bold',
-                                  color: 'red',
-                                  letterSpacing: 0.5,
-                                }}>
-                                {Notice.error}
-                              </Text>
-                            )}
-                          </View>
-                        );
-                      }}
-                      renderItem={({item, index}) => (
-                        <View style={styles.horizonalCardCnt}>
-                          <View
+                <View style={{marginHorizontal: '3%'}}>
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Regular',
+                      color: '#808080',
+                      fontSize: 14,
+                      marginBottom: '3%',
+                    }}>
+                    Hello
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Regular',
+                      fontSize: 20,
+                      color: '#656565',
+                    }}>
+                    {state?.userDetail?.data.name}
+                  </Text>
+                </View>
+              </View>
+              {/* notification icon */}
+              <TouchableOpacity style={{marginRight: '4%'}}>
+                <FontAwesome
+                  name="bell-o"
+                  style={{
+                    fontSize: 25,
+                  }}
+                />
+                <View
+                  style={{
+                    position: 'absolute',
+                    alignSelf: 'flex-end',
+                    backgroundColor: '#F53232',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 1000,
+                    marginTop: '-15%',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Bold',
+                      color: 'white',
+                      margin: 3,
+                      marginHorizontal: '20%',
+                      fontSize: 10,
+                    }}>
+                    1
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            {/* Notice lists in card */}
+            {Notice.data.length > 0 && (
+              <View style={{marginVertical: 25}}>
+                <Text
+                  style={{
+                    fontFamily: 'Axiforma-Bold',
+                    fontSize: 18,
+                    color: COLORS.titleFont,
+                  }}>
+                  Society Notice
+                </Text>
+                <Carousel
+                  layout={'default'}
+                  ref={ref => null}
+                  data={Notice?.data}
+                  sliderWidth={Dimensions.get('window').width / 1.02}
+                  itemWidth={Dimensions.get('window').width / 1}
+                  renderItem={({item, index}) => {
+                    return (
+                      <View
+                        style={{
+                          width: Dimensions.get('window').width / 1.07,
+                          // height: 220,
+                          backgroundColor: 'white',
+                          marginTop: 15,
+                          borderRadius: 20,
+                          padding: 20,
+                        }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                          }}>
+                          <Calendor />
+                          <Text
                             style={{
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
+                              fontFamily: 'Axiforma-Regular',
+                              fontSize: 12,
+                              color: '#ABACB0',
                             }}>
-                            <TitleText text={item.title} numberOfLines={1} />
-                            <View style={styles.cardCreateDetailCnt}>
-                              <Calendor style={{marginRight: '1.5%'}} />
-                              <Text
-                                style={[
-                                  styles.DetailViewMoreButton,
-                                  {fontSize: 12, marginLeft: 3},
-                                ]}>
-                                {moment(`${item.createdDate}`).format(
-                                  'DD/MMM/YYYY',
-                                )}
-                              </Text>
-                            </View>
-                          </View>
-                          <TouchableOpacity
-                            activeOpacity={1}
-                            style={{
-                              flex: 1,
-                            }}
-                            onPress={() =>
-                              navigation.navigate('NoticeScreen', {
-                                screen: 'NoticeDetailScreen',
-                                params: {item: item},
-                              })
-                            }>
-                            <Text
-                              style={styles.DetailViewMoreButton}
-                              numberOfLines={4}>
-                              {item.description}
-                              <Text
-                                style={{
-                                  color: COLORS.buttonColor,
-                                }}>
-                                {' '}
-                                Read more
-                              </Text>
-                            </Text>
-                          </TouchableOpacity>
+                            {moment(`${item.createdDate}`).format(
+                              'DD/MMM/YYYY',
+                            )}
+                          </Text>
                         </View>
-                      )}
-                      extraData={({item, index}) => index}
-                    />
-                  </>
-                )}
+                        <View>
+                          <Text
+                            style={{
+                              fontFamily: 'Axiforma-Medium',
+                              fontSize: 18,
+                              color: '#262626',
+                              marginVertical: '3%',
+                              marginTop: '7%',
+                            }}>
+                            {item.title}
+                          </Text>
+                          <Text
+                            numberOfLines={3}
+                            styl={{
+                              fontFamily: 'Axiforma-Regular',
+                              fontSize: 16,
+                              color: '#72767C',
+                              lineHeight: 25,
+                            }}>
+                            {item.description}
+                          </Text>
+                        </View>
+                      </View>
+                    );
+                  }}
+                  onSnapToItem={index => setActiveIndex(index)}
+                />
+                <Pagination
+                  dotsLength={Notice?.data?.length}
+                  activeDotIndex={activeIndex}
+                  containerStyle={
+                    {
+                      // backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                    }
+                  }
+                  dotStyle={{
+                    width: 12,
+                    height: 10,
+                    borderRadius: 1000,
+                    marginHorizontal: -5,
+                    backgroundColor: '#A9A9A9',
+                  }}
+                  activeDotStyle={
+                    {
+                      // Define styles for inactive dots here
+                    }
+                  }
+                  inactiveDotOpacity={0.8}
+                  inactiveDotScale={0.5}
+                />
               </View>
             )}
-            renderItem={() => (
-              <>
-                <View style={styles.HeaderCnt}>
-                  <View style={styles.HeaderDetailCnt}>
-                    <TitleText text={'Society Services'} />
+          </ImageBackground>
+        </View>
+        <View style={{marginHorizontal: 15, marginTop: '10%'}}>
+          <Text
+            style={{
+              fontFamily: 'Axiforma-Bold',
+              fontSize: 20,
+            }}>
+            Society Services
+          </Text>
+          <FlatList
+            data={SocietyOptions}
+            showsVerticalScrollIndicator={false}
+            numColumns={2}
+            renderItem={({item, index}) => (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginVertical: 10,
+                  // backgroundColor: 'red',
+                  width: '52%',
+                }}>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={() => navigation.navigate(item.navigationScreen)}
+                  style={{
+                    height: 110,
+                    width: 170,
+                    backgroundColor: 'white',
+                    borderRadius: 10,
+                    shadowOffset: {width: 0, height: 0},
+                    shadowOpacity: 0.12,
+                    shadowRadius: 2,
+                    elevation: 3,
+                    marginLeft: '1%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      height: 60,
+                      width: 60,
+                      borderRadius: 1000,
+                      backgroundColor: '#F7F7F7',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    {item.image}
                   </View>
-                </View>
-                <FlatList
-                  data={SocietyOptions}
-                  numColumns={2}
-                  style={{alignSelf: 'center', marginTop: '3%'}}
-                  renderItem={({item, index}) => (
-                    <TouchableOpacity
-                      style={styles.societyDetailButtons}
-                      onPress={() =>
-                        navigation.navigate(item.navigationScreen)
-                      }>
-                      {item.image}
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontWeight: '500',
-                          color: '#111827',
-                        }}>
-                        {item.title}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                  extraData={({item, index}) => index}
-                />
-              </>
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Medium',
+                      fontSize: 14,
+                      color: '#707070',
+                      marginTop: '10%',
+                    }}>
+                    {item.title}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             )}
-            extraData={({item, index}) => index}
+            ListFooterComponent={() => <View style={{height: 400}} />}
           />
         </View>
       </SafeAreaView>
-      <SafeAreaView style={{height: 0, backgroundColor: 'white'}} />
-    </Fragment>
+    </LinearGradient>
   );
 };
 

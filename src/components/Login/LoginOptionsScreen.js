@@ -48,6 +48,7 @@ const LoginOptionsScreen = ({navigation, route}) => {
         style={{
           height: 250,
           width: '100%',
+          marginBottom: '15%',
         }}
         resizeMode="contain"
       />

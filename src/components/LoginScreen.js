@@ -72,6 +72,9 @@ const LoginScreen = ({navigation}) => {
 
       try {
         const Result = await PostData(payload);
+        console.log(payload);
+        console.log(Result);
+        console.log(Result.data);
         if (Result && Result.data.success) {
           StoreData('user', JSON.stringify(Result.data));
           dispatch({type: USER_DATA, payload: Result.data});
@@ -86,7 +89,7 @@ const LoginScreen = ({navigation}) => {
             }),
           );
         } else {
-          if (Result.data.message === 'Your OTP Is Not Verified!') {
+          if (Result.data.message === 'Your OTP Is Not Verified') {
             errorAlert(
               true,
               `${
@@ -108,8 +111,8 @@ const LoginScreen = ({navigation}) => {
 
   const errorAlert = (visible, message) => {
     setAlertData({
-      visible: true,
-      message: 'Something went wrong please try again later.',
+      visible: visible,
+      message: message,
       iconType: 'error',
     });
   };

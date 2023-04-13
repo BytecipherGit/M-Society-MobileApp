@@ -25,54 +25,80 @@ const Notices = ({navigation}) => {
   }, []);
 
   return (
-    <Fragment>
-      <SafeAreaView style={[globalStyle.cntWithTheme]}>
-        {/* Header */}
-        <AppHeader title={'Notice'} navigation={navigation} />
+    <View style={globalStyle.cnt}>
+      <AppHeader navigation={navigation} title={'Notice'} />
+      <FlatList
+        data={Notice?.data}
+        ListEmptyComponent={() => (
+          <AppLoaderSrceen loader={Notice.loader} error={Notice.error} />
+        )}
+        renderItem={({item, index}) => {
+          return (
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() =>
+                navigation.navigate('NoticeScreen', {
+                  screen: 'NoticeDetailScreen',
+                  params: {item: item},
+                })
+              }
+              style={{
+                paddingVertical: 10,
+                paddingHorizontal: 15,
+                backgroundColor: 'white',
+                width: '90%',
+                alignSelf: 'center',
+                marginVertical: '5%',
+                borderRadius: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 0,
+                  height: 1,
+                },
+                shadowOpacity: 0.1,
+                shadowRadius: 1.84,
 
-        {/* Detail Data View */}
-        <FullCardBackground
-          RenderUI={() => (
-            <FlatList
-              data={Notice?.data}
-              ListEmptyComponent={() => (
-                <AppLoaderSrceen loader={Notice.loader} error={Notice.error} />
-              )}
-              renderItem={({item, index}) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('NoticeScreen', {
-                        screen: 'NoticeDetailScreen',
-                        params: {item: item},
-                      })
-                    }
-                    style={style.cardCnt}>
-                    <View style={style.bellIcon}>
-                      <BellIcon />
-                    </View>
-                    <View style={style.detailCnt}>
-                      <Text style={style.cardTitle}>{item.title}</Text>
-                      <Text style={style.cardDescription} numberOfLines={2}>
-                        {item.description}
-                      </Text>
-                      <View style={style.createdCnt}>
-                        <Calendor style={{marginRight: '1.5%'}} />
-                        <Text style={[style.dateTxt, {fontSize: 12}]}>
-                          {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
-                        </Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                );
-              }}
-              extraData={({item, index}) => index}
-            />
-          )}
-        />
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: 'white'}} />
-    </Fragment>
+                elevation: 5,
+              }}>
+              <Calendor />
+              <View style={{marginHorizontal: '5%'}}>
+                <Text
+                  style={{
+                    fontFamily: 'Axiforma-Medium',
+                    fontSize: 18,
+                    color: '#262626',
+                    marginBottom: '3%',
+                  }}>
+                  {item.title}
+                </Text>
+                <Text
+                  numberOfLines={2}
+                  style={{
+                    fontFamily: 'Inter-Regular',
+                    fontSize: 16,
+                    color: '#72767c',
+                    lineHeight: 25,
+                    marginBottom: '1.5%',
+                  }}>
+                  {item.description}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: 'Inter-Regular',
+                    fontSize: 12,
+                    color: '#ABACB0',
+                  }}>
+                  {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
+        extraData={({item, index}) => index}
+      />
+    </View>
   );
 };
 

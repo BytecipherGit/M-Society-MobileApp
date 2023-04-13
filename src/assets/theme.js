@@ -21,7 +21,7 @@ export const COLORS = {
 export const globalStyle = StyleSheet.create({
   cnt: {
     flex: 1,
-    backgroundColor: COLORS.themeBackground,
+    backgroundColor: '#F9F9F9',
   },
   cntWithTheme: {
     flex: 1,

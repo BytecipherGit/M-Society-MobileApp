@@ -14,6 +14,7 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {API_URL, PostData} from '../assets/services';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../assets/GlobalStates/RecoilGloabalState';
+import ForgotPasswordCard from '../ReUsableComponents/ForgotPasswordCard';
 
 const OtpScreen = ({navigation, route}) => {
   const [loader, setLoader] = useState(false);
@@ -61,7 +62,80 @@ const OtpScreen = ({navigation, route}) => {
   };
 
   return (
-    <View style={globalStyle.cnt}>
+    <ForgotPasswordCard
+      title={'Enter OTP'}
+      buttonTitle={'Verify OTP'}
+      onPressButton={verifyOtp}
+      renderDesc={() => (
+        <Text
+          style={{
+            fontFamily: 'Axiforma-Regular',
+            fontSize: 14,
+            color: COLORS.descFont,
+            marginBottom: '7%',
+            lineHeight: 22,
+          }}>
+          Please enter OTP which has been sent to your registered mobile{' '}
+          <Text
+            style={{
+              color: 'black',
+            }}>
+            {route?.params?.data?.phone}
+          </Text>
+        </Text>
+      )}
+      renderUI={() => {
+        return (
+          <View>
+            <TouchableOpacity style={{}} onPress={() => resendOtp()}>
+              <Text style={styles.inputTitle}>{'Resend OTP?'}</Text>
+            </TouchableOpacity>
+            <OTPInputView
+              style={{
+                width: '100%',
+                height: 60,
+                marginTop: '2%',
+              }}
+              pinCount={4}
+              code={OTP}
+              onCodeChanged={code => setOTP(code)}
+              autoFocusOnLoad
+              codeInputFieldStyle={{
+                backgroundColor: COLORS.inputBackground,
+                borderRadius: 5,
+                height: 50,
+                width: 50,
+                fontFamily: 'Axiforma-Regular',
+                color: COLORS.titleFont,
+              }}
+              codeInputHighlightStyle={{
+                borderWidth: 1,
+                borderColor: COLORS.themeColor,
+              }}
+              onCodeFilled={code => {
+                console.log(`Code is ${code}, you are good to go!`);
+              }}
+            />
+          </View>
+        );
+      }}
+    />
+  );
+};
+
+export default OtpScreen;
+
+const styles = StyleSheet.create({
+  inputTitle: {
+    fontSize: 14,
+    fontFamily: 'Axiforma-Medium',
+    color: 'black',
+    marginBottom: '1%',
+  },
+});
+
+{
+  /* <View style={globalStyle.cnt}>
       <AuthHeader />
       <AuthCard
         cardTitle={'Enter OTP'}
@@ -118,35 +192,5 @@ const OtpScreen = ({navigation, route}) => {
           </>
         }
       />
-    </View>
-  );
-};
-
-export default OtpScreen;
-
-const styles = StyleSheet.create({
-  inputCnt: {marginVertical: 14},
-  title: {
-    fontSize: 14,
-    fontFamily: 'Inter-Medium',
-    color: COLORS.titleFont,
-    marginTop: '6%',
-  },
-  inputView: {
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 5,
-    marginTop: '3%',
-    borderColor: COLORS.inputBorder,
-  },
-  actionbtn: {
-    alignSelf: 'flex-end',
-    fontSize: 14,
-    fontWeight: '400',
-    color: COLORS.bluetext,
-  },
-  borderStyleBase: {
-    width: 30,
-    height: 45,
-  },
-});
+    </View> */
+}

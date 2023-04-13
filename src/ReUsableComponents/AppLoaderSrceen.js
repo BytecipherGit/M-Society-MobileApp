@@ -13,7 +13,7 @@ const AppLoaderSrceen = ({loader, error}) => {
       }}>
       {/*  */}
       {loader ? (
-        <ActivityIndicator color={COLORS.themeColor} />
+        <ActivityIndicator color={COLORS.primary} />
       ) : (
         <Text
           style={{fontFamily: 'Inter-Bold', color: 'red', letterSpacing: 0.5}}>
