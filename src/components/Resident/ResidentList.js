@@ -24,6 +24,7 @@ import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import {API_URL, DeleteData, PutData} from '../../assets/services';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ResidentList = ({navigation}) => {
   const dispatch = useDispatch();
@@ -104,26 +105,18 @@ const ResidentList = ({navigation}) => {
       <TouchableOpacity style={style.card} activeOpacity={1}>
         <View style={style.userNameCnt}>
           <TitleText text={`${name} (${userType})`} />
-          {isAdmin && (
-            <ToggleSwitch
-              isOn={status === 'active' ? true : false}
-              onColor={COLORS.buttonColor}
-              offColor={COLORS.inputBorder}
-              size="medium"
-              onToggle={isOn => changeUserStatus(item, index)}
-            />
-          )}
-        </View>
-        <View style={style.detailCnt}>
-          <DescriptionText
-            text={`House:${houseNumber}`}
-            style={{color: COLORS.blackFont, marginBottom: '1%'}}
-          />
-          <TitleText
-            text={`${countryCode} ${phoneNumber}`}
-            style={{color: COLORS.blackFont, fontSize: 14}}
+          <ToggleSwitch
+            isOn={status === 'active' ? true : false}
+            onColor={'#FF7334'}
+            offColor={COLORS.inputBorder}
+            size="medium"
+            onToggle={isOn => isAdmin && changeUserStatus(item, index)}
           />
         </View>
+        <DescriptionText
+          text={`House: ${houseNumber}`}
+          style={{color: COLORS.blackFont, marginBottom: '1%'}}
+        />
         {isAdmin && (
           <View style={style.actionButtonsCnt}>
             {['EDIT', 'DELETE'].map((title, i) => {
@@ -133,10 +126,24 @@ const ResidentList = ({navigation}) => {
                   style={style.button}
                   activeOpacity={0.7}
                   onPress={() => (i === 0 ? null : deleteUser(item, index))}>
-                  <DescriptionText
-                    text={title}
-                    style={{color: 'white', fontWeight: '700'}}
-                  />
+                  <LinearGradient
+                    colors={['#FF7334', '#FFA13C']}
+                    start={{x: 0.0, y: 0.0}}
+                    end={{x: 1.0, y: 1.0}}
+                    locations={[0.0, 1.0]}
+                    style={{
+                      flex: 0.48,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: COLORS.buttonColor,
+                      padding: 10,
+                      borderRadius: 4,
+                    }}>
+                    <DescriptionText
+                      text={title}
+                      style={{color: 'white', fontWeight: '700'}}
+                    />
+                  </LinearGradient>
                 </TouchableOpacity>
               );
             })}
@@ -147,43 +154,32 @@ const ResidentList = ({navigation}) => {
   };
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <AppHeader navigation={navigation} title="Residents" />
-        <FullCardBackground
-          styles={{backgroundColor: COLORS.themeBackground}}
-          RenderUI={() => (
-            <View style={style.mainCnt}>
-              <View style={{flex: 1}}>
-                <FlatList
-                  data={data}
-                  showsVerticalScrollIndicator={false}
-                  ListEmptyComponent={() => (
-                    <AppLoaderSrceen
-                      loader={state.loader}
-                      error={state.error}
-                    />
-                  )}
-                  renderItem={({item, index}) => {
-                    if (isAdmin && user._id !== item._id) {
-                      return renderUI(item, index);
-                    } else if (!isAdmin && item?.status === 'active') {
-                      return renderUI(item, index);
-                    }
-                  }}
-                />
-              </View>
-              {isAdmin && (
-                <AppRoundAddActionButton
-                  onPress={() => navigation.navigate('AddNewResident')}
-                />
-              )}
-            </View>
-          )}
-        />
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: COLORS.themeBackground}} />
-    </Fragment>
+    <View style={globalStyle.cnt}>
+      <AppHeader navigation={navigation} title="Residents" />
+      <View style={style.mainCnt}>
+        <View style={{flex: 1}}>
+          <FlatList
+            data={data}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={() => (
+              <AppLoaderSrceen loader={state.loader} error={state.error} />
+            )}
+            renderItem={({item, index}) => {
+              if (isAdmin && user._id !== item._id) {
+                return renderUI(item, index);
+              } else if (!isAdmin && item?.status === 'active') {
+                return renderUI(item, index);
+              }
+            }}
+          />
+        </View>
+        {isAdmin && (
+          <AppRoundAddActionButton
+            onPress={() => navigation.navigate('AddNewResident')}
+          />
+        )}
+      </View>
+    </View>
   );
 };
 
@@ -216,10 +212,5 @@ const style = StyleSheet.create({
   },
   button: {
     flex: 0.48,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.buttonColor,
-    padding: 10,
-    borderRadius: 4,
   },
 });

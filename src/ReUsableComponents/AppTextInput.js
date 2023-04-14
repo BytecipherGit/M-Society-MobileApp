@@ -16,6 +16,7 @@ const AppTextInput = ({
   countryCode,
   cntStyle,
   countryCodeStyles,
+  multiline = false,
   onSelectCountry = () => null,
 }) => {
   const [countryPickerVisible, setCountryPickerVisible] = useState(false);
@@ -31,6 +32,7 @@ const AppTextInput = ({
           backgroundColor: COLORS.inputBackground,
           borderRadius: 10,
           marginVertical: 2,
+          height: 50,
         },
         cntStyle,
       ]}>
@@ -61,20 +63,22 @@ const AppTextInput = ({
         />
       )}
       <TextInput
-        placeholder={`Enter ${item.title}`}
+        placeholder={`${item.title}`}
         editable={stopEditable ? false : true}
         keyboardType={item.keyboardType}
         secureTextEntry={item.secureTextEntry}
         placeholderTextColor={COLORS.inputPlaceholder}
         defaultValue={value}
+        multiline={multiline}
         onChangeText={setValue}
         style={[
           {
-            marginVertical: 10,
+            // marginVertical: 10,
             fontSize: 14,
             color: COLORS.titleFont,
             flex: 1,
             fontFamily: 'Axiforma-Regular',
+            // height: 50,
           },
           style && style,
         ]}

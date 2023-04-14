@@ -47,19 +47,17 @@ const CompaintList = ({navigation}) => {
   };
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <AppHeader navigation={navigation} title="Complaint" />
-        <FullCardBackground
-          RenderUI={() => (
-            <View style={{flex: 1, padding: 16, justifyContent: 'flex-end'}}>
-              <View style={{flex: 1}}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  {/* {['My', 'Residents'].map((item, index) => {
+    <View style={globalStyle.cnt}>
+      <AppHeader navigation={navigation} title={'Complaint'} />
+
+      <View style={{flex: 1, justifyContent: 'flex-end'}}>
+        <View style={{flex: 1}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            {/* {['My', 'Residents'].map((item, index) => {
                     return (
                       <TouchableOpacity
                         key={index}
@@ -84,70 +82,77 @@ const CompaintList = ({navigation}) => {
                       </TouchableOpacity>
                     );
                   })} */}
-                </View>
-                <FlatList
-                  data={
-                    defaultComplaint === 'My'
-                      ? comlaintList?.data?.my
-                      : comlaintList?.data?.other
-                  }
-                  showsVerticalScrollIndicator={false}
-                  ListEmptyComponent={() => (
-                    <AppLoaderSrceen
-                      loader={comlaintList.loader}
-                      error={'No Complaint Found'}
-                    />
-                  )}
-                  renderItem={({item, index}) => (
-                    <>
-                      <TouchableOpacity
-                        style={style.cardCnt}
-                        onPress={() =>
-                          navigation.navigate(
-                            defaultComplaint === 'My'
-                              ? 'ComplaintChatScreen'
-                              : 'ComplainDetailScreen',
-                            {
-                              data: item,
-                            },
-                          )
-                        }>
-                        <View style={style.titleCnt}>
-                          <View style={style.iconCnt}>
-                            <DocumentIcon />
-                          </View>
-                          <TitleText
-                            text={item.complainTitle}
-                            style={{color: 'black', marginLeft: '6%'}}
-                            numberOfLines={1}
-                          />
-                        </View>
-                        <DescriptionText
-                          text={item?.description}
-                          style={style.descText}
-                        />
-                      </TouchableOpacity>
-                      {/* 16 Nov,10:22 am */}
-                      <DescriptionText
-                        text={moment(`${item.createdDate}`).format(
-                          'DD MMM,hh:mm a',
-                        )}
-                        style={{marginTop: '3%', alignSelf: 'flex-end'}}
-                      />
-                    </>
-                  )}
-                />
-              </View>
-              <AppRoundAddActionButton
-                onPress={() => navigation.navigate('AddComplain')}
+          </View>
+          <FlatList
+            data={
+              defaultComplaint === 'My'
+                ? comlaintList?.data?.my
+                : comlaintList?.data?.other
+            }
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={() => (
+              <AppLoaderSrceen
+                loader={comlaintList.loader}
+                error={'No Complaint Found'}
               />
-            </View>
-          )}
-          styles={{backgroundColor: COLORS.themeBackground}}
+            )}
+            renderItem={({item, index}) => (
+              <>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate(
+                      defaultComplaint === 'My'
+                        ? 'ComplaintChatScreen'
+                        : 'ComplainDetailScreen',
+                      {
+                        data: item,
+                      },
+                    )
+                  }
+                  style={{
+                    margin: 20,
+                    padding: 15,
+                    backgroundColor: 'white',
+                    borderRadius: 10,
+                    ...shadow,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Medium',
+                      fontSize: 18,
+                      color: COLORS.blackFont,
+                      marginBottom: '2%',
+                    }}>
+                    {item.complainTitle}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Light',
+                      fontSize: 14,
+                      color: COLORS.greyFont,
+                      lineHeight: 23,
+                    }}>
+                    {item.description}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Light',
+                      fontSize: 12,
+                      color: '#ABACB0',
+                      marginTop: '2%',
+                    }}>
+                    {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
+          />
+        </View>
+        <AppRoundAddActionButton
+          onPress={() => navigation.navigate('AddComplain')}
         />
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: COLORS.themeBackground}} />
-    </Fragment>
+      </View>
+    </View>
   );
 };
 

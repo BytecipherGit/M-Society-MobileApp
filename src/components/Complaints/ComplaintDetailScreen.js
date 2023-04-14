@@ -17,97 +17,102 @@ import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import AppButton from '../../ReUsableComponents/AppButton';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
+import moment from 'moment';
 
 const ComplaintDetailScreen = ({navigation, route}) => {
-  const {attachedFile, complainTitle, applicantName, description} =
-    route?.params?.data;
-
-  // const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
-  // const checkAlert = () => {
-  //   setAlertData({visible: true, message: 'Done', iconType: 'error'});
-  // };
+  const {
+    attachedFile,
+    complainTitle,
+    applicantName,
+    description,
+    createdDate,
+    attachedImage,
+  } = route?.params?.data;
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <AppHeader navigation={navigation} title={complainTitle} />
-        <FullCardBackground
-          styles={{backgroundColor: COLORS.themeBackground}}
-          RenderUI={() => (
-            <>
-              <View style={{flex: 1}}>
-                <View style={style.card}>
-                  <FlatList
-                    data={[1]}
-                    nestedScrollEnabled
-                    showsVerticalScrollIndicator={false}
-                    renderItem={() => (
-                      <>
-                        <View style={{flexDirection: 'row'}}>
-                          <View style={style.whiteCard}>
-                            <DocumentIcon height={20} width={15} />
-                          </View>
-                          <View style={{justifyContent: 'center'}}>
-                            <TitleText
-                              style={{color: COLORS.themeColor}}
-                              text={complainTitle}
-                            />
-                            <DescriptionText
-                              style={{color: COLORS.titleFont}}
-                              text={applicantName}
-                            />
-                          </View>
-                        </View>
-                        <DescriptionText
-                          style={style.desc}
-                          text={description}
-                        />
-                        <FlatList
-                          data={[1]}
-                          horizontal
-                          showsHorizontalScrollIndicator={false}
-                          style={{alignSelf: 'flex-end'}}
-                          renderItem={({item, index}) => (
-                            <View style={style.images}>
-                              <TouchableOpacity
-                                onPress={() =>
-                                  navigation.navigate('ImageViewScreen', {
-                                    img: attachedFile,
-                                  })
-                                }>
-                                <Image
-                                  source={{
-                                    uri: attachedFile,
-                                  }}
-                                  style={{
-                                    height: '100%',
-                                    width: '100%',
-                                    borderRadius: 8,
-                                  }}
-                                />
-                              </TouchableOpacity>
-                            </View>
-                          )}
-                          extraData={({item, index}) => index}
-                        />
-                      </>
-                    )}
-                  />
-                </View>
-              </View>
-              <View style={{padding: 16}}>
-                <AppButton
-                  buttonStyle={{padding: 16}}
-                  buttonTitle="Ok"
-                  onPress={() => navigation.goBack()}
-                  // onPress={checkAlert}
+    <View style={globalStyle.cnt}>
+      <AppHeader navigation={navigation} title={complainTitle} />
+      <FlatList
+        data={[1]}
+        renderItem={() => {
+          return (
+            <View
+              style={{
+                margin: 20,
+                padding: 15,
+                backgroundColor: 'white',
+                borderRadius: 10,
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 0,
+                  height: 1,
+                },
+                shadowOpacity: 0.1,
+                shadowRadius: 1.84,
+                elevation: 5,
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Inter-Regular',
+                  fontSize: 12,
+                  color: '#ABACB0',
+                  alignSelf: 'flex-end',
+                }}>
+                {moment(`${createdDate}`).format('DD/MMM/YYYY')}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: 'Axiforma-Medium',
+                  fontSize: 18,
+                  color: '#262626',
+                  marginTop: '7%',
+                  marginBottom: '2%',
+                }}>
+                {complainTitle}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: 'Inter-Regular',
+                  fontSize: 16,
+                  color: '#72767C',
+                  marginBottom: '2%',
+                  lineHeight: 25,
+                }}>
+                {description}
+              </Text>
+
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('ImageViewScreen', {
+                    img: attachedFile,
+                  })
+                }
+                style={{
+                  height: 260,
+                  width: '100%',
+                  backgroundColor: COLORS.themeColor,
+                  // marginLeft: 10,
+                  marginTop: 20,
+                  borderRadius: 8,
+                  borderWidth: 0.5,
+                  borderColor: 'grey',
+                }}>
+                <Image
+                  source={{
+                    uri: attachedImage,
+                  }}
+                  style={{
+                    height: '100%',
+                    width: '100%',
+                    borderRadius: 8,
+                  }}
+                  resizeMode="contain"
                 />
-              </View>
-            </>
-          )}
-        />
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: COLORS.themeBackground}} />
-    </Fragment>
+              </TouchableOpacity>
+            </View>
+          );
+        }}
+      />
+    </View>
   );
 };
 

@@ -13,6 +13,7 @@ export const COLORS = {
   themeBackground: '#F6FDFF',
   listCardBackTheme: '#E9F5F8',
   blackFont: '#262626',
+  greyFont: '#72767C',
   inputTitleBlack: '#111827',
   inputBackground: '#F4F6F8',
   inputPlaceholder: '#BABABA',
@@ -35,8 +36,9 @@ export const shadow = {
     width: 0,
     height: 1,
   },
-  shadowOpacity: 0.2,
-  shadowRadius: 5,
+  shadowOpacity: 0.1,
+  shadowRadius: 1.84,
+
   elevation: 5,
 };
 

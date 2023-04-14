@@ -33,7 +33,7 @@ const App = () => {
   return (
     <RecoilRoot>
       <Provider store={store}>
-        <StatusBar animated={true} backgroundColor="#61dafb" />
+        <StatusBar animated={true} backgroundColor={'#CAE7FF'} hidden={true} />
         <NavigationContainer>
           <AppAlert />
           <ReactNativeModal isVisible={isInternet ? false : true}>

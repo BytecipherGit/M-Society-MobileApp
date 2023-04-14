@@ -24,6 +24,7 @@
 		C517D18A37D3459680462B93 /* Axiforma-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9F9C7F0A43F641688A559E90 /* Axiforma-Bold.ttf */; };
 		E4E98B70E6744A0FADEB72AE /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 02F337AEA0B14F03864CA75C /* Inter-Bold.ttf */; };
 		ED46A8B175294C04B1160D54 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F476DD07959949F1A48751CB /* Inter-SemiBold.ttf */; };
+		FD12C9CE0B294609B5A385CB /* Axiforma-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A61FFE5DC70F4BDF9B003CC0 /* Axiforma-Light.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		B842BA9F379E4944A74F4D10 /* Axiforma-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Axiforma-Medium.ttf"; path = "../src/assets/fonts/Axiforma-Medium.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F476DD07959949F1A48751CB /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-SemiBold.ttf"; path = "../src/assets/fonts/Inter-SemiBold.ttf"; sourceTree = "<group>"; };
+		A61FFE5DC70F4BDF9B003CC0 /* Axiforma-Light.ttf */ = {isa = PBXFileReference; name = "Axiforma-Light.ttf"; path = "../src/assets/fonts/Axiforma-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +173,7 @@
 				B842BA9F379E4944A74F4D10 /* Axiforma-Medium.ttf */,
 				A16EBE20E724499394E783D5 /* Axiforma-Regular.ttf */,
 				629E95E7F3F149A3B053BA6D /* Axiforma-SemiBold.ttf */,
+				A61FFE5DC70F4BDF9B003CC0 /* Axiforma-Light.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -292,6 +295,7 @@
 				6C71F793688C4816AC92EA2B /* Axiforma-Medium.ttf in Resources */,
 				070D149AE10B45039633CCD9 /* Axiforma-Regular.ttf in Resources */,
 				8CCD4E6BB09C4B9E9C5A97AD /* Axiforma-SemiBold.ttf in Resources */,
+				FD12C9CE0B294609B5A385CB /* Axiforma-Light.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

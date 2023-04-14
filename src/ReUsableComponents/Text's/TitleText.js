@@ -10,7 +10,7 @@ const TitleText = ({text, style, numberOfLines}) => {
           {
             fontSize: 16,
             fontFamily: 'Axiforma-SemiBold',
-            color: COLORS.inputtext,
+            color: COLORS.titleFont,
           },
           style && style,
         ]}

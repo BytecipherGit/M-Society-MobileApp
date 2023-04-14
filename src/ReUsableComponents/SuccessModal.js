@@ -36,7 +36,7 @@ const SuccessModal = ({
 
   return (
     <ReactNativeModal isVisible={isVisible}>
-      <View style={{padding: 16, backgroundColor: 'white', borderRadius: 15}}>
+      <View style={{padding: 15, backgroundColor: 'white', borderRadius: 10}}>
         {type === 'Logout' ? (
           <View
             style={{
@@ -52,15 +52,18 @@ const SuccessModal = ({
             <LogoutIcon />
           </View>
         ) : iconType === 'error' ? null : (
-          <SuccessSvg style={{alignSelf: 'center'}} />
+          <SuccessSvg style={{alignSelf: 'center'}} width={300} />
         )}
         <DescriptionText
           style={{
             color: iconType === 'error' ? 'red' : '#595959',
             alignSelf: 'center',
-            marginVertical: '4%',
+            marginVertical: '2%',
             width: '60%',
             textAlign: 'center',
+            fontFamily: 'Axiforma-Bold',
+            lineHeight: 25,
+            fontSize: 15,
           }}
           text={desc}
         />

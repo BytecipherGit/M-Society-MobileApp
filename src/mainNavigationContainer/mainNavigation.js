@@ -36,6 +36,7 @@ import ResidentList from '../components/Resident/ResidentList';
 import AddNewResident from '../components/Resident/AddNewResident';
 import GuardList from '../components/Guard/GuardList';
 import VisitorsList from '../components/Guard/VisitorsList';
+import ContactDetail from '../components/Contact/ContactDetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -127,6 +128,7 @@ const mainNavigation = () => {
       {stackScreenWithNoHeader('ComplaintScreen', ComplaintStackNavigator)}
       {stackScreenWithNoHeader('ImageViewScreen', ImageViewScreen)}
       {stackScreenWithNoHeader('ContactScreen', ContactScreen)}
+      {stackScreenWithNoHeader('ContactDetailScreen', ContactDetail)}
       {stackScreenWithNoHeader('ProfileStackScreen', ProfileStackNavigator)}
       {stackScreenWithNoHeader('PaymentHistoryScreen', PaymentHistory)}
       {stackScreenWithNoHeader('ResidentStack', ResidentStackScreens)}

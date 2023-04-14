@@ -60,70 +60,32 @@ const ContactScreen = ({navigation, route}) => {
   }, []);
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <AppHeader navigation={navigation} title="Contact" />
-        <FullCardBackground
-          styles={{backgroundColor: COLORS.themeBackground, padding: 16}}
-          RenderUI={() => (
-            <View>
-              <View style={style.container}>
-                <TextInput
-                  placeholder="Search"
-                  placeholderTextColor={'#595959'}
-                  style={style.search}
-                />
-                <TouchableOpacity
-                  activeOpacity={1}
-                  style={{
-                    height: 16,
-                    width: 16,
-                  }}>
-                  <Image
-                    source={{
-                      uri: 'https://cdn-icons-png.flaticon.com/512/54/54481.png',
-                    }}
-                    style={{flex: 1, tintColor: '#6B737F'}}
-                  />
-                </TouchableOpacity>
+    <View style={globalStyle.cnt}>
+      <AppHeader navigation={navigation} title="Contact" />
+      <View>
+        <FlatList
+          data={data}
+          ListEmptyComponent={() => (
+            <AppLoaderSrceen loader={loader} error={error} />
+          )}
+          style={{marginTop: '3%'}}
+          renderItem={({item, index}) => (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('ContactDetailScreen', {detail: item})
+              }
+              style={style.detailCard}>
+              <PhoneIcon />
+              <View style={{marginLeft: '3%'}}>
+                <Text style={style.contactDetail}>
+                  {item.name + ' - ' + item.profession}
+                </Text>
               </View>
-              <FlatList
-                data={data}
-                ListEmptyComponent={() => (
-                  <AppLoaderSrceen loader={loader} error={error} />
-                )}
-                renderItem={({item, index}) => (
-                  <TouchableOpacity
-                    onPress={() => Linking.openURL(`tel:${item.phoneNumber}`)}
-                    style={style.detailCard}>
-                    <View style={style.phoneIconView}>
-                      <PhoneIcon />
-                    </View>
-                    <View style={{width: '82%'}}>
-                      <Text style={style.contactDetail}>
-                        {item.name + ' - ' + item.profession}
-                      </Text>
-                      <Text style={style.contactNumber}>
-                        {item.phoneNumber}
-                      </Text>
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <LocationIcon />
-                        <Text style={style.contactAddress}>
-                          {' '}
-                          {item.address}
-                        </Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                )}
-              />
-            </View>
+            </TouchableOpacity>
           )}
         />
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: COLORS.themeBackground}} />
-    </Fragment>
+      </View>
+    </View>
   );
 };
 
@@ -154,12 +116,14 @@ const style = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 1.5,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: '4%',
-    padding: 10,
+    // justifyContent: 'space-between',
+    marginVertical: '2%',
+    padding: 15,
     backgroundColor: 'white',
     borderRadius: 8,
     marginHorizontal: 1,
+    alignItems: 'center',
+    marginHorizontal: 15,
   },
   phoneIconView: {
     height: 50,
@@ -172,9 +136,8 @@ const style = StyleSheet.create({
   },
   contactDetail: {
     fontSize: 16,
-    fontWeight: '400',
-    color: '#4C5564',
-    marginBottom: '1%',
+    fontFamily: 'Axiforma-SemiBold',
+    color: COLORS.titleFont,
   },
   contactNumber: {
     fontSize: 14,

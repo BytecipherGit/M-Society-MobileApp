@@ -18,6 +18,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {GET_MAINTANCE_USER_REQUEST} from '../../redux/Actions';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
+import AppTextInput from '../../ReUsableComponents/AppTextInput';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const searchIcon = 'https://cdn-icons-png.flaticon.com/512/54/54481.png';
 
@@ -30,55 +32,61 @@ const TakePaymentScreen = ({navigation}) => {
   }, []);
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <AppHeader title={'Take Payment'} navigation={navigation} />
-        <FullCardBackground
-          styles={{backgroundColor: COLORS.themeBackground}}
-          RenderUI={() => (
-            <View style={{}}>
-              <View style={styles.container}>
+    <View style={[globalStyle.cnt, {backgroundColor: 'white'}]}>
+      <AppHeader title={'Take Payment'} navigation={navigation} />
+      <View style={{}}>
+        <AppTextInput
+          item={{title: 'Search'}}
+          renderIcon={() => (
+            <AntDesign
+              name="search1"
+              style={{
+                fontSize: 20,
+                marginRight: 10,
+                color: COLORS.descFont,
+              }}
+            />
+          )}
+          cntStyle={{marginHorizontal: '4%', marginTop: '7%'}}
+        />
+        <TitleText style={styles.title} text="Results" />
+        <FlatList
+          data={users.data}
+          ListEmptyComponent={() => (
+            <AppLoaderSrceen loader={users.loader} error={users.error} />
+          )}
+          renderItem={({item, index}) => (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('MainTainUserPayment', {user: item})
+              }
+              activeOpacity={0.5}
+              style={{backgroundColor: 'white'}}>
+              <View style={styles.cardContainer}>
                 <Image
-                  source={{
-                    uri: searchIcon,
-                  }}
-                  style={styles.searchIcon}
+                  style={styles.profilePic}
+                  source={{uri: users.profileImage}}
                 />
-                <TextInput placeholder="Search" />
+                <View style={{width: '75%'}}>
+                  <Text style={styles.userName}>{item.name}</Text>
+                  <Text style={styles.userHouse}>
+                    House Number {item.houseNumber}
+                  </Text>
+                </View>
+                <AntDesign
+                  name="right"
+                  style={{
+                    fontSize: 12,
+                    color: COLORS.descFont,
+                  }}
+                />
               </View>
-              <TitleText style={styles.title} text="Results" />
-              <FlatList
-                data={users.data}
-                ListEmptyComponent={() => (
-                  <AppLoaderSrceen loader={users.loader} error={users.error} />
-                )}
-                renderItem={({item, index}) => (
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('MainTainUserPayment', {user: item})
-                    }
-                    activeOpacity={0.5}
-                    style={{backgroundColor: 'white'}}>
-                    <View style={styles.cardContainer}>
-                      <Image
-                        style={styles.profilePic}
-                        source={{uri: users.profileImage}}
-                      />
-                      <View style={{width: '70%'}}>
-                        <Text style={styles.userName}>{item.name}</Text>
-                      </View>
-                      <LinkAerrow />
-                    </View>
-                    <View style={styles.bottomBorder} />
-                  </TouchableOpacity>
-                )}
-              />
-            </View>
+              <View style={styles.bottomBorder} />
+            </TouchableOpacity>
           )}
         />
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: COLORS.themeBackground}} />
-    </Fragment>
+      </View>
+    </View>
   );
 };
 
@@ -104,9 +112,10 @@ const styles = StyleSheet.create({
     marginRight: '2%',
   },
   title: {
-    color: COLORS.titleFont,
-    marginBottom: '4%',
+    color: '#A7A7A7',
+    marginTop: '8%',
     margin: 16,
+    fontFamily: 'Axiforma-SemiBold',
   },
   cardContainer: {
     flexDirection: 'row',
@@ -116,14 +125,20 @@ const styles = StyleSheet.create({
   },
   profilePic: {
     backgroundColor: COLORS.themeColor,
-    height: 60,
-    width: 60,
+    height: 45,
+    width: 45,
     borderRadius: 1000,
   },
   userName: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: 'black',
+    fontFamily: 'Axiforma-Medium',
+    fontSize: 18,
+    color: '#262626',
+    lineHeight: 29,
+  },
+  userHouse: {
+    fontFamily: 'Axiforma-Regular',
+    fontSize: 12,
+    color: '#ABACB0',
   },
   bottomBorder: {
     borderWidth: 0.5,

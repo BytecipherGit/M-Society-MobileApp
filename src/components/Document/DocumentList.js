@@ -9,7 +9,7 @@ import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
 import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
-import DocumentSvg from '../../assets/images/DocumentIcon.svg';
+import DocumentSvg from '../../assets/images/Document.svg';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import {API_URL, GetData} from '../../assets/services';
@@ -44,77 +44,54 @@ const DocumentList = ({navigation}) => {
   };
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <AppHeader navigation={navigation} title="Document" />
-        <FullCardBackground
-          styles={{backgroundColor: COLORS.themeBackground, padding: 16}}
-          RenderUI={() => (
-            <>
-              <TitleText
-                style={{color: '#384252', marginBottom: '5%'}}
-                text="Documents"
-              />
-              <FlatList
-                data={documents}
-                ListEmptyComponent={() => (
-                  <AppLoaderSrceen loader={loader} error={error} />
-                )}
-                renderItem={({item, index}) => (
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('DocumentDetail', {item: item})
-                    }
-                    style={{
-                      ...shadow,
-                      shadowOpacity: 0.4,
-                      shadowRadius: 1.5,
-                      padding: 15,
-                      borderRadius: 4,
-                      backgroundColor: 'white',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      marginBottom: '3%',
-                      marginHorizontal: 1,
-                    }}>
-                    <View
-                      style={{
-                        height: 40,
-                        width: 40,
-                        borderRadius: 1000,
-                        backgroundColor: '#E9F5F8',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <DocumentSvg height={20} width={20} />
-                    </View>
-                    <View style={{width: '85%'}}>
-                      <DescriptionText
-                        style={{
-                          fontSize: 16,
-                          color: '#202937',
-                          marginBottom: '1%',
-                        }}
-                        text={item.documentName}
-                      />
-                      <DescriptionText
-                        style={{color: '#384252'}}
-                        text={moment(`${item.createdDate}`).format(
-                          'DD/MMM/YYYY',
-                        )}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                )}
-                extraData={item => item._id}
-              />
-            </>
-          )}
-        />
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: COLORS.themeBackground}} />
-    </Fragment>
+    <View style={globalStyle.cnt}>
+      <AppHeader navigation={navigation} title="Document" />
+
+      <FlatList
+        data={documents}
+        ListEmptyComponent={() => (
+          <AppLoaderSrceen loader={loader} error={error} />
+        )}
+        renderItem={({item, index}) => (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('DocumentDetail', {item: item})}
+            style={{
+              ...shadow,
+              margin: 20,
+              padding: 15,
+              borderRadius: 10,
+              backgroundColor: 'white',
+              flexDirection: 'row',
+              // justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <DocumentSvg height={30} width={30} />
+
+            <View style={{marginLeft: '3%'}}>
+              <Text
+                style={{
+                  fontFamily: 'Axiforma-Medium',
+                  fontSize: 16,
+                  color: '#262626',
+                  lineHeight: 28,
+                  marginBottom: '2%',
+                }}>
+                {item.documentName}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: 'Axiforma-Light',
+                  fontSize: 12,
+                  color: '#ABACB0',
+                }}>
+                {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
+        extraData={item => item._id}
+      />
+    </View>
   );
 };
 

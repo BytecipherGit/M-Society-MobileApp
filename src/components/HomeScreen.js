@@ -278,6 +278,7 @@ const HomeScreen = ({navigation}) => {
             style={{
               fontFamily: 'Axiforma-Bold',
               fontSize: 20,
+              color: COLORS.titleFont,
             }}>
             Society Services
           </Text>

@@ -18,6 +18,7 @@ import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
 import AddComplainDocumentIcon from '../../assets/images/AddComplaintDocumentIcon.svg';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import CameraIcon from '../../assets/images/CameraIcon.svg';
+import AddFileIcon from '../../assets/images/AddFileIcon.svg';
 import AppButton from '../../ReUsableComponents/AppButton';
 import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -28,11 +29,7 @@ import {API_URL, postFormData} from '../../assets/services';
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
-
-const buttonArray = [
-  {id: 1, title: 'Cancel'},
-  {id: 2, title: 'Submit'},
-];
+import AppTextInput from '../../ReUsableComponents/AppTextInput';
 
 const AddComplaints = ({route}) => {
   const navigation = useNavigation();
@@ -115,246 +112,267 @@ const AddComplaints = ({route}) => {
     setData({...data, attachedImage: [...arr]});
   };
 
-  const ComplaintAction = async id => {
-    if (id === 1) {
-      navigation.goBack();
-    } else {
-      if (!data.complainTitle || !data.description) {
-        return setAlertData({
-          visible: true,
-          message: 'Please Enter Subject and Note First',
-          iconType: 'error',
-        });
-      }
-      if (route?.name === 'UpdateComplaint') {
-        if (statusOption) {
-          const payloadData = {
-            id: route.params.data.id,
-            description: data.description,
-            status: route.params.data.status,
-            attachedImage: data.attachedImage,
-          };
+  const ComplaintAction = async () => {
+    if (!data.complainTitle || !data.description) {
+      return setAlertData({
+        visible: true,
+        message: 'Please Enter Subject and Note First',
+        iconType: 'error',
+      });
+    }
+    if (route?.name === 'UpdateComplaint') {
+      if (statusOption) {
+        const payloadData = {
+          id: route.params.data.id,
+          description: data.description,
+          status: route.params.data.status,
+          attachedImage: data.attachedImage,
+        };
 
-          const payload = {
-            url: API_URL + 'complaint/',
-            body: payloadData,
-          };
+        const payload = {
+          url: API_URL + 'complaint/',
+          body: payloadData,
+        };
 
-          const Result = await postFormData(payload, 'PUT');
-          if (Result.success) {
-            setAlertData({
-              visible: true,
-              message: Result.message,
-              // iconType: 'error',
-            });
-            navigation.popToTop();
-          } else {
-            setAlertData({
-              visible: true,
-              message: Result.message,
-              iconType: 'error',
-            });
-          }
-        } else {
-          return setAlertData({
+        const Result = await postFormData(payload, 'PUT');
+        if (Result.success) {
+          setAlertData({
             visible: true,
-            message: 'Please Select Status First For This Complaint.',
+            message: Result.message,
+            // iconType: 'error',
+          });
+          navigation.popToTop();
+        } else {
+          setAlertData({
+            visible: true,
+            message: Result.message,
             iconType: 'error',
           });
         }
       } else {
-        try {
-          const payload = {
-            url: API_URL + 'complaint/',
-            body: data,
-          };
+        return setAlertData({
+          visible: true,
+          message: 'Please Select Status First For This Complaint.',
+          iconType: 'error',
+        });
+      }
+    } else {
+      try {
+        const payload = {
+          url: API_URL + 'complaint/',
+          body: data,
+        };
 
-          const Result = await postFormData(payload);
-          console.log(Result.message);
-          // Result = JSON.parse(Result);
-          if (Result.success) {
-            setAlertData({
-              visible: true,
-              message: Result.message,
-              // iconType: 'error',
-            });
-            navigation.popToTop();
-          } else {
-            setAlertData({
-              visible: true,
-              message: Result.message,
-              iconType: 'error',
-            });
-          }
-        } catch (e) {
+        const Result = await postFormData(payload);
+        console.log(Result.message);
+        // Result = JSON.parse(Result);
+        if (Result.success) {
           setAlertData({
             visible: true,
-            message: 'Something went wrong please try again later.',
+            message: Result.message,
+            // iconType: 'error',
+          });
+          navigation.popToTop();
+        } else {
+          setAlertData({
+            visible: true,
+            message: Result.message,
             iconType: 'error',
           });
         }
+      } catch (e) {
+        setAlertData({
+          visible: true,
+          message: 'Something went wrong please try again later.',
+          iconType: 'error',
+        });
       }
     }
   };
 
   return (
-    <Fragment>
+    <>
       <SuccessModal
         isVisible={isVisible}
+        // isVisible={true}
         setIsVisible={setIsVisible}
         navigationScreenName="ComplaintScreen"
         desc="Your Complaint Has Been Successfully Register"
       />
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <AppHeader navigation={navigation} title="Complaint" />
-        <FullCardBackground
-          styles={{backgroundColor: COLORS.themeBackground}}
-          RenderUI={() => (
-            <>
-              <View style={styles.cnt}>
-                <View style={styles.InnerCardDetail}>
-                  <AddComplainDocumentIcon style={{alignSelf: 'center'}} />
-                  <TitleText
-                    text={
-                      route?.name === 'UpdateComplaint'
-                        ? 'Reply'
-                        : 'Add Compaint'
-                    }
-                    style={styles.cardTitle}
-                  />
-                  <ScrollView style={{marginTop: '2%'}}>
-                    <TextInput
-                      placeholder="Subject"
-                      placeholderTextColor={'black'}
-                      defaultValue={data.complainTitle}
-                      onChangeText={text =>
-                        setData({...data, complainTitle: text})
-                      }
-                      style={styles.SubjectInput}
-                    />
-                    <View style={styles.devider} />
-                    <TextInput
-                      placeholder="Note"
-                      onChangeText={text =>
-                        setData({...data, description: text})
-                      }
-                      placeholderTextColor={COLORS.inputtext}
-                      style={styles.descInput}
-                    />
-                  </ScrollView>
-                </View>
-                <FlatList
-                  data={data.attachedImage}
-                  horizontal
-                  style={{alignSelf: 'flex-end'}}
-                  renderItem={({item, index}) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() =>
-                          navigation.navigate('ImageViewScreen', {
-                            img: item.uri,
-                          })
-                        }
-                        onLongPress={() => deleteImage(index)}>
-                        <Image source={{uri: item?.uri}} style={[styles.img]} />
-                      </TouchableOpacity>
-                    );
-                  }}
-                />
-              </View>
-              <View style={styles.operationButtonsCnt}>
-                <Menu
-                  visible={visible}
-                  style={styles.cameraOptionsCnt}
-                  anchor={
-                    <TouchableOpacity
-                      onPress={showMenu}
-                      style={styles.cameraButton}>
-                      <CameraIcon />
-                    </TouchableOpacity>
-                  }
-                  onRequestClose={hideMenu}>
-                  <FlatList
-                    data={['camera', 'gallery']}
-                    renderItem={({item, index}) => (
-                      <>
-                        <MenuItem
-                          onPress={() => {
-                            hideMenu(),
-                              setTimeout(() => {
-                                pickImage(item);
-                              }, 500);
-                          }}>
-                          <Text style={{fontWeight: 'bold', color: 'grey'}}>
-                            {' '}
-                            Pick From {item?.toLocaleUpperCase()}
-                          </Text>
-                        </MenuItem>
-                        <MenuDivider />
-                      </>
-                    )}
-                  />
-                </Menu>
-                {route?.name === 'UpdateComplaint' && (
-                  <TouchableOpacity style={styles.statusButton}>
-                    <View style={styles.statusCnt}>
-                      <DescriptionText
-                        text={'Status'}
-                        style={{color: '#ffffff'}}
-                      />
-                      <Image
-                        source={{
-                          uri: 'https://cdn-icons-png.flaticon.com/512/2985/2985150.png',
-                        }}
-                        style={styles.bottomAerrowStyle}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                )}
-              </View>
-              {route?.name === 'UpdateComplaint' && (
-                <View
-                  style={[
-                    styles.statusOptionsCnt,
-                    statusOption === route.params.data.status && {
-                      backgroundColor: '#D1F0F7',
-                    },
-                  ]}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      setStatusOption(
-                        statusOption ? '' : route.params.data.status,
-                      )
-                    }>
-                    <DescriptionText
-                      text={route.params.data.status}
-                      style={{color: COLORS.themeColor}}
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
-            </>
-          )}
+      <View style={globalStyle.cnt}>
+        <AppHeader
+          navigation={navigation}
+          title={
+            route?.name === 'UpdateComplaint'
+              ? 'Edit Complaint'
+              : 'Rase Complaint'
+          }
         />
-        <View style={styles.BottomButtonView}>
-          {buttonArray.map((item, index) => {
-            return (
-              <AppButton
-                key={index}
-                buttonTitle={item.title}
-                onPress={() => ComplaintAction(item.id)}
-                buttonStyle={[
-                  styles.BottomButton,
-                  item.id === 1 && {backgroundColor: 'transparent'},
-                ]}
-                TextStyle={item.id === 1 ? {color: COLORS.buttonColor} : {}}
-              />
-            );
-          })}
+        <View
+          style={{
+            borderRadius: 10,
+            ...shadow,
+            margin: 20,
+            padding: 15,
+            backgroundColor: 'white',
+          }}>
+          <FlatList
+            data={[1]}
+            renderItem={() => {
+              return (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Medium',
+                      fontSize: 14,
+                      color: COLORS.descFont,
+                      marginBottom: '1.5%',
+                      marginTop: '7%',
+                    }}>
+                    Subject
+                  </Text>
+                  <AppTextInput
+                    item={{title: 'Subject'}}
+                    value={data.complainTitle}
+                    setValue={text => setData({...data, complainTitle: text})}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Medium',
+                      fontSize: 14,
+                      color: COLORS.descFont,
+                      marginBottom: '1.5%',
+                      marginTop: '7%',
+                    }}>
+                    Note
+                  </Text>
+                  <AppTextInput
+                    item={{title: 'Note'}}
+                    multiline
+                    value={data.description}
+                    setValue={text => setData({...data, description: text})}
+                    cntStyle={{
+                      height: 129,
+                      alignItems: 'flex-start',
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Medium',
+                      fontSize: 14,
+                      color: COLORS.descFont,
+                      marginBottom: '1.5%',
+                      marginTop: '7%',
+                    }}>
+                    Attach File
+                  </Text>
+                  <View
+                    style={{
+                      borderRadius: 10,
+                      borderWidth: 2,
+                      height: 130,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginVertical: '1%',
+                      borderColor: '#DEDEDE',
+                      borderStyle: 'dashed',
+                    }}>
+                    <Menu
+                      visible={visible}
+                      style={styles.cameraOptionsCnt}
+                      anchor={
+                        <>
+                          <TouchableOpacity
+                            onPress={showMenu}
+                            style={{alignSelf: 'center'}}>
+                            <AddFileIcon />
+                          </TouchableOpacity>
+                          <Text>Upload Certificate </Text>
+                        </>
+                      }
+                      onRequestClose={hideMenu}>
+                      <FlatList
+                        data={['camera', 'gallery']}
+                        renderItem={({item, index}) => (
+                          <>
+                            <MenuItem
+                              onPress={() => {
+                                hideMenu(),
+                                  setTimeout(() => {
+                                    pickImage(item);
+                                  }, 500);
+                              }}>
+                              <Text style={{fontWeight: 'bold', color: 'grey'}}>
+                                {' '}
+                                Pick From {item?.toLocaleUpperCase()}
+                              </Text>
+                            </MenuItem>
+                            <MenuDivider />
+                          </>
+                        )}
+                      />
+                    </Menu>
+                    {route?.name === 'UpdateComplaint' && (
+                      <TouchableOpacity style={styles.statusButton}>
+                        <View style={styles.statusCnt}>
+                          <DescriptionText
+                            text={'Status'}
+                            style={{color: '#ffffff'}}
+                          />
+                          <Image
+                            source={{
+                              uri: 'https://cdn-icons-png.flaticon.com/512/2985/2985150.png',
+                            }}
+                            style={styles.bottomAerrowStyle}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Regular',
+                      fontSize: 12,
+                      color: COLORS.descFont,
+                      marginVertical: '2%',
+                    }}>
+                    Mandotary Only PDF, JPG, PNG, JPEG File Accepted
+                  </Text>
+                  <FlatList
+                    data={data.attachedImage}
+                    horizontal
+                    style={{alignSelf: 'flex-end', marginTop: '3%'}}
+                    renderItem={({item, index}) => {
+                      return (
+                        <TouchableOpacity
+                          onPress={() =>
+                            navigation.navigate('ImageViewScreen', {
+                              img: item.uri,
+                            })
+                          }
+                          onLongPress={() => deleteImage(index)}>
+                          <Image
+                            source={{uri: item?.uri}}
+                            style={[styles.img]}
+                          />
+                        </TouchableOpacity>
+                      );
+                    }}
+                  />
+                  <View style={{marginTop: '7%'}}>
+                    <AppButton
+                      buttonTitle={'Submit'}
+                      onPress={ComplaintAction}
+                    />
+                  </View>
+                </View>
+              );
+            }}
+          />
         </View>
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: COLORS.themeBackground}} />
-    </Fragment>
+        <View style={styles.cnt}></View>
+      </View>
+    </>
   );
 };
 

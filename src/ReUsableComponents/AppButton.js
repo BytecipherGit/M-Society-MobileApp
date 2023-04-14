@@ -14,7 +14,7 @@ const AppButton = ({
   return (
     <TouchableOpacity onPress={onPress}>
       <LinearGradient
-        colors={['#FFA13C', '#FF7334']}
+        colors={['#FF7334', '#FFA13C']}
         start={{x: 0.0, y: 0.0}}
         end={{x: 1.0, y: 1.0}}
         locations={[0.0, 1.0]}
