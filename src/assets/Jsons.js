@@ -18,6 +18,8 @@ import TakePayment from '../assets/images/TakePayment.svg';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {COLORS} from './theme';
 import PhoneSvg from '../assets/images/PhoneSvg.svg';
+import FaqIcon from '../assets/images/FaqIcon.svg';
+import TermService from '../assets/images/TermServiceIcon.svg';
 
 export const inputFields = [
   {
@@ -256,6 +258,13 @@ export let SocietyOptions = [
     navigationScreen: 'ResidentStack',
     image: <SocietyInfo />,
   },
+  {
+    id: 9,
+    title: 'SERVICE PROVIDER',
+    navigationScreen: 'ContactScreen',
+    param: {screenName: 'Service'},
+    image: <Contact />,
+  },
 ];
 
 export const profileOptions = [
@@ -268,8 +277,10 @@ export const profileOptions = [
   {
     id: 2,
     title: 'FAQ',
-    navigationScreen: 'FaqListScreen',
-    icon: <QuestionIcon />,
+    navigationScreen: 'Webview',
+    icon: <FaqIcon />,
+    param: {screenName: 'FAQ'},
+    urlParam: 'FAQ',
   },
   {
     id: 3,
@@ -296,18 +307,33 @@ export const profileOptions = [
     navigationScreen: 'VisitorsListScreen',
     icon: <User />,
   },
+  // {
+  //   id: 8,
+  //   title: 'Maintainance Setting',
+  //   navigationScreen: 'LoginOptionsScreen',
+  //   icon: <TermService />,
+  // },
   {
-    id: 8,
-    title: 'Maintainance Setting',
-    navigationScreen: 'LoginOptionsScreen',
-    icon: <MoneyIcon />,
+    id: 9,
+    title: 'Terms & Conditions',
+    navigationScreen: 'Webview',
+    icon: <TermService />,
+    param: {screenName: 'Terms & Conditions'},
+    urlParam: 'termsCondition',
   },
   {
-    id: 5,
-    title: 'Logout',
-    navigationScreen: 'LoginOptionsScreen',
-    icon: <LogoutIcon />,
+    id: 10,
+    title: 'Support',
+    navigationScreen: 'ContactScreen',
+    icon: <TermService />,
+    param: {screenName: 'Support'},
   },
+  // {
+  //   id: 5,
+  //   title: 'Logout',
+  //   navigationScreen: 'LoginOptionsScreen',
+  //   icon: <LogoutIcon />,
+  // },
 ];
 
 export const GuardprofileOptions = [
@@ -438,8 +464,14 @@ export const VisitorsFakeList = [
 
 export const AddVisitorFields = [
   {
+    id: 5,
+    title: 'Attach Photo',
+    keyboardType: 'image-Picker',
+    param: 'image',
+  },
+  {
     id: 1,
-    title: 'Phone No.',
+    title: 'Phone Number',
     keyboardType: 'number-pad', //default
     param: 'phoneNumber',
   },
@@ -451,21 +483,15 @@ export const AddVisitorFields = [
   },
   {
     id: 3,
-    title: 'House No',
+    title: 'House Number',
     keyboardType: 'default',
     param: 'houseNumber',
   },
   {
     id: 4,
-    title: 'Enter Reason',
+    title: 'Reason for Visit',
     keyboardType: 'default',
     param: 'reasone',
-  },
-  {
-    id: 5,
-    title: 'Attach Photo',
-    keyboardType: 'image-Picker',
-    param: 'image',
   },
 ];
 

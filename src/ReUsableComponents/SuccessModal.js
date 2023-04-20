@@ -9,6 +9,7 @@ import LogoutIcon from '../assets/images/LogoutIcon.svg';
 import {COLORS} from '../assets/theme';
 import {RemoveStoreData} from '../assets/services';
 import {CommonActions} from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const SuccessModal = ({
   isVisible,
@@ -38,19 +39,15 @@ const SuccessModal = ({
     <ReactNativeModal isVisible={isVisible}>
       <View style={{padding: 15, backgroundColor: 'white', borderRadius: 10}}>
         {type === 'Logout' ? (
-          <View
+          <AntDesign
+            name="logout"
             style={{
-              height: 45,
-              width: 45,
-              borderWidth: 1.2,
-              borderColor: COLORS.themeColor,
-              borderRadius: 1000,
-              justifyContent: 'center',
-              alignItems: 'center',
+              fontSize: 40,
+              color: COLORS.buttonColor,
               alignSelf: 'center',
-            }}>
-            <LogoutIcon />
-          </View>
+              marginBottom: '2%',
+            }}
+          />
         ) : iconType === 'error' ? null : (
           <SuccessSvg style={{alignSelf: 'center'}} width={300} />
         )}
@@ -68,23 +65,20 @@ const SuccessModal = ({
           text={desc}
         />
         {navigationScreenName === 'Logout' ? (
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View
+            style={
+              {
+                // flexDirection: 'row',
+                // justifyContent: 'space-between',
+                // backgroundColor: 'red',
+              }
+            }>
             <AppButton
               buttonTitle={'Cancel'}
-              buttonStyle={{
-                width: '49%',
-                backgroundColor: 'white',
-                borderWidth: 1,
-                borderColor: COLORS.buttonColor,
-              }}
-              TextStyle={{color: COLORS.buttonColor}}
               onPress={() => setIsVisible(false)}
+              buttonStyle={{marginBottom: '2%'}}
             />
-            <AppButton
-              onPress={() => logout()}
-              buttonTitle={'Yes'}
-              buttonStyle={{width: '49%'}}
-            />
+            <AppButton onPress={() => logout()} buttonTitle={'Yes'} />
           </View>
         ) : (
           <AppButton

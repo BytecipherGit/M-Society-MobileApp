@@ -24,11 +24,7 @@ import AppButton from '../../ReUsableComponents/AppButton';
 import {addVisitorFormData} from '../../assets/services';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
-
-const buttonArray = [
-  {id: 1, title: 'Cancel'},
-  {id: 2, title: 'Submit'},
-];
+import AppTextInput from '../../ReUsableComponents/AppTextInput';
 
 const AddVisitor = ({navigation, route}) => {
   const [visible, setVisible] = useState(false);
@@ -114,137 +110,128 @@ const AddVisitor = ({navigation, route}) => {
   };
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <View style={style.cnt}>
-          <AppHeader navigation={navigation} title="Add Visitor" />
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            automaticallyAdjustKeyboardInsets={true}
-            contentContainerStyle={{flexGrow: 0.3}}>
-            {AddVisitorFields.map((item, index) => {
-              return (
-                <View
-                  key={index}
-                  style={{paddingHorizontal: 15, marginTop: '4%'}}>
-                  <TitleText text={item.title} />
-                  {item.keyboardType === 'image-Picker' ? (
-                    <View style={style.imageView}>
-                      <Menu
-                        visible={visible}
-                        style={{marginTop: '5%', marginLeft: '9%'}}
-                        anchor={
-                          <>
-                            {data.image.uri ? (
+    <View style={[globalStyle.cnt, {backgroundColor: 'white'}]}>
+      <View style={style.cnt}>
+        <AppHeader navigation={navigation} title="Add Visitor" />
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          automaticallyAdjustKeyboardInsets={true}
+          contentContainerStyle={{flexGrow: 0.3}}>
+          {AddVisitorFields.map((item, index) => {
+            return (
+              <View
+                key={index}
+                style={{paddingHorizontal: 15, marginTop: '4%'}}>
+                {item.keyboardType !== 'image-Picker' && (
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Medium',
+                      fontSize: 14,
+                      color: COLORS.descFont,
+                      marginBottom: '1%',
+                    }}>
+                    {item.title}
+                  </Text>
+                )}
+                {item.keyboardType === 'image-Picker' ? (
+                  <View style={style.imageView}>
+                    <Menu
+                      visible={visible}
+                      style={{marginTop: '5%', marginLeft: '9%'}}
+                      anchor={
+                        <>
+                          {data.image.uri ? (
+                            <TouchableOpacity
+                              activeOpacity={0.7}
+                              onPress={showMenu}
+                              style={{height: 120, width: 120}}>
+                              <Image
+                                style={{
+                                  flex: 1,
+                                  borderRadius: 10,
+                                }}
+                                source={{uri: data.image.uri}}
+                              />
+                            </TouchableOpacity>
+                          ) : (
+                            <View>
                               <TouchableOpacity
-                                activeOpacity={0.7}
                                 onPress={showMenu}
-                                style={style.img}>
-                                <Image
-                                  style={{flex: 1, borderRadius: 10}}
-                                  source={{uri: data.image.uri}}
-                                />
+                                style={style.cameraIcon}>
+                                <CameraIcon height={100} width={60} />
                               </TouchableOpacity>
-                            ) : (
-                              <View>
-                                <TouchableOpacity
-                                  onPress={showMenu}
-                                  style={style.cameraIcon}>
-                                  <CameraIcon />
-                                </TouchableOpacity>
-                                <DescriptionText
-                                  style={{color: '#202937', marginTop: '10%'}}
-                                  text="Take Photo"
-                                />
-                              </View>
-                            )}
-                          </>
-                        }
-                        onRequestClose={hideMenu}>
-                        <FlatList
-                          data={['camera', 'gallery']}
-                          renderItem={({item, index}) => (
-                            <>
-                              <MenuItem
-                                onPress={() => {
-                                  hideMenu(),
-                                    setTimeout(() => {
-                                      pickImage(item);
-                                    }, 500);
-                                }}>
-                                <Text
-                                  style={{fontWeight: 'bold', color: 'grey'}}>
-                                  {' '}
-                                  Pick From {item?.toLocaleUpperCase()}
-                                </Text>
-                              </MenuItem>
-                              <MenuDivider />
-                            </>
+                            </View>
                           )}
-                        />
-                      </Menu>
-                    </View>
-                  ) : (
-                    <View style={style.textInput}>
-                      <TextInput
-                        placeholder={item.title}
-                        placeholderTextColor={COLORS.inputtext}
-                        defaultValue={data[item.param]}
-                        onChangeText={text =>
-                          setData({...data, [item.param]: text})
-                        }
-                        keyboardType={item.keyboardType}
-                        multiline={item.id === 4 ? true : false}
+                        </>
+                      }
+                      onRequestClose={hideMenu}>
+                      <FlatList
+                        data={['camera', 'gallery']}
+                        renderItem={({item, index}) => (
+                          <>
+                            <MenuItem
+                              onPress={() => {
+                                hideMenu(),
+                                  setTimeout(() => {
+                                    pickImage(item);
+                                  }, 1000);
+                              }}>
+                              <Text style={{fontWeight: 'bold', color: 'grey'}}>
+                                {' '}
+                                Pick From {item?.toLocaleUpperCase()}
+                              </Text>
+                            </MenuItem>
+                            <MenuDivider />
+                          </>
+                        )}
                       />
-                    </View>
-                  )}
-                </View>
-              );
-            })}
-          </ScrollView>
-          <View style={style.buttonsCnt}>
-            {buttonArray.map((item, index) => {
-              return (
-                <AppButton
-                  key={index}
-                  buttonTitle={item.title}
-                  onPress={() =>
-                    !loader && item.id === 1
-                      ? navigation.goBack()
-                      : AddVisitor()
-                  }
-                  btnLoader={loader}
-                  buttonStyle={[
-                    style.button,
-                    item.id === 1 && {backgroundColor: 'transparent'},
-                  ]}
-                  TextStyle={item.id === 1 ? {color: COLORS.buttonColor} : {}}
-                />
-              );
-            })}
-          </View>
-        </View>
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: '#F2FCFF'}} />
-    </Fragment>
+                    </Menu>
+                  </View>
+                ) : (
+                  <AppTextInput
+                    item={item}
+                    value={data[item.param]}
+                    setValue={text => setData({...data, [item.param]: text})}
+                  />
+                )}
+              </View>
+            );
+          })}
+        </ScrollView>
+
+        <AppButton
+          buttonTitle={'Add Visitor'}
+          onPress={() => !loader && AddVisitor()}
+          btnLoader={loader}
+          buttonStyle={{
+            width: '90%',
+            alignSelf: 'center',
+            marginBottom: '3%',
+          }}
+        />
+      </View>
+    </View>
   );
 };
 
 export default AddVisitor;
 
 const style = StyleSheet.create({
-  cnt: {flex: 1, backgroundColor: '#F2FCFF'},
+  cnt: {flex: 1},
   imageView: {
-    height: 160,
-    width: 160,
-    backgroundColor: 'white',
+    height: 120,
+    width: 120,
+    backgroundColor: '#C4C4C4',
     borderWidth: 0.5,
     borderColor: COLORS.themeColor,
-    borderRadius: 10,
+    borderRadius: 30,
     borderStyle: 'dashed',
-    marginTop: '3%',
+    // marginTop: '%',
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
+    marginVertical: '8%',
+    ...shadow,
   },
   img: {
     height: 157.5,
@@ -253,10 +240,10 @@ const style = StyleSheet.create({
     backgroundColor: COLORS.inputBorder,
   },
   cameraIcon: {
-    height: 36,
-    width: 36,
-    backgroundColor: COLORS.themeColor,
-    borderRadius: 1000,
+    // height: 36,
+    // width: 36,
+    // backgroundColor: COLORS.themeColor,
+    // borderRadius: 1000,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',

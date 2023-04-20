@@ -26,6 +26,7 @@ import {
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const MainTainUserPayment = ({navigation, route}) => {
   const {name, houseNumber, _id} = route.params.user;
@@ -98,122 +99,128 @@ const MainTainUserPayment = ({navigation, route}) => {
   };
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <AppHeader navigation={navigation} title="Maintenance Charge" />
-        <FullCardBackground
-          styles={style.container}
-          RenderUI={() => (
-            <>
-              <View style={{flex: 1}}>
-                <TitleText style={style.title} text="Resident" />
-                <View style={style.userDetailCnt}>
-                  <Image style={style.userImage} />
-                  <View style={style.userNameCnt}>
-                    <DescriptionText style={style.userName} text={name} />
+    <View style={globalStyle.cnt}>
+      <AppHeader navigation={navigation} title="Maintenance Charge" />
+      <View style={{flex: 1}}>
+        <View style={style.userDetailCnt}>
+          <Image style={style.userImage} />
+
+          <DescriptionText style={style.userName} text={name} />
+          <DescriptionText
+            style={style.userHouseNo}
+            text={`House Nunmber ${houseNumber}`}
+          />
+        </View>
+        <View style={style.billingTitleCnt}>
+          {['Action', 'Months', 'Amount'].map((item, index) => {
+            return (
+              <View key={index}>
+                <TitleText
+                  text={item}
+                  style={{
+                    fontFamily: 'Axiforma-Regular',
+                    fontSize: 12,
+                    color: '#ABACB0',
+                    left: index === 1 ? -15 : 0,
+                  }}
+                />
+              </View>
+            );
+          })}
+        </View>
+
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={paymentData}
+          ListEmptyComponent={() => (
+            <AppLoaderSrceen loader={payment.loader} error={payment.error} />
+          )}
+          ListFooterComponent={() => {
+            return (
+              <>
+                {paymentData.length > 0 && paymentData[0].fistTimePayment && (
+                  <TouchableOpacity
+                    style={{marginVertical: '5%'}}
+                    onPress={() => {
+                      if (!payment.loader) {
+                        dispatch({
+                          type: PRE_PAYMENT_DETAIL_REQUEST,
+                          payload: {
+                            year: paymentData[0].year,
+                            month: paymentData[0].month,
+                          },
+                        });
+                      }
+                    }}>
                     <DescriptionText
-                      style={style.userHouseNo}
-                      text={`House No. ${houseNumber}`}
+                      text={'Show Previous'}
+                      style={{
+                        fontWeight: 'bold',
+                        color: COLORS.buttonColor,
+                      }}
                     />
-                  </View>
-                </View>
-                <View style={style.billingTitleCnt}>
-                  {['Months', 'Amount'].map((item, index) => {
-                    return (
-                      <View key={index} style={style.titleContainer}>
-                        <TitleText
-                          text={item}
-                          style={{color: COLORS.blackFont}}
-                        />
-                      </View>
-                    );
-                  })}
-                </View>
-                <FlatList
-                  showsVerticalScrollIndicator={false}
-                  data={paymentData}
-                  ListEmptyComponent={() => (
-                    <AppLoaderSrceen
-                      loader={payment.loader}
-                      error={payment.error}
+                  </TouchableOpacity>
+                )}
+              </>
+            );
+          }}
+          renderItem={({item, index}) => {
+            return (
+              <View
+                key={index}
+                style={{
+                  padding: 10,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <TouchableOpacity
+                  style={style.checkBox}
+                  onPress={() => setLastSelectedIndex(index + 1)}>
+                  {index + 1 <= lastSelectedIndex && (
+                    <AntDesign
+                      name="check"
+                      style={{fontSize: 20, color: '#1559AF'}}
                     />
                   )}
-                  ListFooterComponent={() => {
-                    return (
-                      <>
-                        {paymentData.length > 0 &&
-                          paymentData[0].fistTimePayment && (
-                            <TouchableOpacity
-                              style={{marginVertical: '5%'}}
-                              onPress={() => {
-                                if (!payment.loader) {
-                                  dispatch({
-                                    type: PRE_PAYMENT_DETAIL_REQUEST,
-                                    payload: {
-                                      year: paymentData[0].year,
-                                      month: paymentData[0].month,
-                                    },
-                                  });
-                                }
-                              }}>
-                              <DescriptionText
-                                text={'Show Previous'}
-                                style={{
-                                  fontWeight: 'bold',
-                                  color: COLORS.buttonColor,
-                                }}
-                              />
-                            </TouchableOpacity>
-                          )}
-                      </>
-                    );
-                  }}
-                  renderItem={({item, index}) => {
-                    return (
-                      <View style={style.billingMainCnt}>
-                        {/* Months container */}
-                        <View style={style.monthCnt}>
-                          <TouchableOpacity
-                            style={style.checkBox}
-                            onPress={() => setLastSelectedIndex(index + 1)}>
-                            {index + 1 <= lastSelectedIndex && <RightIcon />}
-                          </TouchableOpacity>
-                          <DescriptionText
-                            text={item.textMonth + ' ' + item.year}
-                            style={style.monthTxt}
-                          />
-                        </View>
-                        {/* Amount View */}
-                        <View style={style.amountCnt}>
-                          <DescriptionText
-                            text={'2000'}
-                            style={style.amountTxt}
-                          />
-                        </View>
-                      </View>
-                    );
-                  }}
-                  extraData={(item, index) => index}
-                />
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    fontFamily: 'Axiforma-Medium',
+                    fontSize: 14,
+                    color: COLORS.blackFont,
+                  }}>
+                  {item.textMonth + ' ' + item.year}
+                </Text>
+                <View
+                  style={{
+                    borderRadius: 5,
+                    backgroundColor: '#F4F6F8',
+                    paddingHorizontal: 16,
+                    paddingVertical: 7,
+                    ...shadow,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Medium',
+                      fontSize: 14,
+                      color: COLORS.blackFont,
+                    }}>
+                    2000 ₹
+                  </Text>
+                </View>
               </View>
-              <View style={style.footer}>
-                <AppButton
-                  buttonStyle={style.cancelButton}
-                  TextStyle={style.cancelButtonTxt}
-                  buttonTitle="Cancel"
-                />
-                <AppButton
-                  buttonStyle={{width: '49%'}}
-                  buttonTitle="Save"
-                  onPress={() => payPayment()}
-                />
-              </View>
-            </>
-          )}
+            );
+          }}
+          extraData={(item, index) => index}
         />
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: 'white'}} />
-    </Fragment>
+      </View>
+
+      <AppButton
+        buttonStyle={{width: '90%', alignSelf: 'center', marginBottom: '5%'}}
+        buttonTitle="Update Payment"
+        onPress={() => payPayment()}
+      />
+    </View>
   );
 };
 
@@ -224,31 +231,47 @@ const style = StyleSheet.create({
   title: {
     color: COLORS.titleFont,
   },
-  userDetailCnt: {flexDirection: 'row', marginTop: '5%'},
+  userDetailCnt: {marginTop: '5%'},
   userImage: {
-    height: 60,
-    width: 60,
+    height: 80,
+    width: 80,
     backgroundColor: COLORS.themeColor,
     borderRadius: 1000,
+    alignSelf: 'center',
+    marginBottom: '3%',
   },
   userNameCnt: {
     alignSelf: 'center',
     marginLeft: '3%',
     justifyContent: 'space-around',
   },
-  userName: {fontSize: 16, color: 'black', marginBottom: '5%'},
-  userHouseNo: {color: '#4C5564', fontSize: 12},
+  userName: {
+    fontSize: 19,
+    color: '#262626',
+    marginBottom: '2%',
+    fontFamily: 'Axiforma-Medium',
+    alignSelf: 'center',
+  },
+  userHouseNo: {
+    fontFamily: 'Axiforma-Regular',
+    fontSize: 13,
+    color: '#ABACB0',
+    alignSelf: 'center',
+  },
   billingTitleCnt: {
+    justifyContent: 'space-between',
     flexDirection: 'row',
-    backgroundColor: '#F6FDFF',
-    marginTop: '5%',
+    marginVertical: '2%',
+    marginHorizontal: 10,
+    padding: 10,
     borderBottomWidth: 0.5,
-    borderColor: COLORS.themeColor,
+    borderColor: '#D2D5DC',
+    marginTop: '7%',
   },
   titleContainer: {
     flex: 0.5,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'space-between',
+    // alignItems: 'center',
     padding: 10,
   },
   billingMainCnt: {
@@ -266,8 +289,8 @@ const style = StyleSheet.create({
     height: 24,
     width: 24,
     backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: COLORS.themeColor,
+    borderWidth: 2,
+    borderColor: '#1559AF',
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',

@@ -8,6 +8,7 @@ import {
   FlatList,
   Button,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
@@ -31,6 +32,8 @@ import {
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
+import LinearGradient from 'react-native-linear-gradient';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const GuardHomeScreen = ({navigation}) => {
   const state = useSelector(state => state.AuthReducer);
@@ -121,168 +124,232 @@ const GuardHomeScreen = ({navigation}) => {
   };
 
   const visitorsListUI = ({item, index}) => {
+    const {image, houseNumber, phoneNumber, createdDate, name} = item;
     return (
-      <View
-        style={[
-          styles.cardCnt,
-          {backgroundColor: item.outTime ? 'white' : '#FFF7E6'},
-        ]}>
-        {/* Basic Detail */}
-        <View style={styles.cardBasicDetailCnt}>
-          <Image source={{uri: item.image}} style={styles.profilePic} />
-          <View style={styles.detailCnt}>
-            <DescriptionText text={item.name} style={styles.userName} />
-            <DescriptionText
-              text={`House No.${item.houseNumber}`}
-              style={styles.userHouse}
-            />
+      <View style={[styles.cardCnt]}>
+        <View style={{flexDirection: 'row'}}>
+          <Image
+            source={{uri: image}}
+            style={{
+              height: 50,
+              width: 50,
+              borderRadius: 10,
+              backgroundColor: COLORS.themeColor,
+            }}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              // flex: 0.8,
+              width: '86%',
+              alignItems: 'center',
+            }}>
+            <View style={{marginLeft: 10}}>
+              <Text
+                style={{
+                  fontFamily: 'Axiforma-Medium',
+                  fontSize: 19,
+                  color: COLORS.blackFont,
+                  marginBottom: '4%',
+                }}>
+                {name}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: 'Axiforma-Regular',
+                  fontSize: 14,
+                  color: COLORS.descFont,
+                }}>
+                {phoneNumber}
+              </Text>
+            </View>
+            <View style={{height: '80%'}}>
+              <Text
+                style={{
+                  fontFamily: 'Axiforma-Light',
+                  fontSize: 12,
+                  color: '#ABACB0',
+                }}>
+                {moment(`${createdDate}`).format('DD/MM/YYYY')}
+              </Text>
+            </View>
           </View>
         </View>
-        {/* In out time view */}
-        <View style={{justifyContent: 'center'}}>
+        <View style={{marginTop: '5%'}}>
           {[
-            {param: 'inTime', title: 'In Time'},
-            {param: 'outTime', title: 'Out Time'},
-          ].map((button, i) => {
-            return (
-              <View key={i} style={styles.timeDetailCnt}>
-                <DescriptionText text={button.title} style={styles.timeTxt} />
-                <TouchableOpacity
-                  activeOpacity={
-                    !item['outTime'] && button.param === 'outTime' ? 0.5 : 1
-                  }
-                  onPress={() => {
-                    !item['outTime'] &&
-                      button.param === 'outTime' &&
-                      checkOutUser(item, index);
-                  }}
-                  style={[
-                    styles.timeButton,
-                    {
-                      backgroundColor:
-                        button.param === 'inTime'
-                          ? COLORS.themeColor
-                          : COLORS.buttonColor,
-                    },
-                  ]}>
-                  <TitleText
-                    text={item[button.param] ? item[button.param] : 'Exit'}
-                    style={{fontSize: 10, color: 'white'}}
-                  />
-                </TouchableOpacity>
-              </View>
-            );
-          })}
+            {
+              title: 'House Number',
+              param: 'houseNumber',
+            },
+            {
+              title: 'In Time',
+              param: 'inTime',
+            },
+            {
+              title: 'Reason',
+              param: 'reasone',
+            },
+          ].map((data, index) => (
+            <View key={index} style={{marginVertical: '1%'}}>
+              <Text
+                style={{
+                  fontFamily: 'Axiforma-Regular',
+                  fontSize: 14,
+                  color: COLORS.descFont,
+                }}>
+                {data.title} -{' '}
+                <Text
+                  style={{
+                    color: COLORS.titleFont,
+                  }}>
+                  {item[data.param]}
+                </Text>
+              </Text>
+            </View>
+          ))}
         </View>
+        <View
+          style={{
+            borderWidth: 1,
+            borderStyle: 'dashed',
+            marginTop: '3%',
+            borderColor: '#C8C8C8',
+          }}
+        />
+        <TouchableOpacity
+          onPress={() => !item.outTime && checkOutUser(item, index)}>
+          <Text
+            style={{
+              marginVertical: 15,
+              marginTop: 20,
+              alignSelf: 'center',
+              fontFamily: 'Inter-SemiBold',
+              fontSize: 14,
+              color: '#FF7334',
+              letterSpacing: 1,
+            }}>
+            {item.outTime ? item.outTime : 'Exit Visitor'}
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   };
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        {/* Header */}
-        <View style={styles.headerCnt}>
-          <View>
-            <TitleText
-              text={`Hello, ${state?.userDetail?.data?.name}`}
-              style={[styles.headerTitle, {marginBottom: '4%'}]}
-            />
-            <View style={styles.dayTxtCnt}>
-              <DescriptionText
-                text={`${state?.userDetail?.data?.shift} Shift`}
-                style={styles.headerTitle}
-              />
-              <View style={{marginLeft: '5%'}}>
-                {state?.userDetail?.data?.shift === 'day' ? <Sun /> : <Moon />}
-              </View>
-            </View>
-          </View>
-          <View style={styles.actionBtnCnt}>
-            {[<User />].map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  style={[styles.actionBtn]}
-                  onPress={() => navigation.navigate('ProfileStackScreen')}>
-                  {state?.userDetail?.data?.profileImage ? (
-                    <Image
-                      source={{uri: state?.userDetail?.data?.profileImage}}
-                      style={styles.profileImg}
-                    />
-                  ) : (
-                    item
-                  )}
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        </View>
-        {/* Body */}
-        <View style={styles.bodyCnt}>
-          <View style={{flex: 1}}>
-            <TitleText
-              text={'Visitors'}
-              style={{fontSize: 18, color: COLORS.inputtext}}
-            />
-            {/* Filters */}
-            <VisitorFilters filters={filters} setFilters={setFilters} />
+    <LinearGradient
+      colors={['#AFDBFF80', '#F9F9F9', '#F9F9F9']}
+      style={{
+        flex: 1,
+        justifyContent: 'flex-end',
+      }}>
+      <SafeAreaView style={{flex: 1}}>
+        <View
+          style={{
+            height: '5%',
+          }}>
+          <ImageBackground
+            source={require('../../assets/images/gridBackground.png')}
+            style={{marginHorizontal: 15}}>
+            {/* Header */}
             <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
+                alignItems: 'center',
               }}>
-              <TouchableOpacity
-                onPress={() => setFilter({loader: false, data: []})}>
-                <TitleText
-                  style={{
-                    fontSize: 14,
-                    color: 'red',
-                  }}
-                  text={filter.data.length > 0 ? 'Clear' : ''}
-                />
-              </TouchableOpacity>
-              {filters.From && filters.To && (
+              {/* User normal Detail */}
+              <View
+                style={{flexDirection: 'row', flex: 1, alignItems: 'center'}}>
                 <TouchableOpacity
-                  style={{marginBottom: '2%'}}
-                  onPress={applyFilter}>
-                  <TitleText
-                    style={{
-                      fontSize: 14,
-                      color: 'red',
+                  onPress={() => navigation.navigate('ProfileStackScreen')}>
+                  <Image
+                    source={{
+                      uri: state?.userDetail?.data.profileImage
+                        ? state?.userDetail?.data.profileImage
+                        : 'https://static.vecteezy.com/system/resources/thumbnails/001/840/612/small_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg',
                     }}
-                    text={'Apply Filter'}
+                    style={{
+                      height: 40,
+                      width: 40,
+                      borderRadius: 1000,
+                      backgroundColor: 'grey',
+                    }}
                   />
                 </TouchableOpacity>
-              )}
+                <View style={{marginHorizontal: '3%'}}>
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Regular',
+                      color: '#808080',
+                      fontSize: 14,
+                      marginBottom: '3%',
+                    }}>
+                    Hello
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-Regular',
+                      fontSize: 20,
+                      color: '#656565',
+                    }}>
+                    {state?.userDetail?.data.name}
+                  </Text>
+                </View>
+              </View>
+
+              <FontAwesome
+                // name="moon-o"
+                name={
+                  state?.userDetail?.data?.shift === 'day' ? 'sun-o' : 'moon-o'
+                }
+                style={{
+                  fontSize: 25,
+                  alignSelf: 'center',
+                  color: COLORS.blackFont,
+                }}
+              />
             </View>
-            {/* Visitors Lists */}
-            <FlatList
-              data={
-                filter.loader
-                  ? []
-                  : filter.data.length > 0
-                  ? filter.data
-                  : visitors.data
-              }
-              ListEmptyComponent={() => (
-                <AppLoaderSrceen
-                  loader={visitors.loader || filter.loader}
-                  error={visitors.error}
-                />
-              )}
-              ListFooterComponent={() => <View style={{height: 70}} />}
-              renderItem={visitorsListUI}
-              extraData={item => item._id}
-            />
-          </View>
-          <AppRoundAddActionButton
-            onPress={() => navigation.navigate('AddVisitor')}
-          />
+            <View style={{height: 200}} />
+          </ImageBackground>
         </View>
+
+        <VisitorFilters filters={filters} setFilters={setFilters} />
+        {filters.From && filters.To && (
+          <TouchableOpacity style={{marginBottom: '2%'}} onPress={applyFilter}>
+            <TitleText
+              style={{
+                fontSize: 14,
+                color: 'red',
+                alignSelf: 'flex-end',
+              }}
+              text={'Apply Filter'}
+            />
+          </TouchableOpacity>
+        )}
+        <FlatList
+          data={
+            filter.loader
+              ? []
+              : filter.data.length > 0
+              ? filter.data
+              : visitors.data
+          }
+          ListEmptyComponent={() => (
+            <AppLoaderSrceen
+              loader={visitors.loader || filter.loader}
+              error={visitors.error}
+            />
+          )}
+          ListFooterComponent={() => <View style={{height: 70}} />}
+          renderItem={visitorsListUI}
+          extraData={item => item._id}
+        />
       </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: '#F2FCFF'}} />
-    </Fragment>
+      <AppRoundAddActionButton
+        onPress={() => navigation.navigate('AddVisitor')}
+      />
+    </LinearGradient>
   );
 };
 
@@ -326,15 +393,10 @@ const styles = StyleSheet.create({
   },
   cardCnt: {
     ...shadow,
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    paddingHorizontal: 9,
-    paddingVertical: 15,
-    marginVertical: '2.5%',
-    marginHorizontal: 2,
+    padding: 10,
+    margin: 10,
     borderRadius: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    backgroundColor: 'white',
   },
   cardBasicDetailCnt: {flexDirection: 'row', flex: 1},
   profilePic: {

@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, Platform} from 'react-native';
 import {images} from './images/image';
 
 export const COLORS = {
@@ -17,6 +17,7 @@ export const COLORS = {
   inputTitleBlack: '#111827',
   inputBackground: '#F4F6F8',
   inputPlaceholder: '#BABABA',
+  softDescText: '#656565',
 };
 
 export const globalStyle = StyleSheet.create({
@@ -38,8 +39,7 @@ export const shadow = {
   },
   shadowOpacity: 0.1,
   shadowRadius: 1.84,
-
-  elevation: 5,
+  elevation: Platform.OS === 'ios' ? 5 : 2,
 };
 
 export const AuthThemeImage = () => {

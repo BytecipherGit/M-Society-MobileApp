@@ -26,17 +26,19 @@ const ContactDetail = ({navigation, route}) => {
           backgroundColor: 'white',
           ...shadow,
         }}>
-        <Text
-          style={{
-            fontFamily: 'Axiforma-SemiBold',
-            fontSize: 20,
-            color: '#262626',
-            marginBottom: '3%',
-            letterSpacing: 0.3,
-            alignSelf: 'center',
-          }}>
-          {`${profession}`.toUpperCase()}
-        </Text>
+        {profession && (
+          <Text
+            style={{
+              fontFamily: 'Axiforma-SemiBold',
+              fontSize: 20,
+              color: '#262626',
+              marginBottom: '3%',
+              letterSpacing: 0.3,
+              alignSelf: 'center',
+            }}>
+            {`${profession}`.toUpperCase()}
+          </Text>
+        )}
         {[
           {
             id: 1,

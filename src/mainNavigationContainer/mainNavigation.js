@@ -1,5 +1,5 @@
-import {View, Text} from 'react-native';
-import React from 'react';
+import {View, Text, StatusBar} from 'react-native';
+import React, {useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplashScreen from '../components/SplashScreen';
 import LoginScreen from '../components/LoginScreen';
@@ -37,6 +37,7 @@ import AddNewResident from '../components/Resident/AddNewResident';
 import GuardList from '../components/Guard/GuardList';
 import VisitorsList from '../components/Guard/VisitorsList';
 import ContactDetail from '../components/Contact/ContactDetail';
+import AppWebview from '../ReUsableComponents/AppWebview';
 
 const Stack = createNativeStackNavigator();
 
@@ -138,6 +139,7 @@ const mainNavigation = () => {
       {stackScreenWithNoHeader('UpdateComplaint', AddComplaints)}
       {stackScreenWithNoHeader('DocumentStack', DocumentStackNavigator)}
       {stackScreenWithNoHeader('SocietyInfoScreen', SocietyInfo)}
+      {stackScreenWithNoHeader('Webview', AppWebview)}
     </Stack.Navigator>
   );
 };

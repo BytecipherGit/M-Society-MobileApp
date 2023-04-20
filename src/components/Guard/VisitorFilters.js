@@ -69,8 +69,10 @@ const styles = StyleSheet.create({
   filterCnt: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: '4%',
+    marginTop: '6%',
     marginBottom: '2.5%',
+    width: '95%',
+    alignSelf: 'center',
   },
   datePickerButton: {
     backgroundColor: 'white',

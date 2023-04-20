@@ -19,82 +19,129 @@ import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import ForwardAerrow from '../../assets/images/ForwardAerrow.svg';
 import SuccessModal from '../../ReUsableComponents/SuccessModal';
 import {useSelector} from 'react-redux';
+import AppButton from '../../ReUsableComponents/AppButton';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const ProfileScreen = ({navigation, route}) => {
   const [logoutPopup, setLogoutPopup] = useState(false);
   const User = useSelector(state => state.AuthReducer.userDetail);
 
   const renderOptions = () => {
+    let array =
+      User.data.userType === 'guard' ? GuardprofileOptions : profileOptions;
     return (
-      <View>
-        <TitleText style={styles.profileText} text="Profile" />
-        <FlatList
-          data={
-            User.data.userType === 'guard'
-              ? GuardprofileOptions
-              : profileOptions
-          }
-          showsVerticalScrollIndicator={false}
-          renderItem={({item, index}) => (
-            <TouchableOpacity
-              style={styles.optionCards}
-              onPress={() => {
-                item.title === 'Logout'
-                  ? setLogoutPopup(true)
-                  : navigation.navigate(item.navigationScreen, {item: User});
-              }}>
-              {/* Icon UI */}
-              <View style={styles.cardIconCnt}>{item.icon}</View>
-              <View style={{width: '76%'}}>
-                <TitleText text={item.title} style={styles.cardTitle} />
-              </View>
-              <ForwardAerrow />
-            </TouchableOpacity>
-          )}
-          ListFooterComponent={() => <View style={{height: 10}} />}
-          extraData={({item, index}) => item.id}
-        />
+      <View
+        style={{
+          margin: 10,
+          backgroundColor: 'white',
+          borderRadius: 10,
+          ...shadow,
+        }}>
+        {array.map((item, index) => {
+          return (
+            <View key={index}>
+              <TouchableOpacity
+                style={styles.optionCards}
+                onPress={() => {
+                  item.param
+                    ? navigation.navigate(item.navigationScreen, {
+                        screenName: item.param.screenName,
+                        url: User[item.urlParam],
+                      })
+                    : navigation.navigate(item.navigationScreen, {item: User});
+                }}>
+                {/* Icon UI */}
+                <View style={styles.cardIconCnt}>{item.icon}</View>
+                <View style={{width: '76%'}}>
+                  <TitleText text={item.title} style={styles.cardTitle} />
+                </View>
+                <AntDesign
+                  name="right"
+                  style={{
+                    fontSize: 15,
+                    color: '#858585',
+                  }}
+                />
+              </TouchableOpacity>
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                  width: '83%',
+                  alignSelf: 'flex-end',
+                  borderColor: '#F3F3F3',
+                }}
+              />
+            </View>
+          );
+        })}
       </View>
     );
   };
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <SuccessModal
-          isVisible={logoutPopup}
-          setIsVisible={setLogoutPopup}
-          type={'Logout'}
-          navigationScreenName="Logout"
-          desc="Do you want to Logout Your Account ?"
+    <View style={globalStyle.cnt}>
+      <SuccessModal
+        isVisible={logoutPopup}
+        setIsVisible={setLogoutPopup}
+        type={'Logout'}
+        navigationScreenName="Logout"
+        desc="Do you want to Logout Your Account ?"
+      />
+      <AppHeader title={'Profile'} navigation={navigation} />
+      <FlatList
+        data={[1]}
+        renderItem={() => {
+          return (
+            <>
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                <ImageBackground
+                  style={[styles.profileImageCnt]}
+                  imageStyle={[
+                    {borderRadius: 30},
+                    !User.data.profileImage && {tintColor: COLORS.buttonColor},
+                  ]}
+                  source={{
+                    uri: User.data.profileImage,
+                  }}
+                />
+                <Text style={styles.userName}>{User.data.name}</Text>
+                <DescriptionText
+                  style={styles.userContact}
+                  text={`${User.data.countryCode} ${User.data.phoneNumber}`}
+                />
+              </View>
+              {renderOptions()}
+            </>
+          );
+        }}
+      />
+      <View
+        style={{
+          height: 100,
+          backgroundColor: 'white',
+          // alignItems: 'center',
+          // justifyContent: 'center',
+          ...shadow,
+          borderTopRightRadius: 20,
+          borderTopLeftRadius: 20,
+        }}>
+        <AppButton
+          buttonTitle={'Log Out'}
+          onPress={() => setLogoutPopup(true)}
+          renderIcon={() => (
+            <AntDesign
+              name="logout"
+              style={{
+                fontSize: 15,
+                marginRight: 10,
+                color: 'white',
+              }}
+            />
+          )}
+          buttonStyle={{width: '80%', alignSelf: 'center', marginTop: '5%'}}
         />
-        <AppHeader title={'Profile'} navigation={navigation} />
-        <View style={{flex: 0.34, alignItems: 'center'}}>
-          <ImageBackground
-            style={[styles.profileImageCnt]}
-            imageStyle={[
-              {borderRadius: 1000},
-              !User.data.profileImage && {tintColor: COLORS.buttonColor},
-            ]}
-            source={{
-              uri: User.data.profileImage
-                ? User.data.profileImage
-                : 'https://cdn-icons-png.flaticon.com/512/2102/2102647.png',
-            }}
-          />
-          <Text style={styles.userName}>{User.data.name}</Text>
-          <DescriptionText
-            style={styles.userContact}
-            text={`${User.data.countryCode} ${User.data.phoneNumber}`}
-          />
-        </View>
-        <FullCardBackground
-          RenderUI={() => renderOptions()}
-          styles={styles.detailCardCnt}
-        />
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: COLORS.themeBackground}} />
-    </Fragment>
+      </View>
+    </View>
   );
 };
 
@@ -102,30 +149,37 @@ export default ProfileScreen;
 
 const styles = StyleSheet.create({
   profileImageCnt: {
-    backgroundColor: COLORS.themeBackground,
-    height: 75,
-    width: 75,
-    borderRadius: 1000,
+    backgroundColor: COLORS.themeColor,
+    height: 100,
+    width: 100,
+    borderRadius: 30,
+    marginTop: 50,
   },
   userName: {
-    fontWeight: '400',
-    fontSize: 26,
-    marginTop: 16,
-    color: '#FAFEFF',
+    fontFamily: 'Axiforma-Bold',
+    fontSize: 18,
+    color: COLORS.blackFont,
+    marginTop: '4%',
   },
-  userContact: {color: '#E9F5F8', marginTop: 4},
+  userContact: {
+    fontFamily: 'Axiforma-Medium',
+    fontSize: 14,
+    color: COLORS.descFont,
+    marginTop: '2%',
+    marginBottom: 28,
+  },
   detailCardCnt: {padding: 16, backgroundColor: COLORS.themeBackground},
   profileText: {color: '#384252', marginBottom: '1.5%'},
   optionCards: {
-    ...shadow,
-    shadowOpacity: 0.4,
-    shadowRadius: 1,
+    // ...shadow,
+    // shadowOpacity: 0.4,
+    // shadowRadius: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: '2.5%',
-    marginHorizontal: '.5%',
+    marginVertical: '.5%',
+    // marginHorizontal: '.5%',
     padding: 10,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     borderRadius: 8,
     alignItems: 'center',
   },
@@ -133,10 +187,14 @@ const styles = StyleSheet.create({
     height: 35,
     width: 35,
     borderRadius: 1000,
-    borderWidth: 1.15,
+    // borderWidth: 1.15,
     borderColor: COLORS.themeColor,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  cardTitle: {fontWeight: '400', color: COLORS.blackFont},
+  cardTitle: {
+    fontFamily: 'Axiforma-Regular',
+    fontSize: 14,
+    color: COLORS.blackFont,
+  },
 });

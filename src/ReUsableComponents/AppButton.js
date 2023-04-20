@@ -10,6 +10,7 @@ const AppButton = ({
   onPress,
   buttonStyle,
   TextStyle,
+  renderIcon = () => null,
 }) => {
   return (
     <TouchableOpacity onPress={onPress}>
@@ -33,15 +34,18 @@ const AppButton = ({
         {btnLoader ? (
           <ActivityIndicator color={'white'} />
         ) : (
-          <TitleText
-            text={buttonTitle}
-            style={[
-              {
-                color: 'white',
-              },
-              TextStyle && TextStyle,
-            ]}
-          />
+          <View style={{flexDirection: 'row'}}>
+            {renderIcon()}
+            <TitleText
+              text={buttonTitle}
+              style={[
+                {
+                  color: 'white',
+                },
+                TextStyle && TextStyle,
+              ]}
+            />
+          </View>
         )}
       </LinearGradient>
     </TouchableOpacity>

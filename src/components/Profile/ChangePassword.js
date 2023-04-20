@@ -7,6 +7,7 @@ import {
   Platform,
   Alert,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import React, {useRef, useState} from 'react';
 import {AuthThemeImage, COLORS, globalStyle, shadow} from '../../assets/theme';
@@ -27,6 +28,8 @@ import HideEyeIcon from '../../assets/images/HideEyeIcon.svg';
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
+import AppHeader from '../../ReUsableComponents/AppHeader';
+import AppButton from '../../ReUsableComponents/AppButton';
 
 const LoginScreen = ({navigation, route}) => {
   const [data, setData] = useState({
@@ -121,93 +124,63 @@ const LoginScreen = ({navigation, route}) => {
         // showHideTransition={statusBarTransition}
         // hidden={hidden}
       />
-      <AuthHeader />
-      <AuthCard
-        cardTitle={'Change Password'}
-        buttonTitle={'Done'}
-        btnLoader={loader}
-        withCancelButton
-        onCancelPress={() => navigation.goBack()}
-        onSubmitPress={() => ChangePassword()}
-        renderSecondDesign={
-          <View style={{marginTop: '7%'}}>
-            {inputArray.map((item, index) => {
-              return (
-                <View style={styles.inputCnt} key={index}>
-                  <Text style={styles.title}>{item.title}</Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '100%',
-                      justifyContent: 'flex-end',
-                    }}>
-                    <AppTextInput
-                      item={item}
-                      value={data[item.param]}
-                      style={{
-                        // borderWidth: 1,
-                        flex: 1,
-                        borderRadius: 5,
-                        // padding: Platform.OS === 'ios' ? 5 : 0,
-                        // marginTop: '3%',
-                        borderColor: COLORS.inputBorder,
-                        backgroundColor: 'white',
-                        shadowColor: '#000',
-                        shadowOffset: {
-                          width: 0,
-                          height: 0,
-                        },
-                        shadowOpacity: 0.6,
-                        shadowRadius: 1.2,
-                        elevation: 3,
-                        margin: 2,
-                        // flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        padding: 12,
-                      }}
-                      setValue={text => {
-                        setData({...data, [item.param]: text});
-                        (error.newPassword ||
-                          error.oldPassword ||
-                          error.cPassword) &&
-                          setError({
-                            oldPassword: '',
-                            newPassword: '',
-                            cPassword: '',
-                          });
-                      }}
-                    />
-                    {item.id !== 1 && (
-                      <View style={{position: 'absolute', alignSelf: 'center'}}>
-                        <TouchableOpacity
-                          onPress={() => visibleInput(index)}
-                          style={{
-                            marginHorizontal: 10,
-                            // position: 'absolute',
-                            // alignSelf: 'center',
-                          }}>
-                          {item.secureTextEntry ? (
-                            <HideEyeIcon />
-                          ) : (
-                            <EyeIconSvg />
-                          )}
-                        </TouchableOpacity>
-                      </View>
-                    )}
-                  </View>
-                  {error[item.param] && (
-                    <DescriptionText
-                      style={{color: 'red', marginTop: '1.5%'}}
-                      text={error[item.param]}
-                    />
-                  )}
-                </View>
-              );
-            })}
-          </View>
-        }
-      />
+      <AppHeader navigation={navigation} title={'Change Password'} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        automaticallyAdjustKeyboardInsets={true}
+        contentContainerStyle={{flexGrow: 0.3}}>
+        <View
+          style={{
+            margin: 15,
+            padding: 10,
+            backgroundColor: 'white',
+            borderRadius: 10,
+            marginTop: '10%',
+            ...shadow,
+          }}>
+          {inputArray.map((item, index) => {
+            return (
+              <View style={styles.inputCnt} key={index}>
+                <Text style={styles.title}>{item.title}</Text>
+                <AppTextInput
+                  item={item}
+                  value={data[item.param]}
+                  showEyeIcon={true}
+                  onPressEye={() => {
+                    let arr = inputArray;
+                    arr[index].secureTextEntry = !arr[index].secureTextEntry;
+                    setInputArray([...arr]);
+                  }}
+                  setValue={text => {
+                    setData({...data, [item.param]: text});
+                    (error.newPassword ||
+                      error.oldPassword ||
+                      error.cPassword) &&
+                      setError({
+                        oldPassword: '',
+                        newPassword: '',
+                        cPassword: '',
+                      });
+                  }}
+                />
+                {error[item.param] && (
+                  <DescriptionText
+                    style={{color: 'red', marginTop: '1.5%'}}
+                    text={error[item.param]}
+                  />
+                )}
+              </View>
+            );
+          })}
+          <AppButton
+            buttonTitle={'Update Password'}
+            onPress={ChangePassword}
+            buttonStyle={{
+              marginTop: '10%',
+            }}
+          />
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -217,9 +190,10 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   inputCnt: {marginVertical: 10},
   title: {
+    fontFamily: 'Axiforma-Regular',
     fontSize: 14,
-    fontFamily: 'Inter-Medium',
-    color: COLORS.inputTitleBlack,
+    color: COLORS.descFont,
+    marginBottom: '2%',
   },
   inputView: {
     // borderWidth: 1,

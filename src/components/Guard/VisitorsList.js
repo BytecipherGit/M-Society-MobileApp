@@ -70,8 +70,6 @@ const VisitorsList = ({navigation}) => {
       <View
         style={{
           ...shadow,
-          shadowOpacity: 0.1,
-          shadowRadius: 3,
           padding: 10,
           backgroundColor: 'white',
           marginVertical: '2%',
@@ -84,7 +82,7 @@ const VisitorsList = ({navigation}) => {
           style={{
             height: 60,
             width: 60,
-            backgroundColor: COLORS.inputBorder,
+            backgroundColor: COLORS.themeColor,
             borderRadius: 10000,
           }}
           source={{uri: item?.image}}
@@ -101,7 +99,11 @@ const VisitorsList = ({navigation}) => {
               ' ' +
               `(${item.inTime} ${item.outTime ? '- ' + item.outTime : ''})`
             }
-            style={{marginBottom: '1%', marginLeft: '1%'}}
+            style={{
+              marginBottom: '1%',
+              marginLeft: '1%',
+              color: COLORS.titleFont,
+            }}
           />
 
           <DescriptionText
@@ -110,16 +112,15 @@ const VisitorsList = ({navigation}) => {
             }
             style={{
               marginLeft: '1%',
-              color: 'black',
+              color: COLORS.descFont,
               marginVertical: 5,
             }}
           />
           <DescriptionText
-            text={item.reasone}
+            text={'Reason:-' + item.reasone}
             style={{
               marginLeft: '1%',
-              color: 'red',
-              marginVertical: 3,
+              color: COLORS.buttonColor,
             }}
           />
         </View>
@@ -128,34 +129,27 @@ const VisitorsList = ({navigation}) => {
   };
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <AppHeader navigation={navigation} title="Visitors" />
-        <FullCardBackground
-          styles={{backgroundColor: COLORS.themeBackground, padding: 16}}
-          RenderUI={() => (
-            <View>
-              <FlatList
-                data={data.data}
-                showsVerticalScrollIndicator={false}
-                ListEmptyComponent={() => (
-                  <AppLoaderSrceen loader={data.loader} erro={data.error} />
-                )}
-                renderItem={({item, index}) => {
-                  if (isAdmin) {
-                    return rendetUI(item, index);
-                  } else if (houseNumber === item.houseNumber) {
-                    return rendetUI(item, index);
-                  }
-                }}
-                extraData={item => item._id}
-              />
-            </View>
+    <View style={globalStyle.cnt}>
+      <AppHeader navigation={navigation} title="Visitors" />
+      <View>
+        <FlatList
+          data={data.data}
+          showsVerticalScrollIndicator={false}
+          style={{margin: 15}}
+          ListEmptyComponent={() => (
+            <AppLoaderSrceen loader={data.loader} erro={data.error} />
           )}
+          renderItem={({item, index}) => {
+            if (isAdmin) {
+              return rendetUI(item, index);
+            } else if (houseNumber === item.houseNumber) {
+              return rendetUI(item, index);
+            }
+          }}
+          extraData={item => item._id}
         />
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: COLORS.themeBackground}} />
-    </Fragment>
+      </View>
+    </View>
   );
 };
 

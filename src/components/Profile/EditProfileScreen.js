@@ -37,6 +37,9 @@ import {USER_DATA} from '../../redux/Actions';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
+import LinearGradient from 'react-native-linear-gradient';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AppTextInput from '../../ReUsableComponents/AppTextInput';
 
 const EditProfileScreen = ({navigation, route}) => {
   const [visible, setVisible] = useState(false);
@@ -146,57 +149,41 @@ const EditProfileScreen = ({navigation, route}) => {
   const renderOptions = () => {
     return (
       <>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          automaticallyAdjustKeyboardInsets={true}
-          contentContainerStyle={{flexGrow: 0.3}}>
-          <TitleText style={styles.profileText} text="Edit Profile" />
-          <View>
-            {editUserJson.map((item, index) => {
-              return (
-                <View key={index} style={{marginVertical: '2%'}}>
-                  <TitleText
-                    text={item.title}
-                    style={{fontSize: 14, color: COLORS.titleFont}}
-                  />
-                  <View style={styles.optionCards}>
-                    <TextInput
-                      placeholder="Your Name"
-                      keyboardType={item.keyboardType}
-                      defaultValue={data[item.param]}
-                      placeholderTextColor={'#6B737F'}
-                      onChangeText={text =>
-                        setData({...data, [item.param]: text})
-                      }
-                      style={{
-                        marginVertical: '2%',
-                        fontWeight: '500',
-                        fontSize: 14,
-                        color: '#6B737F',
-                        flex: 1,
-                      }}
-                    />
-                  </View>
-                </View>
-              );
-            })}
-          </View>
-        </ScrollView>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View
+          style={{
+            width: '95%',
+            backgroundColor: 'white',
+            alignSelf: 'center',
+            padding: 10,
+            borderRadius: 10,
+            ...shadow,
+          }}>
+          {editUserJson.map((item, index) => {
+            return (
+              <View key={index} style={{marginVertical: '2%'}}>
+                <TitleText
+                  text={item.title}
+                  style={{
+                    fontFamily: 'Axiforma-Medium',
+                    fontSize: 14,
+                    color: COLORS.descFont,
+                    marginBottom: '2%',
+                  }}
+                />
+
+                <AppTextInput
+                  item={item}
+                  value={data[item.param]}
+                  setValue={text => setData({...data, [item.param]: text})}
+                />
+              </View>
+            );
+          })}
           <AppButton
+            buttonTitle="Update Profile"
             buttonStyle={{
-              width: '49%',
-              backgroundColor: 'white',
-              borderWidth: 0.5,
-              borderColor: COLORS.buttonColor,
+              marginTop: '10%',
             }}
-            TextStyle={{color: COLORS.buttonColor}}
-            onPress={() => navigation.goBack()}
-            buttonTitle="Cancel"
-          />
-          <AppButton
-            buttonStyle={{width: '49%'}}
-            buttonTitle="Save"
             btnLoader={saveLoader}
             onPress={updateProfile}
           />
@@ -206,88 +193,106 @@ const EditProfileScreen = ({navigation, route}) => {
   };
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <AppHeader title={'Edit Profile'} navigation={navigation} />
-        {loader ? (
+    <View style={globalStyle.cnt}>
+      <AppHeader title={'Edit Profile'} navigation={navigation} />
+      {loader ? (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator color={'white'} style={{marginTop: '-25%'}} />
+        </View>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          automaticallyAdjustKeyboardInsets={true}
+          contentContainerStyle={{flexGrow: 0.3}}>
           <View
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator color={'white'} style={{marginTop: '-25%'}} />
-          </View>
-        ) : (
-          <>
-            <View style={{flex: 0.34, alignItems: 'center'}}>
-              <Menu
-                visible={visible}
-                style={{marginTop: '10%', marginLeft: '4%'}}
-                anchor={
+            style={{
+              height: 200,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Menu
+              visible={visible}
+              style={{marginTop: '25%'}}
+              anchor={
+                <View style={styles.profileImageCnt}>
                   <ImageBackground
-                    style={styles.profileImageCnt}
+                    style={{
+                      height: '100%',
+                      width: '100%',
+                    }}
                     imageStyle={[
-                      {borderRadius: 1000},
+                      {borderRadius: 30},
                       !data.profileImage && {tintColor: COLORS.buttonColor},
                     ]}
                     source={{
-                      uri: data.profileImage
-                        ? data.profileImage
-                        : 'https://cdn-icons-png.flaticon.com/512/2102/2102647.png',
-                    }}>
-                    <TouchableOpacity
-                      onPress={showMenu}
+                      uri: data.profileImage,
+                    }}></ImageBackground>
+                  <TouchableOpacity
+                    style={{
+                      height: 30,
+                      width: 30,
+                      borderRadius: 1000,
+                      borderWidth: 3,
+                      borderColor: 'white',
+                      position: 'absolute',
+                    }}
+                    onPress={showMenu}>
+                    <LinearGradient
+                      colors={['#FF7334', '#FFA13C']}
+                      start={{x: 0.0, y: 0.0}}
+                      end={{x: 1.0, y: 1.0}}
+                      locations={[0.0, 1.0]}
                       style={{
-                        backgroundColor: 'rgba(0,0,0,.2)',
-                        flex: 1,
+                        height: '100%',
+                        width: '100%',
                         borderRadius: 1000,
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      <CameraIconSvg />
-                    </TouchableOpacity>
-                  </ImageBackground>
-                }
-                onRequestClose={hideMenu}>
-                <FlatList
-                  data={['camera', 'gallery', 'View']}
-                  renderItem={({item, index}) => (
-                    <>
-                      <MenuItem
-                        onPress={() => {
-                          hideMenu(),
-                            setTimeout(() => {
-                              item === 'View'
-                                ? navigation.navigate('ImageViewScreen', {
-                                    img: data.profileImage,
-                                  })
-                                : pickImage(item);
-                            }, 500);
-                        }}>
-                        <Text style={{fontWeight: 'bold', color: 'grey'}}>
-                          {' '}
-                          {item === 'View'
-                            ? 'View Profile Picture'
-                            : `Pick From ${item?.toLocaleUpperCase()}`}
-                        </Text>
-                      </MenuItem>
-                      <MenuDivider />
-                    </>
-                  )}
-                />
-              </Menu>
-              <Text style={styles.userName}>{data.name}</Text>
-              <DescriptionText
-                style={styles.userContact}
-                text={data.countryCode + ' ' + data.phoneNumber}
+                      <MaterialIcons
+                        name="edit"
+                        style={{
+                          fontSize: 15,
+                          color: 'white',
+                        }}
+                      />
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </View>
+              }
+              onRequestClose={hideMenu}>
+              <FlatList
+                data={['camera', 'gallery', 'View']}
+                renderItem={({item, index}) => (
+                  <>
+                    <MenuItem
+                      onPress={() => {
+                        hideMenu(),
+                          setTimeout(() => {
+                            item === 'View'
+                              ? navigation.navigate('ImageViewScreen', {
+                                  img: data.profileImage,
+                                })
+                              : pickImage(item);
+                          }, 500);
+                      }}>
+                      <Text style={{fontWeight: 'bold', color: 'grey'}}>
+                        {' '}
+                        {item === 'View'
+                          ? 'View Profile Picture'
+                          : `Pick From ${item?.toLocaleUpperCase()}`}
+                      </Text>
+                    </MenuItem>
+                    <MenuDivider />
+                  </>
+                )}
               />
-            </View>
-            <FullCardBackground
-              RenderUI={() => renderOptions()}
-              styles={styles.detailCardCnt}
-            />
-          </>
-        )}
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: COLORS.themeBackground}} />
-    </Fragment>
+            </Menu>
+          </View>
+          {renderOptions()}
+        </ScrollView>
+      )}
+    </View>
   );
 };
 
@@ -295,9 +300,13 @@ export default EditProfileScreen;
 
 const styles = StyleSheet.create({
   profileImageCnt: {
-    height: 75,
-    width: 75,
-    borderRadius: 1000,
+    height: 100,
+    width: 100,
+    borderRadius: 30,
+    backgroundColor: COLORS.themeColor,
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    // flexDirection: 'row',
   },
   userName: {
     fontWeight: '400',

@@ -28,18 +28,32 @@ const ContactScreen = ({navigation, route}) => {
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
 
   useEffect(() => {
+    console.log(route?.params?.screenName === 'Service');
     const getContactDetails = async () => {
       setLoader(true);
       const payload = {
-        url: API_URL + 'directory/resident/all',
+        url:
+          API_URL +
+          (route?.params?.screenName === 'Service'
+            ? 'serviceProvider/all'
+            : 'directory/resident/all'),
       };
       try {
         const Result = await GetData(payload);
-        console.log(Result.data);
         if (Result && Result.data && Result.data.success) {
           if (Result.data.data.length > 0) {
-            setData(Result?.data?.data);
-            setError('');
+            if (route?.params?.screenName === 'Service') {
+              let arr = [];
+              Result.data.data.map((item, index) => {
+                if (item.isVerify) {
+                  arr.push(item);
+                }
+              });
+              setData([...arr]);
+            } else {
+              setData(Result?.data?.data);
+              setError('');
+            }
           } else {
             setError('No Contact Found');
           }
@@ -61,7 +75,10 @@ const ContactScreen = ({navigation, route}) => {
 
   return (
     <View style={globalStyle.cnt}>
-      <AppHeader navigation={navigation} title="Contact" />
+      <AppHeader
+        navigation={navigation}
+        title={route?.params?.screenName === 'Service' ? 'Service' : 'Contact'}
+      />
       <View>
         <FlatList
           data={data}
@@ -78,7 +95,7 @@ const ContactScreen = ({navigation, route}) => {
               <PhoneIcon />
               <View style={{marginLeft: '3%'}}>
                 <Text style={style.contactDetail}>
-                  {item.name + ' - ' + item.profession}
+                  {item.name + (item.profession ? ' - ' + item.profession : '')}
                 </Text>
               </View>
             </TouchableOpacity>
