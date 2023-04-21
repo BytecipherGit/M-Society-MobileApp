@@ -71,7 +71,7 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <LinearGradient
-      colors={['#AFDBFF80', '#F9F9F9', '#F9F9F9']}
+      colors={[COLORS.themeColor, '#F9F9F9', '#F9F9F9']}
       style={{
         flex: 1,
       }}>

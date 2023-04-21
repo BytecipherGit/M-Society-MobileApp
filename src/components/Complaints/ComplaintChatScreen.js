@@ -124,115 +124,97 @@ const ComplaintChatScreen = ({navigation, route}) => {
   };
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        {/* Header */}
-        <View style={style.headerCnt}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <BackIcon style={{marginLeft: 3}} />
-          </TouchableOpacity>
-          <View style={style.headerSubCnt}>
-            <View style={style.DocumentIconCnt}>
-              <DocumentIcon width={18} height={18} />
-            </View>
-            <TitleText
-              text={complainTitle}
-              style={{fontSize: 18, color: '#ffffff', marginLeft: '7%'}}
-            />
-          </View>
-        </View>
-        {/* Content */}
-        <View style={{flex: 1, backgroundColor: COLORS.themeBackground}}>
-          <FlatList
-            data={data?.chat?.complainChat}
-            renderItem={({item, index}) => (
-              <>
+    <View style={globalStyle.cnt}>
+      {/* Header */}
+      <AppHeader title={complainTitle} navigation={navigation} />
+      <View style={{flex: 1, backgroundColor: '#F9F9F9'}}>
+        <FlatList
+          data={data?.chat?.complainChat}
+          renderItem={({item, index}) => (
+            <>
+              <View
+                style={{
+                  marginVertical: '5%',
+                }}>
+                <TitleText
+                  style={style.cardDate}
+                  text={moment(`${item.date}`).format('DD MMM, HH:MM a')}
+                />
                 <View
-                  style={{
-                    marginVertical: '5%',
-                  }}>
+                  style={[
+                    style.card,
+                    item.isAdmin && {
+                      backgroundColor: 'white',
+                      alignSelf: 'flex-start',
+                    },
+                  ]}>
                   <TitleText
-                    style={style.cardDate}
-                    text={moment(`${item.date}`).format('DD MMM, HH:MM a')}
+                    style={style.cardTitle}
+                    text={`${item.isAdmin ? 'By' : 'To'} ${item.name}`}
                   />
-                  <View
+                  <DescriptionText
                     style={[
-                      style.card,
-                      item.isAdmin && {
-                        backgroundColor: 'white',
-                        alignSelf: 'flex-start',
-                      },
-                    ]}>
-                    <TitleText
-                      style={style.cardTitle}
-                      text={`${item.isAdmin ? 'By' : 'To'} ${item.name}`}
-                    />
-                    <DescriptionText
-                      style={[
-                        style.cardDescription,
-                        {color: item.isAdmin ? '#6B737F' : '#4C5564'},
-                      ]}
-                      text={item.description}
-                    />
-                  </View>
-                  <View
-                    style={[
-                      style.cardActionButtons,
-                      {alignSelf: item.isAdmin ? 'flex-start' : 'flex-end'},
-                    ]}>
-                    {[1, 2].map((i, index) => {
-                      return (
-                        <TouchableOpacity
-                          activeOpacity={1}
-                          onPress={() => manageActionOnChat(item, index)}
-                          key={index}
+                      style.cardDescription,
+                      {color: item.isAdmin ? '#6B737F' : '#4C5564'},
+                    ]}
+                    text={item.description}
+                  />
+                </View>
+                <View
+                  style={[
+                    style.cardActionButtons,
+                    {alignSelf: item.isAdmin ? 'flex-start' : 'flex-end'},
+                  ]}>
+                  {[1, 2].map((i, index) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={1}
+                        onPress={() => manageActionOnChat(item, index)}
+                        key={index}
+                        style={[
+                          style.button,
+                          !item.isAdmin &&
+                            (index === 0
+                              ? styleOfLoggedInUser.actionButton
+                              : styleOfLoggedInUser.imageButton),
+                        ]}>
+                        <DescriptionText
+                          text={renderButtonTitle(item, index)}
                           style={[
-                            style.button,
+                            style.buttonTitle,
                             !item.isAdmin &&
                               (index === 0
-                                ? styleOfLoggedInUser.actionButton
-                                : styleOfLoggedInUser.imageButton),
-                          ]}>
-                          <DescriptionText
-                            text={renderButtonTitle(item, index)}
-                            style={[
-                              style.buttonTitle,
-                              !item.isAdmin &&
-                                (index === 0
-                                  ? styleOfLoggedInUser.actionButtonTitle
-                                  : styleOfLoggedInUser.imageButtonTitle),
-                            ]}
-                          />
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </View>
+                                ? styleOfLoggedInUser.actionButtonTitle
+                                : styleOfLoggedInUser.imageButtonTitle),
+                          ]}
+                        />
+                      </TouchableOpacity>
+                    );
+                  })}
                 </View>
-                <Text
-                  ellipsizeMode="clip"
-                  numberOfLines={1}
-                  style={{color: '#D2D5DC', marginTop: '-3.5%'}}>
-                  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-                  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-                  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-                  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-                  - - - -
-                </Text>
-              </>
-            )}
-          />
-        </View>
-        <View style={style.replyCnt}>
-          <TouchableOpacity style={style.replyButton} onPress={replyChat}>
-            <Text style={style.replyTitle}>
-              Reply {'  '}
-              <CurveNextAerrow />
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: COLORS.themeBackground}} />
-    </Fragment>
+              </View>
+              <Text
+                ellipsizeMode="clip"
+                numberOfLines={1}
+                style={{color: COLORS.greyFont, marginTop: '-3.5%'}}>
+                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+              </Text>
+            </>
+          )}
+        />
+      </View>
+      <View style={style.replyCnt}>
+        <TouchableOpacity style={style.replyButton} onPress={replyChat}>
+          <Text style={style.replyTitle}>
+            Reply {'  '}
+            <CurveNextAerrow />
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
@@ -302,7 +284,7 @@ const style = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1,
     width: '75%',
-    backgroundColor: '#E9F5F8',
+    backgroundColor: COLORS.themeColor,
     padding: 12,
     marginHorizontal: 12,
     borderRadius: 8,
@@ -324,12 +306,13 @@ const style = StyleSheet.create({
     marginVertical: '2.5%',
   },
   replyCnt: {
-    backgroundColor: COLORS.themeBackground,
+    backgroundColor: '#F9F9F9',
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
+    marginBottom: '6%',
   },
   replyButton: {
-    backgroundColor: '#DAF8FF',
+    backgroundColor: COLORS.themeColor,
     margin: '1%',
     borderRadius: 4,
     marginRight: '4%',
@@ -338,7 +321,7 @@ const style = StyleSheet.create({
     marginHorizontal: 34,
     marginVertical: 13,
     fontSize: 14,
-    color: COLORS.themeColor,
+    color: COLORS.titleFont,
     fontFamily: 'Inter-Medium',
   },
 });

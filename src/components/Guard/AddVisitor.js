@@ -1,12 +1,9 @@
 import {
   View,
   Text,
-  SafeAreaView,
   ScrollView,
-  TextInput,
   TouchableOpacity,
   FlatList,
-  Alert,
   Image,
   StyleSheet,
   Platform,
@@ -15,10 +12,8 @@ import React, {Fragment, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
 import {AddVisitorFields} from '../../assets/Jsons';
-import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
 import CameraIcon from '../../assets/images/CameraIcon.svg';
-import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import AppButton from '../../ReUsableComponents/AppButton';
 import {addVisitorFormData} from '../../assets/services';
@@ -34,7 +29,7 @@ const AddVisitor = ({navigation, route}) => {
     houseNumber: '',
     reasone: '',
     image: {},
-    countyCode: '+91',
+    countryCode: '+91',
   });
   const [loader, setLoader] = useState(false);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
@@ -84,6 +79,7 @@ const AddVisitor = ({navigation, route}) => {
     }
     setLoader(true);
     try {
+      console.log(data);
       const Result = await addVisitorFormData(data);
       if (Result.success) {
         setAlertData({
@@ -190,6 +186,7 @@ const AddVisitor = ({navigation, route}) => {
                 ) : (
                   <AppTextInput
                     item={item}
+                    countryCode={item.countryCode}
                     value={data[item.param]}
                     setValue={text => setData({...data, [item.param]: text})}
                   />

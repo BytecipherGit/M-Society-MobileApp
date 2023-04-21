@@ -1,21 +1,8 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  FlatList,
-  StyleSheet,
-} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../assets/theme';
 import AppHeader from '../ReUsableComponents/AppHeader';
-import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
-import FullCardBackground from '../ReUsableComponents/FullCardBackground';
 import AppRoundAddActionButton from '../ReUsableComponents/AppRoundAddActionButton';
-import DescriptionText from "../ReUsableComponents/Text's/DescriptionText";
-import DocumentIcon from '../assets/images/DocumentIcon.svg';
-import TitleText from "../ReUsableComponents/Text's/TitleText";
-import {API_URL, GetData} from '../assets/services';
 import {useDispatch, useSelector} from 'react-redux';
 import {COMPLAINT_LIST_REQUEST} from '../redux/Actions';
 import AppLoaderSrceen from '../ReUsableComponents/AppLoaderSrceen';
@@ -109,38 +96,10 @@ const CompaintList = ({navigation}) => {
                       },
                     )
                   }
-                  style={{
-                    margin: 20,
-                    padding: 15,
-                    backgroundColor: 'white',
-                    borderRadius: 10,
-                    ...shadow,
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: 'Axiforma-Medium',
-                      fontSize: 18,
-                      color: COLORS.blackFont,
-                      marginBottom: '2%',
-                    }}>
-                    {item.complainTitle}
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'Axiforma-Light',
-                      fontSize: 14,
-                      color: COLORS.greyFont,
-                      lineHeight: 23,
-                    }}>
-                    {item.description}
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'Axiforma-Light',
-                      fontSize: 12,
-                      color: '#ABACB0',
-                      marginTop: '2%',
-                    }}>
+                  style={style.card}>
+                  <Text style={style.cardTitle}>{item.complainTitle}</Text>
+                  <Text style={style.description}>{item.description}</Text>
+                  <Text style={style.cardDate}>
                     {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
                   </Text>
                 </TouchableOpacity>
@@ -159,47 +118,29 @@ const CompaintList = ({navigation}) => {
 export default CompaintList;
 
 const style = StyleSheet.create({
-  cardCnt: {
-    ...shadow,
-    shadowOffset: {
-      width: 0,
-      height: 0.5,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 1,
+  card: {
+    margin: 20,
+    padding: 15,
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 15,
-    marginTop: '5%',
-    marginHorizontal: 2,
-  },
-  titleCnt: {flexDirection: 'row', alignItems: 'center'},
-  iconCnt: {
-    height: 24,
-    width: 24,
-    backgroundColor: 'rgba(233, 245, 248, 1)',
-    borderRadius: 1000,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  descText: {
-    lineHeight: 19.6,
-    marginTop: '3%',
-    textAlign: 'justify',
-  },
-  complaintOptionCnt: {
     ...shadow,
-    shadowOffset: {
-      width: 0.6,
-      height: 0.5,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 1,
-    shadowColor: COLORS.themeColor,
-    width: '49%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 4,
-    marginBottom: '1%',
+  },
+  cardTitle: {
+    fontFamily: 'Axiforma-Medium',
+    fontSize: 18,
+    color: COLORS.blackFont,
+    marginBottom: '2%',
+  },
+  description: {
+    fontFamily: 'Axiforma-Light',
+    fontSize: 14,
+    color: COLORS.greyFont,
+    lineHeight: 23,
+  },
+  cardDate: {
+    fontFamily: 'Axiforma-Light',
+    fontSize: 12,
+    color: '#ABACB0',
+    marginTop: '2%',
   },
 });

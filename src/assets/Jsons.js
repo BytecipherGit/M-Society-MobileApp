@@ -343,12 +343,12 @@ export const GuardprofileOptions = [
     navigationScreen: 'GuardEditProfileScreen',
     icon: <DocumentIcon />,
   },
-  {
-    id: 5,
-    title: 'Logout',
-    navigationScreen: 'LoginOptionsScreen',
-    icon: <LogoutIcon />,
-  },
+  // {
+  //   id: 5,
+  //   title: 'Logout',
+  //   navigationScreen: 'LoginOptionsScreen',
+  //   icon: <LogoutIcon />,
+  // },
 ];
 
 export const editUserJson = [
@@ -474,6 +474,7 @@ export const AddVisitorFields = [
     title: 'Phone Number',
     keyboardType: 'number-pad', //default
     param: 'phoneNumber',
+    countryCode: 91,
   },
   {
     id: 2,

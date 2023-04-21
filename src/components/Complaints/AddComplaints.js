@@ -1,23 +1,14 @@
 import {
   View,
   Text,
-  SafeAreaView,
-  TextInput,
-  ScrollView,
   FlatList,
   TouchableOpacity,
   Image,
   StyleSheet,
-  Alert,
-  Platform,
 } from 'react-native';
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
-import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
-import AddComplainDocumentIcon from '../../assets/images/AddComplaintDocumentIcon.svg';
-import TitleText from "../../ReUsableComponents/Text's/TitleText";
-import CameraIcon from '../../assets/images/CameraIcon.svg';
 import AddFileIcon from '../../assets/images/AddFileIcon.svg';
 import AppButton from '../../ReUsableComponents/AppButton';
 import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
@@ -208,44 +199,19 @@ const AddComplaints = ({route}) => {
               : 'Rase Complaint'
           }
         />
-        <View
-          style={{
-            borderRadius: 10,
-            ...shadow,
-            margin: 20,
-            padding: 15,
-            backgroundColor: 'white',
-          }}>
+        <View style={styles.card}>
           <FlatList
             data={[1]}
             renderItem={() => {
               return (
                 <View>
-                  <Text
-                    style={{
-                      fontFamily: 'Axiforma-Medium',
-                      fontSize: 14,
-                      color: COLORS.descFont,
-                      marginBottom: '1.5%',
-                      marginTop: '7%',
-                    }}>
-                    Subject
-                  </Text>
+                  <Text style={styles.subject}>Subject</Text>
                   <AppTextInput
                     item={{title: 'Subject'}}
                     value={data.complainTitle}
                     setValue={text => setData({...data, complainTitle: text})}
                   />
-                  <Text
-                    style={{
-                      fontFamily: 'Axiforma-Medium',
-                      fontSize: 14,
-                      color: COLORS.descFont,
-                      marginBottom: '1.5%',
-                      marginTop: '7%',
-                    }}>
-                    Note
-                  </Text>
+                  <Text style={styles.note}>Note</Text>
                   <AppTextInput
                     item={{title: 'Note'}}
                     multiline
@@ -256,27 +222,8 @@ const AddComplaints = ({route}) => {
                       alignItems: 'flex-start',
                     }}
                   />
-                  <Text
-                    style={{
-                      fontFamily: 'Axiforma-Medium',
-                      fontSize: 14,
-                      color: COLORS.descFont,
-                      marginBottom: '1.5%',
-                      marginTop: '7%',
-                    }}>
-                    Attach File
-                  </Text>
-                  <View
-                    style={{
-                      borderRadius: 10,
-                      borderWidth: 2,
-                      height: 130,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginVertical: '1%',
-                      borderColor: '#DEDEDE',
-                      borderStyle: 'dashed',
-                    }}>
+                  <Text style={styles.attachFileTxt}>Attach File</Text>
+                  <View style={styles.filePickerCnt}>
                     <Menu
                       visible={visible}
                       style={styles.cameraOptionsCnt}
@@ -329,13 +276,7 @@ const AddComplaints = ({route}) => {
                       </TouchableOpacity>
                     )}
                   </View>
-                  <Text
-                    style={{
-                      fontFamily: 'Axiforma-Regular',
-                      fontSize: 12,
-                      color: COLORS.descFont,
-                      marginVertical: '2%',
-                    }}>
+                  <Text style={styles.filePicknote}>
                     Mandotary Only PDF, JPG, PNG, JPEG File Accepted
                   </Text>
                   <FlatList
@@ -388,29 +329,7 @@ const styles = StyleSheet.create({
     padding: 13,
     marginBottom: '1%',
   },
-  InnerCardDetail: {height: '85%'},
-  cardTitle: {
-    alignSelf: 'center',
-    marginTop: '1.5%',
-    color: COLORS.themeColor,
-  },
-  SubjectInput: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: 'black',
-  },
-  devider: {
-    borderWidth: 0.5,
-    borderColor: '#D2D5DC',
-    marginTop: '2%',
-  },
-  descInput: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: COLORS.inputtext,
-    marginTop: '2%',
-    lineHeight: 19,
-  },
+
   img: {
     height: 44,
     width: 44,
@@ -418,33 +337,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 3,
     borderRadius: 5,
   },
-  cameraButton: {
-    height: 36,
-    width: 36,
-    backgroundColor: COLORS.themeColor,
-    margin: '2%',
-    borderRadius: 1000,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  BottomButtonView: {
-    flexDirection: 'row',
-    backgroundColor: COLORS.themeBackground,
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-  },
-  BottomButton: {
-    width: '49%',
-    borderWidth: 1,
-    borderRadius: 4,
-    borderColor: COLORS.buttonColor,
-  },
-  operationButtonsCnt: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: '4%',
-    marginTop: '4%',
-  },
+
   cameraOptionsCnt: {marginTop: '10%', marginLeft: '4%'},
   statusButton: {
     backgroundColor: COLORS.themeColor,
@@ -464,16 +357,48 @@ const styles = StyleSheet.create({
     marginTop: '1%',
     marginLeft: '2%',
   },
-  statusOptionsCnt: {
-    alignSelf: 'flex-end',
-    width: '25%',
-    backgroundColor: '#E9F5F8',
-    marginHorizontal: '4%',
-    marginTop: '2%',
-    borderRadius: 6,
+  card: {
+    borderRadius: 10,
+    ...shadow,
+    margin: 20,
+    padding: 15,
+    backgroundColor: 'white',
+  },
+  subject: {
+    fontFamily: 'Axiforma-Medium',
+    fontSize: 14,
+    color: COLORS.descFont,
+    marginBottom: '1.5%',
+    marginTop: '7%',
+  },
+  note: {
+    fontFamily: 'Axiforma-Medium',
+    fontSize: 14,
+    color: COLORS.descFont,
+    marginBottom: '1.5%',
+    marginTop: '7%',
+  },
+  attachFileTxt: {
+    fontFamily: 'Axiforma-Medium',
+    fontSize: 14,
+    color: COLORS.descFont,
+    marginBottom: '1.5%',
+    marginTop: '7%',
+  },
+  filePickerCnt: {
+    borderRadius: 10,
+    borderWidth: 2,
+    height: 130,
+    justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
-    borderWidth: 0.5,
-    borderColor: COLORS.themeColor,
+    marginVertical: '1%',
+    borderColor: '#DEDEDE',
+    borderStyle: 'dashed',
+  },
+  filePicknote: {
+    fontFamily: 'Axiforma-Regular',
+    fontSize: 12,
+    color: COLORS.descFont,
+    marginVertical: '2%',
   },
 });

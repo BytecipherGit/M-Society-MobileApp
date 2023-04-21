@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
-  Button,
-  Alert,
   ImageBackground,
 } from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
@@ -16,15 +14,9 @@ import AppHeader from '../../ReUsableComponents/AppHeader';
 import AppRoundAddActionButton from '../../ReUsableComponents/AppRoundAddActionButton';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import {useDispatch, useSelector} from 'react-redux';
-import User from '../../assets/images/User.svg';
-import Moon from '../../assets/images/Moon.svg';
-import Sun from '../../assets/images/Sun.svg';
-import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
-import DatePicker from 'react-native-date-picker';
-import {VisitorsFakeList} from '../../assets/Jsons';
 import moment from 'moment';
 import VisitorFilters from './VisitorFilters';
-import {API_URL, GetData, PostData} from '../../assets/services';
+import {API_URL, GetData, PostData, PutData} from '../../assets/services';
 import {
   GET_VISITORS_LIST_REQUEST,
   UPDATE_VISITORS_LIST,
@@ -77,8 +69,10 @@ const GuardHomeScreen = ({navigation}) => {
       },
     };
 
+    console.log(payload);
+
     try {
-      const Result = await PostData(payload);
+      const Result = await PutData(payload);
       if (Result.data.success) {
         if (filter.data.length > 0) {
           const arr = filter.data;
@@ -128,49 +122,14 @@ const GuardHomeScreen = ({navigation}) => {
     return (
       <View style={[styles.cardCnt]}>
         <View style={{flexDirection: 'row'}}>
-          <Image
-            source={{uri: image}}
-            style={{
-              height: 50,
-              width: 50,
-              borderRadius: 10,
-              backgroundColor: COLORS.themeColor,
-            }}
-          />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              // flex: 0.8,
-              width: '86%',
-              alignItems: 'center',
-            }}>
+          <Image source={{uri: image}} style={styles.cardImage} />
+          <View style={styles.cardUserMainDetail}>
             <View style={{marginLeft: 10}}>
-              <Text
-                style={{
-                  fontFamily: 'Axiforma-Medium',
-                  fontSize: 19,
-                  color: COLORS.blackFont,
-                  marginBottom: '4%',
-                }}>
-                {name}
-              </Text>
-              <Text
-                style={{
-                  fontFamily: 'Axiforma-Regular',
-                  fontSize: 14,
-                  color: COLORS.descFont,
-                }}>
-                {phoneNumber}
-              </Text>
+              <Text style={styles.cardName}>{name}</Text>
+              <Text style={styles.cardPhoneNumber}>{phoneNumber}</Text>
             </View>
             <View style={{height: '80%'}}>
-              <Text
-                style={{
-                  fontFamily: 'Axiforma-Light',
-                  fontSize: 12,
-                  color: '#ABACB0',
-                }}>
+              <Text style={styles.cardDate}>
                 {moment(`${createdDate}`).format('DD/MM/YYYY')}
               </Text>
             </View>
@@ -192,12 +151,7 @@ const GuardHomeScreen = ({navigation}) => {
             },
           ].map((data, index) => (
             <View key={index} style={{marginVertical: '1%'}}>
-              <Text
-                style={{
-                  fontFamily: 'Axiforma-Regular',
-                  fontSize: 14,
-                  color: COLORS.descFont,
-                }}>
+              <Text style={styles.cardDetailHeader}>
                 {data.title} -{' '}
                 <Text
                   style={{
@@ -209,26 +163,10 @@ const GuardHomeScreen = ({navigation}) => {
             </View>
           ))}
         </View>
-        <View
-          style={{
-            borderWidth: 1,
-            borderStyle: 'dashed',
-            marginTop: '3%',
-            borderColor: '#C8C8C8',
-          }}
-        />
+        <View style={styles.devider} />
         <TouchableOpacity
           onPress={() => !item.outTime && checkOutUser(item, index)}>
-          <Text
-            style={{
-              marginVertical: 15,
-              marginTop: 20,
-              alignSelf: 'center',
-              fontFamily: 'Inter-SemiBold',
-              fontSize: 14,
-              color: '#FF7334',
-              letterSpacing: 1,
-            }}>
+          <Text style={styles.outTimeButton}>
             {item.outTime ? item.outTime : 'Exit Visitor'}
           </Text>
         </TouchableOpacity>
@@ -239,10 +177,7 @@ const GuardHomeScreen = ({navigation}) => {
   return (
     <LinearGradient
       colors={['#AFDBFF80', '#F9F9F9', '#F9F9F9']}
-      style={{
-        flex: 1,
-        justifyContent: 'flex-end',
-      }}>
+      style={styles.leanerCnt}>
       <SafeAreaView style={{flex: 1}}>
         <View
           style={{
@@ -252,12 +187,7 @@ const GuardHomeScreen = ({navigation}) => {
             source={require('../../assets/images/gridBackground.png')}
             style={{marginHorizontal: 15}}>
             {/* Header */}
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
+            <View style={styles.headerCnt}>
               {/* User normal Detail */}
               <View
                 style={{flexDirection: 'row', flex: 1, alignItems: 'center'}}>
@@ -269,45 +199,22 @@ const GuardHomeScreen = ({navigation}) => {
                         ? state?.userDetail?.data.profileImage
                         : 'https://static.vecteezy.com/system/resources/thumbnails/001/840/612/small_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg',
                     }}
-                    style={{
-                      height: 40,
-                      width: 40,
-                      borderRadius: 1000,
-                      backgroundColor: 'grey',
-                    }}
+                    style={styles.headerProfileIcon}
                   />
                 </TouchableOpacity>
                 <View style={{marginHorizontal: '3%'}}>
-                  <Text
-                    style={{
-                      fontFamily: 'Axiforma-Regular',
-                      color: '#808080',
-                      fontSize: 14,
-                      marginBottom: '3%',
-                    }}>
-                    Hello
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'Axiforma-Regular',
-                      fontSize: 20,
-                      color: '#656565',
-                    }}>
+                  <Text style={styles.headerHelloIcon}>Hello</Text>
+                  <Text style={styles.headerProfileTitle}>
                     {state?.userDetail?.data.name}
                   </Text>
                 </View>
               </View>
 
               <FontAwesome
-                // name="moon-o"
                 name={
                   state?.userDetail?.data?.shift === 'day' ? 'sun-o' : 'moon-o'
                 }
-                style={{
-                  fontSize: 25,
-                  alignSelf: 'center',
-                  color: COLORS.blackFont,
-                }}
+                style={styles.headerShiftIcon}
               />
             </View>
             <View style={{height: 200}} />
@@ -316,16 +223,28 @@ const GuardHomeScreen = ({navigation}) => {
 
         <VisitorFilters filters={filters} setFilters={setFilters} />
         {filters.From && filters.To && (
-          <TouchableOpacity style={{marginBottom: '2%'}} onPress={applyFilter}>
-            <TitleText
-              style={{
-                fontSize: 14,
-                color: 'red',
-                alignSelf: 'flex-end',
-              }}
-              text={'Apply Filter'}
-            />
-          </TouchableOpacity>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingHorizontal: 15,
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                setFilter({loader: false, data: []}),
+                  setFilters({From: '', To: ''});
+              }}>
+              <TitleText
+                style={[styles.applyFilterTxt]}
+                text={'Clear Filter'}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{marginBottom: '2%'}}
+              onPress={applyFilter}>
+              <TitleText style={styles.applyFilterTxt} text={'Apply Filter'} />
+            </TouchableOpacity>
+          </View>
         )}
         <FlatList
           data={
@@ -356,41 +275,6 @@ const GuardHomeScreen = ({navigation}) => {
 export default GuardHomeScreen;
 
 const styles = StyleSheet.create({
-  headerCnt: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    color: '#F3F4F6',
-  },
-  actionBtnCnt: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    // width: '23%',
-  },
-  actionBtn: {
-    height: 34,
-    width: 34,
-    borderRadius: 1000,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  bodyCnt: {
-    flex: 1,
-    padding: 16,
-    justifyContent: 'flex-end',
-    backgroundColor: '#F2FCFF',
-  },
-  dayTxtCnt: {flexDirection: 'row', alignItems: 'center'},
-  profileImg: {
-    height: '100%',
-    width: '100%',
-    borderRadius: 1000,
-  },
   cardCnt: {
     ...shadow,
     padding: 10,
@@ -398,28 +282,88 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'white',
   },
-  cardBasicDetailCnt: {flexDirection: 'row', flex: 1},
-  profilePic: {
-    height: 50,
-    width: 50,
-    borderRadius: 1000,
-    backgroundColor: COLORS.inputBorder,
+  leanerCnt: {
+    flex: 1,
+    justifyContent: 'flex-end',
   },
-  detailCnt: {justifyContent: 'center', marginLeft: '4%'},
-  userName: {fontSize: 16, color: '#202937', marginBottom: '2%'},
-  userHouse: {fontSize: 12, color: COLORS.titleFont},
-  timeDetailCnt: {
+  headerCnt: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  timeTxt: {fontSize: 10, color: '#6B737F', marginRight: '2%'},
-  timeButton: {
-    marginVertical: '2%',
+  headerProfileIcon: {
+    height: 40,
+    width: 40,
+    borderRadius: 1000,
+    backgroundColor: 'grey',
+  },
+  headerHelloIcon: {
+    fontFamily: 'Axiforma-Regular',
+    color: '#808080',
+    fontSize: 14,
+    marginBottom: '3%',
+  },
+  headerProfileTitle: {
+    fontFamily: 'Axiforma-Regular',
+    fontSize: 20,
+    color: COLORS.softDescText,
+  },
+  headerShiftIcon: {
+    fontSize: 25,
+    alignSelf: 'center',
+    color: COLORS.blackFont,
+  },
+  applyFilterTxt: {
+    fontSize: 14,
+    color: 'red',
+    alignSelf: 'flex-end',
+  },
+  cardImage: {
+    height: 50,
     width: 50,
-    height: 19,
-    justifyContent: 'center',
+    borderRadius: 10,
+    backgroundColor: COLORS.themeColor,
+  },
+  cardUserMainDetail: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '86%',
     alignItems: 'center',
-    borderRadius: 5,
+  },
+  cardName: {
+    fontFamily: 'Axiforma-Medium',
+    fontSize: 19,
+    color: COLORS.blackFont,
+    marginBottom: '4%',
+  },
+  cardPhoneNumber: {
+    fontFamily: 'Axiforma-Regular',
+    fontSize: 14,
+    color: COLORS.descFont,
+  },
+  cardDate: {
+    fontFamily: 'Axiforma-Light',
+    fontSize: 12,
+    color: '#ABACB0',
+  },
+  cardDetailHeader: {
+    fontFamily: 'Axiforma-Regular',
+    fontSize: 14,
+    color: COLORS.descFont,
+  },
+  devider: {
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    marginTop: '3%',
+    borderColor: '#C8C8C8',
+  },
+  outTimeButton: {
+    marginVertical: 15,
+    marginTop: 20,
+    alignSelf: 'center',
+    fontFamily: 'Inter-SemiBold',
+    fontSize: 14,
+    color: '#FF7334',
+    letterSpacing: 1,
   },
 });

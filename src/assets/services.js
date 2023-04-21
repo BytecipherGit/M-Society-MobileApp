@@ -1,4 +1,4 @@
-export const API_URL = 'https://c3b2-122-168-229-41.ngrok-free.app/api/';
+export const API_URL = 'https://6d21-122-168-229-41.ngrok-free.app/api/';
 // export const API_URL = 'http://43.231.127.169:9001/api/';
 
 // swagger https://e1b6-122-168-229-41.in.ngrok.io/api-docs/#/
@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const GetData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
-  // console.log(Token);
+  console.log(Token);
   return axios
     .get(
       payload.url,
@@ -30,6 +30,7 @@ export const GetData = async payload => {
 export const PostData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
+  console.log(Token);
   return axios
     .post(
       payload.url,

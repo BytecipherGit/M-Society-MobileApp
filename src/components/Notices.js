@@ -29,6 +29,7 @@ const Notices = ({navigation}) => {
       <AppHeader navigation={navigation} title={'Notice'} />
       <FlatList
         data={Notice?.data}
+        style={{marginTop: '4%'}}
         ListEmptyComponent={() => (
           <AppLoaderSrceen loader={Notice.loader} error={Notice.error} />
         )}
@@ -42,54 +43,14 @@ const Notices = ({navigation}) => {
                   params: {item: item},
                 })
               }
-              style={{
-                paddingVertical: 10,
-                paddingHorizontal: 15,
-                backgroundColor: 'white',
-                width: '90%',
-                alignSelf: 'center',
-                marginVertical: '5%',
-                borderRadius: 10,
-                flexDirection: 'row',
-                alignItems: 'center',
-                shadowColor: '#000',
-                shadowOffset: {
-                  width: 0,
-                  height: 1,
-                },
-                shadowOpacity: 0.1,
-                shadowRadius: 1.84,
-
-                elevation: 5,
-              }}>
+              style={style.card}>
               <Calendor />
               <View style={{marginHorizontal: '5%'}}>
-                <Text
-                  style={{
-                    fontFamily: 'Axiforma-Medium',
-                    fontSize: 18,
-                    color: '#262626',
-                    marginBottom: '3%',
-                  }}>
-                  {item.title}
-                </Text>
-                <Text
-                  numberOfLines={2}
-                  style={{
-                    fontFamily: 'Inter-Regular',
-                    fontSize: 16,
-                    color: '#72767c',
-                    lineHeight: 25,
-                    marginBottom: '1.5%',
-                  }}>
+                <Text style={style.cardTitle}>{item.title}</Text>
+                <Text numberOfLines={2} style={style.cardDesc}>
                   {item.description}
                 </Text>
-                <Text
-                  style={{
-                    fontFamily: 'Inter-Regular',
-                    fontSize: 12,
-                    color: '#ABACB0',
-                  }}>
+                <Text style={style.cardDate}>
                   {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
                 </Text>
               </View>
@@ -105,11 +66,17 @@ const Notices = ({navigation}) => {
 export default Notices;
 
 const style = StyleSheet.create({
-  cardCnt: {
-    borderBottomWidth: 0.5,
-    borderColor: '#D2D5DC',
-    padding: 16,
+  card: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    backgroundColor: 'white',
+    width: '90%',
+    alignSelf: 'center',
+    marginVertical: '2%',
+    borderRadius: 10,
     flexDirection: 'row',
+    alignItems: 'center',
+    ...shadow,
   },
   bellIcon: {
     flexDirection: 'row',
@@ -121,32 +88,22 @@ const style = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
   },
-  detailCnt: {
-    alignSelf: 'center',
-    flex: 1,
-    justifyContent: 'space-between',
-  },
   cardTitle: {
+    fontFamily: 'Axiforma-Medium',
+    fontSize: 18,
+    color: COLORS.blackFont,
+    marginBottom: '3%',
+  },
+  cardDesc: {
+    fontFamily: 'Inter-Regular',
     fontSize: 16,
-    fontWeight: '400',
-    color: '#000000',
-    letterSpacing: 0.5,
-    marginBottom: '1%',
+    color: COLORS.greyFont,
+    lineHeight: 25,
+    marginBottom: '1.5%',
   },
-  cardDescription: {
+  cardDate: {
+    fontFamily: 'Inter-Regular',
     fontSize: 12,
-    fontWeight: '400',
-    color: '#4C5564',
-    marginBottom: '2%',
-  },
-  createdCnt: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  dateTxt: {
-    fontSize: 10,
-    fontWeight: '400',
-    color: '#4C5564',
-    // marginBottom: '2%',
+    color: '#ABACB0',
   },
 });
