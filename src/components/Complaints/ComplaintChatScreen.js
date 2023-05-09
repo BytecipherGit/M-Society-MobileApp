@@ -1,17 +1,7 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  FlatList,
-  Alert,
-  StyleSheet,
-} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
-import BackIcon from '../../assets/images/BackIcon.svg';
-import DocumentIcon from '../../assets/images/DocumentIcon.svg';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import CurveNextAerrow from '../../assets/images/CurveNextAerrow.svg';
@@ -64,11 +54,7 @@ const ComplaintChatScreen = ({navigation, route}) => {
           ? navigation.navigate('ImageViewScreen', {
               img: item.attachedImage,
             })
-          : setAlertData({
-              visible: true,
-              message: 'No Image found.',
-              iconType: 'error',
-            });
+          : AppAlert('No Image found.');
       }
     } else {
       if (index === 0) {
@@ -76,11 +62,7 @@ const ComplaintChatScreen = ({navigation, route}) => {
           ? navigation.navigate('ImageViewScreen', {
               img: item.attachedImage,
             })
-          : setAlertData({
-              visible: true,
-              message: 'No Image Found.',
-              iconType: 'error',
-            });
+          : AppAlert('No Image found.');
       } else {
         return null;
       }
@@ -89,30 +71,11 @@ const ComplaintChatScreen = ({navigation, route}) => {
 
   const replyChat = () => {
     const status =
-      data?.chat?.complainChat[data?.chat?.complainChat.length - 1].status ===
-      'cancel'
-        ? 'reopen'
-        : data?.chat?.complainChat[data?.chat?.complainChat.length - 1]
-            .status === 'inprogress'
-        ? 'cancel'
-        : data?.chat?.complainChat[data?.chat?.complainChat.length - 1]
-            .status === 'resolved'
-        ? 'reopen'
-        : null;
-    if (status) {
-      navigation.navigate('UpdateComplaint', {
-        data: {
-          id: route?.params?.data?._id,
-          subject: complainTitle,
-          status: status,
-        },
-      });
-    } else {
-      setAlertData({
-        visible: true,
-        message: 'Complaint Is Resolved, for new now create a New Complaint.',
-        iconType: 'error',
-      });
+      data?.chat?.complainChat[data?.chat?.complainChat.length - 1].status;
+    if (status === 'cancel') {
+      AppAlert(
+        'Your last complaint cancel by Admin, creating new complaint now.',
+      );
       navigation.navigate('UpdateComplaint', {
         data: {
           id: route?.params?.data?._id,
@@ -120,7 +83,53 @@ const ComplaintChatScreen = ({navigation, route}) => {
           status: 'reopen',
         },
       });
+    } else {
+      AppAlert(
+        'Right now You cannot reply on complaint, once it review by admin so you can reply on complaint. \n            -Thanks',
+      );
     }
+    //new
+    // const status =
+    //   data?.chat?.complainChat[data?.chat?.complainChat.length - 1].status === ("")
+    //   'cancel'
+    //     ? 'reopen'
+    //     : data?.chat?.complainChat[data?.chat?.complainChat.length - 1]
+    //         .status === 'inprogress'
+    //     ? 'cancel'
+    //     : data?.chat?.complainChat[data?.chat?.complainChat.length - 1]
+    //         .status === 'resolved'
+    //     ? 'reopen'
+    //     : null;
+    // if (status) {
+    //   navigation.navigate('UpdateComplaint', {
+    //     data: {
+    //       id: route?.params?.data?._id,
+    //       subject: complainTitle,
+    //       status: status,
+    //     },
+    //   });
+    // } else {
+    //   setAlertData({
+    //     visible: true,
+    //     message: 'Complaint Is Resolved, for new now create a New Complaint.',
+    //     iconType: 'error',
+    //   });
+    //   navigation.navigate('UpdateComplaint', {
+    //     data: {
+    //       id: route?.params?.data?._id,
+    //       subject: complainTitle,
+    //       status: 'reopen',
+    //     },
+    //   });
+    // }
+  };
+
+  const AppAlert = msg => {
+    setAlertData({
+      visible: true,
+      message: msg,
+      iconType: 'error',
+    });
   };
 
   return (

@@ -16,10 +16,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {NOTICE_LIST_REQUEST} from '../redux/Actions';
 import AppLoaderSrceen from '../ReUsableComponents/AppLoaderSrceen';
 import moment from 'moment';
+import AppRoundAddActionButton from '../ReUsableComponents/AppRoundAddActionButton';
 
 const Notices = ({navigation}) => {
   const dispatch = useDispatch();
   const Notice = useSelector(state => state.NoticeReducer);
+  const {isAdmin} = useSelector(state => state.AuthReducer);
   useEffect(() => {
     dispatch({type: NOTICE_LIST_REQUEST});
   }, []);
@@ -35,30 +37,65 @@ const Notices = ({navigation}) => {
         )}
         renderItem={({item, index}) => {
           return (
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() =>
-                navigation.navigate('NoticeScreen', {
-                  screen: 'NoticeDetailScreen',
-                  params: {item: item},
-                })
-              }
-              style={style.card}>
-              <Calendor />
-              <View style={{marginHorizontal: '5%'}}>
-                <Text style={style.cardTitle}>{item.title}</Text>
-                <Text numberOfLines={2} style={style.cardDesc}>
-                  {item.description}
-                </Text>
-                <Text style={style.cardDate}>
-                  {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
-                </Text>
+            <>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() =>
+                  navigation.navigate('NoticeScreen', {
+                    screen: 'NoticeDetailScreen',
+                    params: {item: item},
+                  })
+                }
+                style={style.card}>
+                <Calendor />
+                <View style={{marginHorizontal: '5%'}}>
+                  <Text style={style.cardTitle}>{item.title}</Text>
+                  <Text numberOfLines={2} style={style.cardDesc}>
+                    {item.description}
+                  </Text>
+                  <Text style={style.cardDate}>
+                    {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                  marginBottom: 20,
+                }}>
+                {['Edit', 'Delete'].map((action, index) => (
+                  <TouchableOpacity
+                    style={{
+                      flex: 0.3,
+                      backgroundColor: COLORS.buttonColor,
+                      padding: 10,
+                      borderRadius: 5,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                    }}
+                    key={index}>
+                    <Text
+                      style={{
+                        fontFamily: 'Axiforma-Medium',
+                        color: COLORS.white,
+                      }}>
+                      {action.toUpperCase()}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
               </View>
-            </TouchableOpacity>
+            </>
           );
         }}
         extraData={({item, index}) => index}
       />
+      {isAdmin && (
+        <AppRoundAddActionButton
+          onPress={() => navigation.navigate('CreateNotice')}
+        />
+      )}
     </View>
   );
 };

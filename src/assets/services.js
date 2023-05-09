@@ -1,10 +1,11 @@
-export const API_URL = 'https://6d21-122-168-229-41.ngrok-free.app/api/';
-// export const API_URL = 'http://43.231.127.169:9001/api/';
+// export const API_URL = 'https://a155-122-168-229-41.ngrok-free.app/api/';
+export const API_URL = 'http://43.231.127.169:9001/api/';
 
 // swagger https://e1b6-122-168-229-41.in.ngrok.io/api-docs/#/
 
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Snackbar from 'react-native-snackbar';
 
 export const GetData = async payload => {
   let Token = await getAsyncValue('user');
@@ -237,6 +238,42 @@ export const addVisitorFormData = async payload => {
     });
 };
 
+export const CreateSociety = async payload => {
+  let Token = await getAsyncValue('user');
+  Token = JSON.parse(Token);
+  // var myHeaders = new Headers();
+  // myHeaders.append('Authorization', 'Bearer ' + Token);
+
+  var formData = new FormData();
+  formData.append('title', payload.title);
+  formData.append('description', payload.description);
+  formData.append('status', payload.status);
+  formData.append('attachedFile', payload.attachedFile);
+
+  var requestOptions = {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + Token.accessToken,
+    },
+    body: formData,
+    redirect: 'follow',
+  };
+
+  console.log('Request options =>', requestOptions);
+  console.log('url  =>', API_URL + 'notice/');
+
+  return fetch(API_URL + 'notice/', requestOptions)
+    .then(response => response.json())
+    .then(result => {
+      console.log(result);
+      return result;
+    })
+    .catch(error => {
+      console.log(error);
+      return error;
+    });
+};
+
 export const getAsyncValue = async key => {
   const value = await AsyncStorage.getItem(key);
   return value;
@@ -248,4 +285,20 @@ export const StoreData = async (key, value) => {
 
 export const RemoveStoreData = async key => {
   await AsyncStorage.removeItem(key);
+};
+
+export const SnackError = title => {
+  return Snackbar.show({
+    text: title,
+    duration: 3000,
+    backgroundColor: 'red',
+  });
+};
+
+export const SuccessAlert = title => {
+  return Snackbar.show({
+    text: title,
+    duration: 3000,
+    backgroundColor: 'green',
+  });
 };

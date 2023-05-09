@@ -4,7 +4,7 @@ import {COLORS} from '../assets/theme';
 import AddSvg from '../assets/images/AddSvg.svg';
 import LinearGradient from 'react-native-linear-gradient';
 
-const AppRoundAddActionButton = ({onPress}) => {
+const AppRoundAddActionButton = ({onPress = () => null}) => {
   return (
     <LinearGradient
       // onPress={onPress}

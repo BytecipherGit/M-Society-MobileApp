@@ -32,7 +32,7 @@ const SuccessModal = ({
             routes: [{name: 'LoginOptionsScreen'}],
           }),
         );
-      }, 500);
+      }, 1000);
   };
 
   return (

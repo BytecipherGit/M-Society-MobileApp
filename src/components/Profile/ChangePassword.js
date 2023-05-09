@@ -117,13 +117,7 @@ const LoginScreen = ({navigation, route}) => {
 
   return (
     <View style={globalStyle.cnt}>
-      <StatusBar
-        animated={true}
-        backgroundColor="#61dafb"
-        // barStyle={statusBarStyle}
-        // showHideTransition={statusBarTransition}
-        // hidden={hidden}
-      />
+      <StatusBar animated={true} backgroundColor={'#CAE7FF'} hidden={true} />
       <AppHeader navigation={navigation} title={'Change Password'} />
       <ScrollView
         showsVerticalScrollIndicator={false}

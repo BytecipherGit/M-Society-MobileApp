@@ -8,6 +8,8 @@ import {
   Dimensions,
   Image,
   ImageBackground,
+  StatusBar,
+  Platform,
 } from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../assets/theme';
@@ -69,13 +71,15 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
+  const Label = Platform.OS === 'ios' ? SafeAreaView : View;
+
   return (
     <LinearGradient
       colors={[COLORS.themeColor, '#F9F9F9', '#F9F9F9']}
       style={{
         flex: 1,
       }}>
-      <SafeAreaView style={{flex: 1}}>
+      <Label style={{flex: 1}}>
         <View
           style={{
             height:
@@ -87,7 +91,7 @@ const HomeScreen = ({navigation}) => {
           }}>
           <ImageBackground
             source={require('../assets/images/gridBackground.png')}
-            style={{flex: 0.8, marginHorizontal: 15}}>
+            style={{flex: 0.8, marginHorizontal: 15, marginTop: '2%'}}>
             {/* Header */}
             <View style={styles.headerCnt}>
               {/* User normal Detail */}
@@ -157,7 +161,7 @@ const HomeScreen = ({navigation}) => {
             ListFooterComponent={() => <View style={{height: 400}} />}
           />
         </View>
-      </SafeAreaView>
+      </Label>
     </LinearGradient>
   );
 };

@@ -106,7 +106,7 @@ const LoginOptionsScreen = ({navigation, route}) => {
                       marginBottom: '5%',
                     }}
                   />
-                  <Text>{item.title}</Text>
+                  <Text style={{color: COLORS.titleFont}}>{item.title}</Text>
                 </TouchableOpacity>
                 {item.id === selectLoginOption && (
                   <View style={style.selectedView}>

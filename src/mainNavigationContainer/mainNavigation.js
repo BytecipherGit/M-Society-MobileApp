@@ -38,6 +38,7 @@ import GuardList from '../components/Guard/GuardList';
 import VisitorsList from '../components/Guard/VisitorsList';
 import ContactDetail from '../components/Contact/ContactDetail';
 import AppWebview from '../ReUsableComponents/AppWebview';
+import CreateNotice from '../components/Notice/CreateNotice';
 
 const Stack = createNativeStackNavigator();
 
@@ -65,6 +66,7 @@ const mainNavigation = () => {
       <Stack.Navigator>
         {stackScreenWithNoHeader('NoticeList', Notices)}
         {stackScreenWithNoHeader('NoticeDetailScreen', NoticeDetailScreen)}
+        {stackScreenWithNoHeader('CreateNotice', CreateNotice)}
       </Stack.Navigator>
     );
   }

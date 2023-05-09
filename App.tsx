@@ -13,6 +13,7 @@ import {RecoilRoot} from 'recoil';
 import NetInfo from '@react-native-community/netinfo';
 import ReactNativeModal from 'react-native-modal';
 import TitleText from "./src/ReUsableComponents/Text's/TitleText";
+import Snackbar from 'react-native-snackbar';
 
 const App = () => {
   // Uncomment when you want to use Redux in project
@@ -33,7 +34,7 @@ const App = () => {
   return (
     <RecoilRoot>
       <Provider store={store}>
-        <StatusBar animated={true} backgroundColor={'#CAE7FF'} hidden={true} />
+        {/* <StatusBar animated={true} backgroundColor={'#CAE7FF'} hidden={true} /> */}
         <NavigationContainer>
           <AppAlert />
           <ReactNativeModal isVisible={isInternet ? false : true}>

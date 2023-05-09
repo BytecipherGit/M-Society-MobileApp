@@ -7,7 +7,7 @@ import {
 } from '../Actions';
 
 function* getNoticeList(action) {
-  let url = API_URL + 'notice/resident/all';
+  let url = API_URL + 'notice/all';
   try {
     let payload = {
       url: url,

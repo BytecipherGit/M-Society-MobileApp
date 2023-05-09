@@ -18,6 +18,7 @@ export const COLORS = {
   inputBackground: '#F4F6F8',
   inputPlaceholder: '#BABABA',
   softDescText: '#656565',
+  white: '#ffffff',
 };
 
 export const globalStyle = StyleSheet.create({
