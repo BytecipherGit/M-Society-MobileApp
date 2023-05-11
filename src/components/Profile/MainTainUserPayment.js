@@ -48,7 +48,7 @@ const MainTainUserPayment = ({navigation, route}) => {
   useEffect(() => {
     if (payment.payment.length > 0) {
       setPaymentData(payment.payment);
-      console.log('payment list ====>', payment.payment);
+     
       setLastSelectedIndex(null);
     }
   }, [payment]);

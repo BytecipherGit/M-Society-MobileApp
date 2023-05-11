@@ -18,17 +18,33 @@ import AddFileIcon from '../../assets/images/AddFileIcon.svg';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AppButton from '../../ReUsableComponents/AppButton';
 import {
+  API_URL,
   CreateDocumentAPI,
   CreateSociety,
+  PutData,
   SnackError,
   SuccessAlert,
 } from '../../assets/services';
+import CreateDocument from './CreateDocument';
 
-const CreateDocument = ({navigation}) => {
-  const [data, setData] = useState({});
+const EditDocument = ({navigation, route}) => {
+  const {documentName, description, status, documentImageFile, _id} =
+    route.params.documentDetail;
+
+  const [data, setData] = useState({
+    documentName: documentName,
+    description: description,
+    status: status,
+    documentImageFile: {
+      uri: documentImageFile,
+      type: '',
+      name: '',
+    },
+    id: _id,
+  });
   const [loader, setLoader] = useState(false);
 
-  const createDocumentfun = async () => {
+  const editDocument = async () => {
     if (
       !data.documentName ||
       !data.description ||
@@ -40,15 +56,41 @@ const CreateDocument = ({navigation}) => {
     }
     setLoader(true);
 
-    const Result = await CreateDocumentAPI(data);
+    const payload = data.documentImageFile.type
+      ? data
+      : {
+          documentName: data.documentName,
+          description: data.description,
+          status: data.status,
+          id: data.id,
+        };
 
-    if (Result.success) {
-      SuccessAlert('Your document created successfully.');
-      navigation.goBack();
+    // try {
+    if (data.documentImageFile.type) {
+      const Result = await CreateDocumentAPI(
+        payload,
+        'edit',
+        data.documentImageFile.type,
+      );
+
+      if (Result.success) {
+        SuccessAlert('Your document updated successfully.');
+        navigation.goBack();
+      } else {
+        SnackError(Result.message);
+      }
     } else {
-      SnackError(Result.message);
+      const Result = await PutData({url: API_URL + 'document', body: payload});
+      if (Result.data.success) {
+        SuccessAlert('Your notice updated successfully.');
+        navigation.goBack();
+      } else {
+        SnackError(Result.data.message);
+      }
     }
-
+    // } catch (e) {
+    //   SnackError('something went wrong please try again later.');
+    // }
     setLoader(false);
   };
 
@@ -79,7 +121,7 @@ const CreateDocument = ({navigation}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <AppHeader navigation={navigation} title={'Create New Document'} />
+      <AppHeader navigation={navigation} title={'Edit Notice'} />
       <FlatList
         data={[
           {id: 1, title: 'Document Name', params: 'documentName'},
@@ -188,6 +230,7 @@ const CreateDocument = ({navigation}) => {
                 <View style={{...shadow}}>
                   <AppTextInput
                     item={{title: item.title}}
+                    value={data[item.params]}
                     setValue={txt => setData({...data, [item.params]: txt})}
                   />
                 </View>
@@ -204,11 +247,11 @@ const CreateDocument = ({navigation}) => {
           marginBottom: '2%',
         }}
         btnLoader={loader}
-        buttonTitle="Create Document"
-        onPress={createDocumentfun}
+        buttonTitle="Create Notice"
+        onPress={editDocument}
       />
     </View>
   );
 };
 
-export default CreateDocument;
+export default EditDocument;

@@ -25,6 +25,7 @@ import moment from 'moment';
 import AppRoundAddActionButton from '../ReUsableComponents/AppRoundAddActionButton';
 import {useIsFocused} from '@react-navigation/native';
 import {API_URL, DeleteData, SnackError} from '../assets/services';
+import AppCrudActionButton from '../ReUsableComponents/AppCrudActionButton';
 
 const Notices = ({navigation}) => {
   const isFocus = useIsFocused();
@@ -106,39 +107,12 @@ const Notices = ({navigation}) => {
                   </Text>
                 </View>
               </TouchableOpacity>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                  marginBottom: 20,
-                }}>
-                {['Edit', 'Delete'].map((action, i) => (
-                  <TouchableOpacity
-                    style={{
-                      flex: 0.3,
-                      backgroundColor: COLORS.buttonColor,
-                      padding: 10,
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      flexDirection: 'row',
-                    }}
-                    key={i}
-                    onPress={() => doActions(item, action, index)}>
-                    {deleteLoader === item._id ? (
-                      <ActivityIndicator color={'white'} />
-                    ) : (
-                      <Text
-                        style={{
-                          fontFamily: 'Axiforma-Medium',
-                          color: COLORS.white,
-                        }}>
-                        {action.toUpperCase()}
-                      </Text>
-                    )}
-                  </TouchableOpacity>
-                ))}
-              </View>
+              <AppCrudActionButton
+                item={item}
+                index={index}
+                loaderIndex={deleteLoader}
+                doActions={doActions}
+              />
             </View>
           );
         }}

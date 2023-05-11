@@ -41,6 +41,8 @@ import AppWebview from '../ReUsableComponents/AppWebview';
 import CreateNotice from '../components/Notice/CreateNotice';
 import EditNotice from '../components/Notice/EditNotice';
 import CreateDocument from '../components/Document/CreateDocument';
+import EditDocument from '../components/Document/EditDocument';
+import CreateContact from '../components/Contact/CreateContact';
 
 const Stack = createNativeStackNavigator();
 
@@ -105,6 +107,7 @@ const mainNavigation = () => {
         {stackScreenWithNoHeader('DocumentList', DocumentList)}
         {stackScreenWithNoHeader('DocumentDetail', DocumentDetailScreen)}
         {stackScreenWithNoHeader('CreateDocument', CreateDocument)}
+        {stackScreenWithNoHeader('EditDocument', EditDocument)}
       </Stack.Navigator>
     );
   }
@@ -136,6 +139,7 @@ const mainNavigation = () => {
       {stackScreenWithNoHeader('ImageViewScreen', ImageViewScreen)}
       {stackScreenWithNoHeader('ContactScreen', ContactScreen)}
       {stackScreenWithNoHeader('ContactDetailScreen', ContactDetail)}
+      {stackScreenWithNoHeader('CreateContact', CreateContact)}
       {stackScreenWithNoHeader('ProfileStackScreen', ProfileStackNavigator)}
       {stackScreenWithNoHeader('PaymentHistoryScreen', PaymentHistory)}
       {stackScreenWithNoHeader('ResidentStack', ResidentStackScreens)}

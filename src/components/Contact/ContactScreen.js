@@ -16,16 +16,21 @@ import AppHeader from '../../ReUsableComponents/AppHeader';
 import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
 import LocationIcon from '../../assets/images/LocationIcon.svg';
 import PhoneIcon from '../../assets/images/PhoneIcon.svg';
-import {API_URL, GetData} from '../../assets/services';
+import {API_URL, DeleteData, GetData, SnackError} from '../../assets/services';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
+import AppRoundAddActionButton from '../../ReUsableComponents/AppRoundAddActionButton';
+import {useIsFocused} from '@react-navigation/native';
+import AppCrudActionButton from '../../ReUsableComponents/AppCrudActionButton';
 
 const ContactScreen = ({navigation, route}) => {
   const [loader, setLoader] = useState(false);
   const [data, setData] = useState([]);
   const [error, setError] = useState('');
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
+  const [deleteLoader, setDeleteLoader] = useState('');
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const getContactDetails = async () => {
@@ -69,8 +74,39 @@ const ContactScreen = ({navigation, route}) => {
       }
       setLoader(false);
     };
-    getContactDetails();
-  }, []);
+    isFocused && getContactDetails();
+  }, [isFocused]);
+
+  const doActions = async (item, type, index) => {
+    //Edit,Delete
+
+    if (type === 'Edit') {
+      return;
+      // return navigation.navigate('EditContact', {documentDetail: item});
+    }
+    setDeleteLoader(item._id);
+
+    try {
+      const Result = await DeleteData({
+        url: API_URL + 'directory/',
+        body: {id: item._id},
+      });
+
+      console.log(Result);
+
+      if (Result.success === true) {
+        let arr = documents;
+
+        arr.splice(index, 1);
+        setData([...arr]);
+      } else {
+        SnackError(Result.message);
+      }
+    } catch (e) {
+      SnackError('Something went wrong, please try again later.');
+    }
+    setDeleteLoader('');
+  };
 
   return (
     <View style={globalStyle.cnt}>
@@ -78,14 +114,15 @@ const ContactScreen = ({navigation, route}) => {
         navigation={navigation}
         title={route?.params?.screenName === 'Service' ? 'Service' : 'Contact'}
       />
-      <View>
-        <FlatList
-          data={data}
-          ListEmptyComponent={() => (
-            <AppLoaderSrceen loader={loader} error={error} />
-          )}
-          style={{marginTop: '3%'}}
-          renderItem={({item, index}) => (
+
+      <FlatList
+        data={data}
+        ListEmptyComponent={() => (
+          <AppLoaderSrceen loader={loader} error={error} />
+        )}
+        style={{marginTop: '3%'}}
+        renderItem={({item, index}) => (
+          <>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('ContactDetailScreen', {detail: item})
@@ -98,9 +135,18 @@ const ContactScreen = ({navigation, route}) => {
                 </Text>
               </View>
             </TouchableOpacity>
-          )}
-        />
-      </View>
+            <AppCrudActionButton
+              item={item}
+              index={index}
+              loaderIndex={deleteLoader}
+              doActions={doActions}
+            />
+          </>
+        )}
+      />
+      <AppRoundAddActionButton
+        onPress={() => navigation.navigate('CreateContact')}
+      />
     </View>
   );
 };

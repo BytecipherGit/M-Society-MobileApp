@@ -247,7 +247,7 @@ export const CreateSociety = async (payload, edit, editstatus) => {
     headers: {
       Authorization: 'Bearer ' + Token.accessToken,
     },
-    body: editstatus ? formData : payload,
+    body: formData,
     redirect: 'follow',
   };
 
@@ -283,14 +283,11 @@ export const CreateDocumentAPI = async (payload, edit, editstatus) => {
     headers: {
       Authorization: 'Bearer ' + Token.accessToken,
     },
-    body: editstatus ? formData : payload,
+    body: formData,
     redirect: 'follow',
   };
 
-  return fetch(
-    API_URL + (edit ? 'document/update' : 'document/'),
-    requestOptions,
-  )
+  return fetch(API_URL + 'document/', requestOptions)
     .then(response => response.json())
     .then(result => {
       return result;
