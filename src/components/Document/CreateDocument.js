@@ -10,28 +10,33 @@ import {Menu, MenuDivider, MenuItem} from 'react-native-material-menu';
 import AddFileIcon from '../../assets/images/AddFileIcon.svg';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AppButton from '../../ReUsableComponents/AppButton';
-import {CreateSociety, SnackError, SuccessAlert} from '../../assets/services';
+import {
+  CreateDocumentAPI,
+  CreateSociety,
+  SnackError,
+  SuccessAlert,
+} from '../../assets/services';
 
-const CreateNotice = ({navigation}) => {
+const CreateDocument = ({navigation}) => {
   const [data, setData] = useState({});
   const [loader, setLoader] = useState(false);
 
-  const createNotice = async () => {
+  const createDocumentfun = async () => {
     if (
-      !data.title ||
+      !data.documentName ||
       !data.description ||
       !data.status ||
-      !data.attachedFile ||
-      !data.attachedFile.uri
+      !data.documentImageFile ||
+      !data.documentImageFile.uri
     ) {
       return SnackError('Please Fill All the fileds first.');
     }
     setLoader(true);
 
-    const Result = await CreateSociety(data);
+    const Result = await CreateDocumentAPI(data);
 
     if (Result.success) {
-      SuccessAlert('Your notice created successfully.');
+      SuccessAlert('Your document created successfully.');
       navigation.goBack();
     } else {
       SnackError(Result.message);
@@ -48,7 +53,7 @@ const CreateNotice = ({navigation}) => {
 
       setData({
         ...data,
-        attachedFile: {
+        documentImageFile: {
           uri: result[0].uri,
           type: result[0].type,
           name: result[0].name,
@@ -67,13 +72,13 @@ const CreateNotice = ({navigation}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <AppHeader navigation={navigation} title={'Create New Notice'} />
+      <AppHeader navigation={navigation} title={'Create New Document'} />
       <FlatList
         data={[
-          {id: 1, title: 'Title', params: 'title'},
+          {id: 1, title: 'Document Name', params: 'documentName'},
           {id: 2, title: 'Description', params: 'description'},
           {id: 3, title: 'Status', params: 'status'},
-          {id: 4, title: 'Attach File', params: 'attachedFile'},
+          {id: 4, title: 'Attach File', params: 'documentImageFile'},
         ]}
         showsVerticalScrollIndicator={false}
         style={{marginTop: '0%'}}
@@ -122,11 +127,11 @@ const CreateNotice = ({navigation}) => {
                   })}
                 </View>
               ) : item.id === 4 ? (
-                data.attachedFile && data.attachedFile.uri ? (
+                data.documentImageFile && data.documentImageFile.uri ? (
                   <View>
                     <Image
                       style={{height: 200, width: '100%', borderRadius: 10}}
-                      source={{uri: data.attachedFile.uri}}
+                      source={{uri: data.documentImageFile.uri}}
                       resizeMode="contain"
                     />
                     <TouchableOpacity
@@ -142,7 +147,7 @@ const CreateNotice = ({navigation}) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}
-                      onPress={() => setData({...data, attachedFile: {}})}>
+                      onPress={() => setData({...data, documentImageFile: {}})}>
                       <Entypo name="cross" size={23} color="red" />
                     </TouchableOpacity>
                   </View>
@@ -192,11 +197,11 @@ const CreateNotice = ({navigation}) => {
           marginBottom: '2%',
         }}
         btnLoader={loader}
-        buttonTitle="Create Notice"
-        onPress={createNotice}
+        buttonTitle="Create Document"
+        onPress={createDocumentfun}
       />
     </View>
   );
 };
 
-export default CreateNotice;
+export default CreateDocument;

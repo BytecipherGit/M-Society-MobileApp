@@ -1,7 +1,7 @@
-// export const API_URL = 'https://a155-122-168-229-41.ngrok-free.app/api/';
+// export const API_URL = 'https://deed-122-168-229-41.ngrok-free.app/api/';
 export const API_URL = 'http://43.231.127.169:9001/api/';
 
-// swagger https://e1b6-122-168-229-41.in.ngrok.io/api-docs/#/
+// swagger https://deed-122-168-229-41.ngrok-free.app/api-docs/#/
 
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,7 +10,6 @@ import Snackbar from 'react-native-snackbar';
 export const GetData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
-  console.log(Token);
   return axios
     .get(
       payload.url,
@@ -31,7 +30,6 @@ export const GetData = async payload => {
 export const PostData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
-  console.log(Token);
   return axios
     .post(
       payload.url,
@@ -74,9 +72,6 @@ export const PutData = async payload => {
 export const DeleteData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
-  console.log(payload.url);
-  console.log(payload.body);
-  console.log(Token);
   // return axios
   //   .delete(
   //     payload.url,
@@ -155,11 +150,9 @@ export const postFormData = async (payload, type) => {
   return fetch(payload.url, requestOptions)
     .then(response => response.json())
     .then(result => {
-      console.log(result);
       return result;
     })
     .catch(error => {
-      console.log(error);
       return error;
     });
 };
@@ -171,8 +164,6 @@ export const updatProfile = async payload => {
   // myHeaders.append('Authorization', 'Bearer ' + Token);
 
   var formData = new FormData();
-
-  console.log(payload);
 
   if (payload.data.images.length > 0) {
     const my_file = {
@@ -187,8 +178,6 @@ export const updatProfile = async payload => {
   formData.append('houseNumber', payload.data.houseNumber);
   formData.append('phoneNumber', payload.data.phoneNumber);
   formData.append('id', payload.data._id);
-
-  console.log('form data ====>', formData);
 
   return axios
     .put(API_URL + 'user/', formData, {
@@ -229,47 +218,84 @@ export const addVisitorFormData = async payload => {
   return fetch(API_URL + 'visitor/', requestOptions)
     .then(response => response.json())
     .then(result => {
-      console.log(result);
       return result;
     })
     .catch(error => {
-      console.log(error);
       return error;
     });
 };
 
-export const CreateSociety = async payload => {
+export const CreateSociety = async (payload, edit, editstatus) => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
   // var myHeaders = new Headers();
   // myHeaders.append('Authorization', 'Bearer ' + Token);
 
   var formData = new FormData();
+
+  if (editstatus) {
+    formData.append('id', payload.id);
+  }
+
   formData.append('title', payload.title);
   formData.append('description', payload.description);
   formData.append('status', payload.status);
   formData.append('attachedFile', payload.attachedFile);
 
   var requestOptions = {
-    method: 'POST',
+    method: edit ? 'PUT' : 'POST',
     headers: {
       Authorization: 'Bearer ' + Token.accessToken,
     },
-    body: formData,
+    body: editstatus ? formData : payload,
     redirect: 'follow',
   };
 
-  console.log('Request options =>', requestOptions);
-  console.log('url  =>', API_URL + 'notice/');
-
-  return fetch(API_URL + 'notice/', requestOptions)
+  return fetch(API_URL + (edit ? 'notice/update' : 'notice/'), requestOptions)
     .then(response => response.json())
     .then(result => {
-      console.log(result);
       return result;
     })
     .catch(error => {
-      console.log(error);
+      return error;
+    });
+};
+
+export const CreateDocumentAPI = async (payload, edit, editstatus) => {
+  let Token = await getAsyncValue('user');
+  Token = JSON.parse(Token);
+  // var myHeaders = new Headers();
+  // myHeaders.append('Authorization', 'Bearer ' + Token);
+
+  var formData = new FormData();
+
+  if (editstatus) {
+    formData.append('id', payload.id);
+  }
+
+  formData.append('documentName', payload.documentName);
+  formData.append('description', payload.description);
+  formData.append('status', payload.status);
+  formData.append('documentImageFile', payload.documentImageFile);
+
+  var requestOptions = {
+    method: edit ? 'PUT' : 'POST',
+    headers: {
+      Authorization: 'Bearer ' + Token.accessToken,
+    },
+    body: editstatus ? formData : payload,
+    redirect: 'follow',
+  };
+
+  return fetch(
+    API_URL + (edit ? 'document/update' : 'document/'),
+    requestOptions,
+  )
+    .then(response => response.json())
+    .then(result => {
+      return result;
+    })
+    .catch(error => {
       return error;
     });
 };

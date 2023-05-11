@@ -155,7 +155,7 @@ const AddComplaints = ({route}) => {
         };
 
         const Result = await postFormData(payload);
-        console.log(Result.message);
+
         // Result = JSON.parse(Result);
         if (Result.success) {
           setAlertData({

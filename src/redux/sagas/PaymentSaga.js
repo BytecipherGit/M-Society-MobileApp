@@ -44,8 +44,6 @@ function* getPaymentDetail(action) {
 
     const Data = yield call(GetData, payload);
 
-    console.log(payload);
-
     if (Data.data.success === true) {
       let arr = [];
       arr = Data?.data?.data;

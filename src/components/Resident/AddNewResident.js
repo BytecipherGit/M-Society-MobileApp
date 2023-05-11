@@ -29,7 +29,7 @@ const AddNewResident = ({navigation}) => {
   const getDesignation = async () => {
     try {
       const Result = await GetData({url: API_URL + 'designation/'});
-      console.log(Result.data);
+
       if (Result.data.success) {
         const index = AddResidenceUserJson.findIndex(
           item => item.title === 'Role',

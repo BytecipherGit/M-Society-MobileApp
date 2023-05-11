@@ -14,7 +14,6 @@ import moment from 'moment';
 import BellIcon from '../assets/images/Caledor.svg';
 
 const NoticeDetailScreen = ({navigation, route}) => {
-  console.log(route.params.item);
   const {title, description, createdDate, attachedFile, societyAdminId} =
     route?.params?.item;
 

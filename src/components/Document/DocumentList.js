@@ -15,6 +15,7 @@ import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import {API_URL, GetData} from '../../assets/services';
 import moment from 'moment';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
+import AppRoundAddActionButton from '../../ReUsableComponents/AppRoundAddActionButton';
 
 const DocumentList = ({navigation}) => {
   const [documents, setDocuments] = useState([]);
@@ -31,7 +32,7 @@ const DocumentList = ({navigation}) => {
     };
     try {
       const Result = await GetData(payload);
-      console.log(Result.data);
+
       if (Result.data.success) {
         setDocuments(Result.data.data);
         setError('');
@@ -90,6 +91,9 @@ const DocumentList = ({navigation}) => {
           </TouchableOpacity>
         )}
         extraData={item => item._id}
+      />
+      <AppRoundAddActionButton
+        onPress={() => navigation.navigate('CreateDocument')}
       />
     </View>
   );

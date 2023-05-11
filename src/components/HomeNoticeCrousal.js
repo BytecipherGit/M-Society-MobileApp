@@ -1,4 +1,4 @@
-import {View, Text, Dimensions} from 'react-native';
+import {View, Text, Dimensions, TouchableOpacity} from 'react-native';
 import React from 'react';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {COLORS} from '../assets/theme';
@@ -24,7 +24,11 @@ const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
         itemWidth={Dimensions.get('window').width / 1}
         renderItem={({item, index}) => {
           return (
-            <View
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                null;
+              }}
               style={{
                 width: Dimensions.get('window').width / 1.07,
                 // height: 220,
@@ -70,7 +74,7 @@ const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
                   {item.description}
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           );
         }}
         onSnapToItem={setActiveIndex}

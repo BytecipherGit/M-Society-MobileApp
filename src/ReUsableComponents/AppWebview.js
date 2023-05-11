@@ -5,7 +5,6 @@ import AppHeader from './AppHeader';
 import WebView from 'react-native-webview';
 
 const AppWebview = ({navigation, route}) => {
-  console.log(route?.params);
   return (
     <View style={globalStyle.cnt}>
       <AppHeader navigation={navigation} title={route?.params?.screenName} />

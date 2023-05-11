@@ -5,7 +5,6 @@ import AppHeader from '../../ReUsableComponents/AppHeader';
 import PhoneIcon from '../../assets/images/PhoneIcon.svg';
 
 const ContactDetail = ({navigation, route}) => {
-  console.log(route.params.detail);
   const {
     address,
     countryCode,

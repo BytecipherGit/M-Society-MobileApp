@@ -26,7 +26,7 @@ const GuardEditProfile = ({navigation, route}) => {
       };
       setError('');
       const Result = await GetData(payload);
-      console.log(Result.data);
+
       if (Result.data.success) {
         setData(Result.data.data);
       } else {

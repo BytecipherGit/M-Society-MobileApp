@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../assets/theme';
@@ -13,31 +14,78 @@ import BellIcon from '../assets/images/Bell.svg';
 import Calendor from '../assets/images/Caledor.svg';
 import FullCardBackground from '../ReUsableComponents/FullCardBackground';
 import {useDispatch, useSelector} from 'react-redux';
-import {NOTICE_LIST_REQUEST} from '../redux/Actions';
+import {
+  NOTICE_DELETE_REQUEST,
+  NOTICE_DELETE_SUCCESS,
+  NOTICE_LIST_REQUEST,
+  NOTICE_LIST_SUCCESS,
+} from '../redux/Actions';
 import AppLoaderSrceen from '../ReUsableComponents/AppLoaderSrceen';
 import moment from 'moment';
 import AppRoundAddActionButton from '../ReUsableComponents/AppRoundAddActionButton';
+import {useIsFocused} from '@react-navigation/native';
+import {API_URL, DeleteData, SnackError} from '../assets/services';
 
 const Notices = ({navigation}) => {
+  const isFocus = useIsFocused();
   const dispatch = useDispatch();
   const Notice = useSelector(state => state.NoticeReducer);
   const {isAdmin} = useSelector(state => state.AuthReducer);
+  const [deleteLoader, setDeleteLoader] = useState('');
+  const [data, setData] = useState([]);
+
   useEffect(() => {
-    dispatch({type: NOTICE_LIST_REQUEST});
-  }, []);
+    if (isFocus) {
+      dispatch({type: NOTICE_LIST_REQUEST});
+    }
+  }, [isFocus]);
+
+  useEffect(() => {
+    if (Notice.data.length > 0) {
+      setData(Notice.data);
+    }
+  }, [Notice]);
+
+  const doActions = async (item, type, index) => {
+    //Edit,Delete
+
+    if (type === 'Edit') {
+      return navigation.navigate('EditNotice', {noticeDetail: item});
+    }
+    setDeleteLoader(item._id);
+
+    try {
+      const Result = await DeleteData({
+        url: API_URL + 'notice/',
+        body: {id: item._id},
+      });
+
+      if (Result.success === true) {
+        let arr = Notice.data;
+
+        arr.splice(index, 1);
+        setData([...arr]);
+      } else {
+        SnackError(Result.message);
+      }
+    } catch (e) {
+      SnackError('Something went wrong, please try again later.');
+    }
+    setDeleteLoader('');
+  };
 
   return (
     <View style={globalStyle.cnt}>
       <AppHeader navigation={navigation} title={'Notice'} />
       <FlatList
-        data={Notice?.data}
+        data={data}
         style={{marginTop: '4%'}}
         ListEmptyComponent={() => (
           <AppLoaderSrceen loader={Notice.loader} error={Notice.error} />
         )}
         renderItem={({item, index}) => {
           return (
-            <>
+            <View>
               <TouchableOpacity
                 activeOpacity={0.5}
                 onPress={() =>
@@ -64,7 +112,7 @@ const Notices = ({navigation}) => {
                   justifyContent: 'space-around',
                   marginBottom: 20,
                 }}>
-                {['Edit', 'Delete'].map((action, index) => (
+                {['Edit', 'Delete'].map((action, i) => (
                   <TouchableOpacity
                     style={{
                       flex: 0.3,
@@ -75,18 +123,23 @@ const Notices = ({navigation}) => {
                       alignItems: 'center',
                       flexDirection: 'row',
                     }}
-                    key={index}>
-                    <Text
-                      style={{
-                        fontFamily: 'Axiforma-Medium',
-                        color: COLORS.white,
-                      }}>
-                      {action.toUpperCase()}
-                    </Text>
+                    key={i}
+                    onPress={() => doActions(item, action, index)}>
+                    {deleteLoader === item._id ? (
+                      <ActivityIndicator color={'white'} />
+                    ) : (
+                      <Text
+                        style={{
+                          fontFamily: 'Axiforma-Medium',
+                          color: COLORS.white,
+                        }}>
+                        {action.toUpperCase()}
+                      </Text>
+                    )}
                   </TouchableOpacity>
                 ))}
               </View>
-            </>
+            </View>
           );
         }}
         extraData={({item, index}) => index}

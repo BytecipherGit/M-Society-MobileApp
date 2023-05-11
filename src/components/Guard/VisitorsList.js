@@ -36,7 +36,7 @@ const VisitorsList = ({navigation}) => {
       data: [],
     });
     const Result = await GetData({url: API_URL + 'visitor/app/all'});
-    console.log(Result.data);
+
     try {
       if (Result.data.success) {
         setData({

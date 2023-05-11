@@ -28,7 +28,6 @@ const ContactScreen = ({navigation, route}) => {
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
 
   useEffect(() => {
-    console.log(route?.params?.screenName === 'Service');
     const getContactDetails = async () => {
       setLoader(true);
       const payload = {

@@ -28,7 +28,6 @@ const SocietyInfo = ({navigation, route}) => {
     state => state.AuthReducer.userDetail.data.societyId,
   );
   const data = useSelector(state => state.SocietyReducer);
-  console.log(data.data.society);
 
   const dispatch = useDispatch();
 

@@ -48,7 +48,6 @@ const VisitorFilters = ({filters, setFilters}) => {
         mode="date"
         date={new Date()}
         onConfirm={date => {
-          console.log(date);
           setModal(false);
           setStatus({...status, [status.status]: date});
           setFilters({...filters, [status.status]: date});
@@ -58,7 +57,6 @@ const VisitorFilters = ({filters, setFilters}) => {
         }}
         maximumDate={new Date()}
       />
-      {console.log(status)}
     </View>
   );
 };

@@ -22,13 +22,11 @@ const SignUp = ({navigation}) => {
   }, []);
 
   const Register = async () => {
-    console.log(data);
     const payload = {
       url: API_URL + 'user/signup',
       body: data,
     };
     const Result = await PostData(payload);
-    console.log('Result ===>', Result.data);
   };
   return (
     <View style={globalStyle.cnt}>

@@ -79,7 +79,6 @@ const AddVisitor = ({navigation, route}) => {
     }
     setLoader(true);
     try {
-      console.log(data);
       const Result = await addVisitorFormData(data);
       if (Result.success) {
         setAlertData({

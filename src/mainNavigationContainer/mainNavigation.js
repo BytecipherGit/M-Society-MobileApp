@@ -39,6 +39,8 @@ import VisitorsList from '../components/Guard/VisitorsList';
 import ContactDetail from '../components/Contact/ContactDetail';
 import AppWebview from '../ReUsableComponents/AppWebview';
 import CreateNotice from '../components/Notice/CreateNotice';
+import EditNotice from '../components/Notice/EditNotice';
+import CreateDocument from '../components/Document/CreateDocument';
 
 const Stack = createNativeStackNavigator();
 
@@ -67,6 +69,7 @@ const mainNavigation = () => {
         {stackScreenWithNoHeader('NoticeList', Notices)}
         {stackScreenWithNoHeader('NoticeDetailScreen', NoticeDetailScreen)}
         {stackScreenWithNoHeader('CreateNotice', CreateNotice)}
+        {stackScreenWithNoHeader('EditNotice', EditNotice)}
       </Stack.Navigator>
     );
   }
@@ -101,6 +104,7 @@ const mainNavigation = () => {
       <Stack.Navigator>
         {stackScreenWithNoHeader('DocumentList', DocumentList)}
         {stackScreenWithNoHeader('DocumentDetail', DocumentDetailScreen)}
+        {stackScreenWithNoHeader('CreateDocument', CreateDocument)}
       </Stack.Navigator>
     );
   }

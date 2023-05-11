@@ -47,7 +47,6 @@ const LoginScreen = ({navigation}) => {
     } else if (!data.password) {
       return setError({...error, password: 'Please Enter Password'});
     } else {
-      console.log(data);
       setLoader(true);
       let obj = {
         phoneNumber: data.phoneNumber,
@@ -72,9 +71,6 @@ const LoginScreen = ({navigation}) => {
 
       try {
         const Result = await PostData(payload);
-        console.log(payload);
-        console.log(Result);
-        console.log(Result.data);
         if (Result && Result.data.success) {
           StoreData('user', JSON.stringify(Result.data));
           dispatch({type: USER_DATA, payload: Result.data});

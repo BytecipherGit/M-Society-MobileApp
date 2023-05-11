@@ -60,7 +60,6 @@ const GuardHomeScreen = ({navigation}) => {
   };
 
   const checkOutUser = async (item, index) => {
-    console.log(item);
     setOutIndex(index);
     const payload = {
       url: API_URL + 'visitor/out',
@@ -68,8 +67,6 @@ const GuardHomeScreen = ({navigation}) => {
         visitorId: item._id,
       },
     };
-
-    console.log(payload);
 
     try {
       const Result = await PutData(payload);

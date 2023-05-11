@@ -1,6 +1,9 @@
 import {apply, call, put, takeLatest} from 'redux-saga/effects';
-import {API_URL, GetData} from '../../assets/services';
+import {API_URL, DeleteData, GetData} from '../../assets/services';
 import {
+  NOTICE_DELETE_FAIL,
+  NOTICE_DELETE_REQUEST,
+  NOTICE_DELETE_SUCCESS,
   NOTICE_LIST_FAIL,
   NOTICE_LIST_REQUEST,
   NOTICE_LIST_SUCCESS,
@@ -14,7 +17,7 @@ function* getNoticeList(action) {
     };
 
     const Data = yield call(GetData, payload);
-    console.log(Data.data);
+
     if (Data.data.success === true) {
       yield put({type: NOTICE_LIST_SUCCESS, payload: Data?.data?.data});
     } else {

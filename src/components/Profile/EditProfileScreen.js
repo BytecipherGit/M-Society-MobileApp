@@ -53,7 +53,6 @@ const EditProfileScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(User.data._id);
     getUserData(User.data._id);
   }, []);
 
@@ -74,7 +73,6 @@ const EditProfileScreen = ({navigation, route}) => {
     try {
       const Result = await GetData(payload);
       if (Result && Result.data && Result.data.success) {
-        console.log(Result.data);
         setData(Result.data.data);
       } else {
         errorAlert(Result.data.message);
@@ -115,7 +113,6 @@ const EditProfileScreen = ({navigation, route}) => {
         } else if (response.error) {
           console.log('error =>', response);
         } else {
-          console.log(response.assets[0].uri);
           setData({...data, profileImage: response.assets[0].uri});
           let arr = [];
           arr = profilePic;

@@ -10,10 +10,28 @@ import {Menu, MenuDivider, MenuItem} from 'react-native-material-menu';
 import AddFileIcon from '../../assets/images/AddFileIcon.svg';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AppButton from '../../ReUsableComponents/AppButton';
-import {CreateSociety, SnackError, SuccessAlert} from '../../assets/services';
+import {
+  API_URL,
+  CreateSociety,
+  PutData,
+  SnackError,
+  SuccessAlert,
+} from '../../assets/services';
 
-const CreateNotice = ({navigation}) => {
-  const [data, setData] = useState({});
+const EditNotice = ({navigation, route}) => {
+  const {title, description, status, attachedFile, _id} =
+    route.params.noticeDetail;
+  const [data, setData] = useState({
+    title: title,
+    description: description,
+    status: status,
+    attachedFile: {
+      uri: attachedFile,
+      type: '',
+      name: '',
+    },
+    id: _id,
+  });
   const [loader, setLoader] = useState(false);
 
   const createNotice = async () => {
@@ -28,15 +46,38 @@ const CreateNotice = ({navigation}) => {
     }
     setLoader(true);
 
-    const Result = await CreateSociety(data);
+    const payload = data.attachedFile.type
+      ? data
+      : {
+          title: data.title,
+          description: data.description,
+          status: data.status,
+          id: data.id,
+        };
 
-    if (Result.success) {
-      SuccessAlert('Your notice created successfully.');
-      navigation.goBack();
-    } else {
-      SnackError(Result.message);
+    try {
+      const Result = data.attachedFile.type
+        ? await CreateSociety(payload, 'edit', data.attachedFile.type)
+        : await PutData({url: API_URL + 'notice/update', body: payload});
+
+      if (data.attachedFile.type) {
+        if (Result.success) {
+          SuccessAlert('Your notice updated successfully.');
+          navigation.goBack();
+        } else {
+          SnackError(Result.message);
+        }
+      } else {
+        if (Result.data.success) {
+          SuccessAlert('Your notice updated successfully.');
+          navigation.goBack();
+        } else {
+          SnackError(Result.data.message);
+        }
+      }
+    } catch (e) {
+      SnackError('something went wrong please try again later.');
     }
-
     setLoader(false);
   };
 
@@ -67,7 +108,7 @@ const CreateNotice = ({navigation}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <AppHeader navigation={navigation} title={'Create New Notice'} />
+      <AppHeader navigation={navigation} title={'Edit Notice'} />
       <FlatList
         data={[
           {id: 1, title: 'Title', params: 'title'},
@@ -176,6 +217,7 @@ const CreateNotice = ({navigation}) => {
                 <View style={{...shadow}}>
                   <AppTextInput
                     item={{title: item.title}}
+                    value={data[item.params]}
                     setValue={txt => setData({...data, [item.params]: txt})}
                   />
                 </View>
@@ -199,4 +241,4 @@ const CreateNotice = ({navigation}) => {
   );
 };
 
-export default CreateNotice;
+export default EditNotice;

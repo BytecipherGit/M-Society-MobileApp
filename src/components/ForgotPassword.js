@@ -49,7 +49,7 @@ const ForgotPassword = ({navigation}) => {
     setLoader(true);
     try {
       const Result = await PostData(payload);
-      console.log(payload, Result);
+
       if (Result && Result.data && Result.data.success) {
         let obj = {
           phone: phone,
