@@ -15,27 +15,35 @@ import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../assets/theme';
 import {SocietyOptions} from '../assets/Jsons';
 import {useDispatch, useSelector} from 'react-redux';
-import {NOTICE_LIST_REQUEST, SET_USER_TYPE} from '../redux/Actions';
+import {
+  NOTICE_LIST_REQUEST,
+  NOTICE_LIST_REQUEST_SILENT,
+  SET_USER_TYPE,
+} from '../redux/Actions';
 import {getAsyncValue} from '../assets/services';
 import TakePayment from '../assets/images/TakePayment.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import HomeNoticeCrousal from './HomeNoticeCrousal';
+import {useIsFocused} from '@react-navigation/native';
 
 const HomeScreen = ({navigation}) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const state = useSelector(state => state.AuthReducer);
   const Notice = useSelector(state => state.NoticeReducer);
+  const isFocus = useIsFocused();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    getNoticeList();
-    getUserType();
-  }, []);
+    if (isFocus) {
+      getNoticeList();
+      getUserType();
+    }
+  }, [isFocus]);
 
   const getNoticeList = () => {
-    dispatch({type: NOTICE_LIST_REQUEST});
+    dispatch({type: NOTICE_LIST_REQUEST_SILENT});
   };
 
   const getUserType = async () => {

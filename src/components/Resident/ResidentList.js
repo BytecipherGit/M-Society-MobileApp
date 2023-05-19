@@ -25,6 +25,7 @@ import {API_URL, DeleteData, PutData} from '../../assets/services';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 import LinearGradient from 'react-native-linear-gradient';
+import {useIsFocused} from '@react-navigation/native';
 
 const ResidentList = ({navigation}) => {
   const dispatch = useDispatch();
@@ -34,10 +35,11 @@ const ResidentList = ({navigation}) => {
   const state = useSelector(state => state.ResidentReducer);
   const isAdmin = useSelector(state => state.AuthReducer.isAdmin);
   const user = useSelector(state => state.AuthReducer.userDetail.data);
+  const isFocus = useIsFocused();
 
   useEffect(() => {
     getResidentsList();
-  }, []);
+  }, [isFocus]);
 
   const getResidentsList = () => {
     dispatch({type: GET_RESIDENTSLIST_REQUEST});

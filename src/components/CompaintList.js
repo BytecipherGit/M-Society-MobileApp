@@ -17,8 +17,6 @@ const CompaintList = ({navigation}) => {
 
   useEffect(() => {
     navigation.addListener('focus', () => {
-      // The screen is focused
-      // Call any action
       getComplaintList();
     });
   }, []);
@@ -33,6 +31,12 @@ const CompaintList = ({navigation}) => {
     dispatch({type: COMPLAINT_LIST_REQUEST});
   };
 
+  const toChat = item => {
+    navigation.navigate('ComplaintChatScreen', {
+      data: item,
+    });
+  };
+
   return (
     <View style={globalStyle.cnt}>
       <AppHeader navigation={navigation} title={'Complaint'} />
@@ -43,39 +47,16 @@ const CompaintList = ({navigation}) => {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-            }}>
-            {/* {['My', 'Residents'].map((item, index) => {
-                    return (
-                      <TouchableOpacity
-                        key={index}
-                        onPress={() => setDefaultComplaint(item)}
-                        style={[
-                          style.complaintOptionCnt,
-                          {
-                            backgroundColor:
-                              defaultComplaint === item
-                                ? COLORS.listCardBackTheme
-                                : 'white',
-                          },
-                        ]}>
-                        <DescriptionText
-                          style={{
-                            fontWeight: '500',
-                            color: '#4C5564',
-                            marginVertical: 8,
-                          }}
-                          text={item}
-                        />
-                      </TouchableOpacity>
-                    );
-                  })} */}
-          </View>
+            }}></View>
           <FlatList
             data={
               defaultComplaint === 'My'
                 ? comlaintList?.data?.my
                 : comlaintList?.data?.other
             }
+            style={{
+              marginTop: '7%',
+            }}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={() => (
               <AppLoaderSrceen
@@ -86,16 +67,7 @@ const CompaintList = ({navigation}) => {
             renderItem={({item, index}) => (
               <>
                 <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate(
-                      defaultComplaint === 'My'
-                        ? 'ComplaintChatScreen'
-                        : 'ComplainDetailScreen',
-                      {
-                        data: item,
-                      },
-                    )
-                  }
+                  onPress={() => toChat(item)}
                   style={style.card}>
                   <Text style={style.cardTitle}>{item.complainTitle}</Text>
                   <Text style={style.description}>{item.description}</Text>
@@ -123,6 +95,7 @@ const style = StyleSheet.create({
     padding: 15,
     backgroundColor: 'white',
     borderRadius: 10,
+    marginTop: 0,
     ...shadow,
   },
   cardTitle: {

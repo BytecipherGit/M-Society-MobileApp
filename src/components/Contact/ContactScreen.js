@@ -94,13 +94,21 @@ const ContactScreen = ({navigation, route}) => {
 
       console.log(Result);
 
-      if (Result.success === true) {
-        let arr = documents;
-
-        arr.splice(index, 1);
-        setData([...arr]);
+      if (Result.response) {
+        SnackError(
+          Result.response.data.error
+            ? Result.response.data.error
+            : Result.response.data.message,
+        );
       } else {
-        SnackError(Result.message);
+        if (Result.success == true) {
+          let arr = data;
+
+          arr.splice(index, 1);
+          setData([...arr]);
+        } else {
+          SnackError(Result.message);
+        }
       }
     } catch (e) {
       SnackError('Something went wrong, please try again later.');

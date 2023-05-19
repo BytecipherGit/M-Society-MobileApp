@@ -14,11 +14,20 @@ import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import {AddResidenceUserJson} from '../../assets/Jsons';
 import PhoneInput from 'react-native-phone-number-input';
 import {Dropdown} from 'react-native-element-dropdown';
-import {API_URL, GetData} from '../../assets/services';
+import {
+  API_URL,
+  GetData,
+  PostData,
+  SnackError,
+  SuccessAlert,
+} from '../../assets/services';
+import AppButton from '../../ReUsableComponents/AppButton';
 
 const AddNewResident = ({navigation}) => {
   const [showData, setShowData] = useState(AddResidenceUserJson);
   const [data, setData] = useState({});
+  const [loader, setLoader] = useState(false);
+  const [countryCode, setCountryCode] = useState('+91');
   const phoneInput = useRef(null);
 
   useEffect(() => {
@@ -71,79 +80,137 @@ const AddNewResident = ({navigation}) => {
     } catch (e) {}
   };
 
+  const createResident = async () => {
+    let emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+
+    if (
+      !data.email ||
+      !data.houseNumber ||
+      !data.name ||
+      !data.phoneNumber ||
+      !data.profession ||
+      !data.residentType ||
+      !data.role
+    ) {
+      return SnackError('Fill in the blanks.');
+    }
+
+    if (emailReg.test(data.email) === false) {
+      return SnackError('Please Enter a valid email address');
+    }
+
+    if (data.phoneNumber.length !== 10) {
+      return SnackError('Please Enter a valid phone number');
+    }
+    setLoader(true);
+
+    try {
+      const Result = await PostData({
+        url: API_URL + 'admin/residentialUser/add',
+        body: {
+          ...data,
+          ...{countryCode: countryCode},
+        },
+      });
+      console.log(Result.data);
+      setLoader(false);
+      if (Result.data.success) {
+        SuccessAlert('Your Data Was Created.');
+        navigation.goBack();
+      } else {
+        SnackError(Result.data.message);
+      }
+    } catch (e) {
+      SnackError('Something Went Wrong, please try again later.');
+      setLoader(false);
+    }
+  };
+
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <AppHeader navigation={navigation} title="Add Residence" />
-        <FullCardBackground
-          styles={styles.cnt}
-          RenderUI={() => (
-            <View style={{flex: 1}}>
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                automaticallyAdjustKeyboardInsets={true}
-                contentContainerStyle={{flexGrow: 0.3}}>
-                {showData.map((item, index) => {
-                  return (
-                    <View style={{marginTop: '5%'}} key={index}>
-                      <TitleText text={item.title} />
-                      {item.type === 'Input' && (
-                        <TextInput
-                          placeholder={item.title}
-                          style={styles.textInput}
-                        />
-                      )}
-                      {item.type === 'phoneNumber' && (
-                        <PhoneInput
-                          ref={phoneInput}
-                          layout="second"
-                          inputStyle={{color: 'green'}}
-                          containerStyle={styles.phoneContainerStyle}
-                          buttonStyle={{}}
-                          textContainerStyle={styles.phoneTextContainerStyle}
-                          textInputStyle={{}}
-                          codeTextStyle={{}}
-                          dropdownStyle={{
-                            height: 50,
-                          }}
-                          country={'us'}
-                          value="1425652"
-                          onChangeText={phone => console.log({phone})}
-                        />
-                      )}
-                      {item.type === 'dropDown' && (
-                        <Dropdown
-                          style={[styles.dropdown]}
-                          placeholderStyle={styles.placeholderStyle}
-                          selectedTextStyle={styles.selectedTextStyle}
-                          inputSearchStyle={styles.inputSearchStyle}
-                          iconStyle={styles.iconStyle}
-                          data={item.value}
-                          maxHeight={300}
-                          labelField="label"
-                          valueField="value"
-                          placeholder={'Select item'}
-                          searchPlaceholder="Search..."
-                          value={data[item.param]}
-                          // onFocus={() => setIsFocus(true)}
-                          // onBlur={() => setIsFocus(false)}
-                          onChange={item => {
-                            setData({...data, [item.param]: item.value});
-                            // setIsFocus(false);
-                          }}
-                        />
-                      )}
-                    </View>
-                  );
-                })}
-                <View style={{height: 50}} />
-              </ScrollView>
-            </View>
-          )}
-        />
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: COLORS.themeBackground}} />
-    </Fragment>
+    <View style={globalStyle.cnt}>
+      <AppHeader navigation={navigation} title="Add Residence" />
+      <FullCardBackground
+        styles={styles.cnt}
+        RenderUI={() => (
+          <View style={{flex: 1}}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              automaticallyAdjustKeyboardInsets={true}
+              contentContainerStyle={{flexGrow: 0.3}}>
+              {showData.map((item, index) => {
+                return (
+                  <View style={{marginTop: '5%'}} key={index}>
+                    <TitleText text={item.title} />
+                    {item.type === 'Input' && (
+                      <TextInput
+                        placeholder={item.title}
+                        style={styles.textInput}
+                        value={data[item.param]}
+                        onChangeText={text =>
+                          setData({...data, [item.param]: text})
+                        }
+                      />
+                    )}
+                    {item.type === 'phoneNumber' && (
+                      <PhoneInput
+                        ref={phoneInput}
+                        layout="second"
+                        inputStyle={{color: 'green'}}
+                        containerStyle={styles.phoneContainerStyle}
+                        buttonStyle={{}}
+                        textContainerStyle={styles.phoneTextContainerStyle}
+                        textInputStyle={{}}
+                        codeTextStyle={{}}
+                        dropdownStyle={{
+                          height: 50,
+                        }}
+                        country={'IN'}
+                        value={data[item.param]}
+                        onChangeText={phone =>
+                          setData({...data, [item.param]: phone})
+                        }
+                        onChangeCountry={cn =>
+                          setCountryCode(`+${cn.callingCode[0]}`)
+                        }
+                      />
+                    )}
+                    {item.type === 'dropDown' && (
+                      <Dropdown
+                        style={[styles.dropdown]}
+                        placeholderStyle={styles.placeholderStyle}
+                        selectedTextStyle={styles.selectedTextStyle}
+                        inputSearchStyle={styles.inputSearchStyle}
+                        iconStyle={styles.iconStyle}
+                        data={item.value}
+                        maxHeight={300}
+                        labelField="label"
+                        valueField="value"
+                        placeholder={'Select item'}
+                        searchPlaceholder="Search..."
+                        value={data[item.param]}
+                        // onFocus={() => setIsFocus(true)}
+                        // onBlur={() => setIsFocus(false)}
+                        onChange={i => {
+                          setData({...data, [item.param]: i.value});
+                          // setIsFocus(false);
+                        }}
+                      />
+                    )}
+                  </View>
+                );
+              })}
+              <View style={{height: 50}} />
+            </ScrollView>
+            <AppButton
+              buttonStyle={{marginVertical: 10}}
+              buttonTitle={'Create'}
+              btnLoader={loader}
+              onPress={createResident}
+            />
+          </View>
+        )}
+      />
+    </View>
   );
 };
 

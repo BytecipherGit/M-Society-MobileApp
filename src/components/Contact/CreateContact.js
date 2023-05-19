@@ -1,10 +1,9 @@
 import {View, FlatList} from 'react-native';
-import React, {useState} from 'react';
-import {COLORS, globalStyle, shadow} from '../../assets/theme';
+import React, {useEffect, useState} from 'react';
+import {COLORS, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
 import AppTextInput from '../../ReUsableComponents/AppTextInput';
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
-import DocumentPicker from 'react-native-document-picker';
 import AppButton from '../../ReUsableComponents/AppButton';
 import {
   API_URL,
@@ -12,11 +11,14 @@ import {
   SnackError,
   SuccessAlert,
 } from '../../assets/services';
+import {useDispatch} from 'react-redux';
+import {GET_CONTACT_PROFESSION_REQUEST} from '../../redux/Actions';
 
 const CreateContact = ({navigation}) => {
   const [data, setData] = useState({});
   const [loader, setLoader] = useState(false);
   const [countryCode, setCountryCode] = useState('91');
+  const dispatch = useDispatch();
 
   const createDocumentfun = async () => {
     if (!data.name || !data.address || !data.phoneNumber || !data.profession) {
@@ -48,6 +50,10 @@ const CreateContact = ({navigation}) => {
       SnackError('Something Went wrong, please try again later.');
     }
   };
+
+  useEffect(() => {
+    dispatch({type: GET_CONTACT_PROFESSION_REQUEST});
+  }, []);
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -90,29 +96,6 @@ const CreateContact = ({navigation}) => {
                     setValue={txt => setData({...data, [item.params]: txt})}
                   />
                 )}
-                {/* <AppTextInput
-                  item={item}
-                  value={data[item.param]}
-                  style={styles.inputStyle}
-                  countryCode={item.countryCode}
-                  showEyeIcon={item.showEyeIcon}
-                  onSelectCountry={e => {
-                    let arr = inputFieldsClone;
-                    arr[index].countryCode = `${e.callingCode}`;
-                    setInputFieldsClone([...arr]);
-                  }}
-                  renderIcon={item.renderIcon}
-                  onPressEye={() => {
-                    let arr = inputFieldsClone;
-                    arr[index].secureTextEntry = !arr[index].secureTextEntry;
-                    setInputFieldsClone([...arr]);
-                  }}
-                  setValue={text => {
-                    setData({...data, [item.param]: text});
-                    (error.phoneNumber || error.password) &&
-                      setError({phoneNumber: '', password: ''});
-                  }}
-                /> */}
               </View>
             </View>
           );

@@ -6,6 +6,7 @@ import {
   NOTICE_DELETE_SUCCESS,
   NOTICE_LIST_FAIL,
   NOTICE_LIST_REQUEST,
+  NOTICE_LIST_REQUEST_SILENT,
   NOTICE_LIST_SUCCESS,
 } from '../Actions';
 
@@ -33,6 +34,7 @@ function* getNoticeList(action) {
 
 function* NoticeSaga() {
   yield takeLatest(NOTICE_LIST_REQUEST, getNoticeList);
+  yield takeLatest(NOTICE_LIST_REQUEST_SILENT, getNoticeList);
 }
 
 export default NoticeSaga;

@@ -9,11 +9,16 @@ import {API_URL, GetData} from '../../assets/services';
 import moment from 'moment';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
+import {useIsFocused} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 const ComplaintChatScreen = ({navigation, route}) => {
   const {complainTitle} = route?.params?.data;
   const [data, setData] = useState({});
+  const isFocus = useIsFocused();
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
+  const UserDetail = useSelector(state => state.AuthReducer);
+  const [replyArray, setReplyArray] = useState([]);
 
   useEffect(() => {
     const getChat = async () => {
@@ -24,8 +29,8 @@ const ComplaintChatScreen = ({navigation, route}) => {
       const Result = await GetData(payload);
       setData(Result.data);
     };
-    getChat();
-  }, []);
+    isFocus && getChat();
+  }, [isFocus]);
 
   const renderButtonTitle = (item, index) => {
     const FirstCapitalLatter =
@@ -70,58 +75,13 @@ const ComplaintChatScreen = ({navigation, route}) => {
   };
 
   const replyChat = () => {
-    const status =
-      data?.chat?.complainChat[data?.chat?.complainChat.length - 1].status;
-    if (status === 'cancel') {
-      AppAlert(
-        'Your last complaint cancel by Admin, creating new complaint now.',
-      );
-      navigation.navigate('UpdateComplaint', {
-        data: {
-          id: route?.params?.data?._id,
-          subject: complainTitle,
-          status: 'reopen',
-        },
-      });
-    } else {
-      AppAlert(
-        'Right now You cannot reply on complaint, once it review by admin so you can reply on complaint. \n            -Thanks',
-      );
-    }
-    //new
-    // const status =
-    //   data?.chat?.complainChat[data?.chat?.complainChat.length - 1].status === ("")
-    //   'cancel'
-    //     ? 'reopen'
-    //     : data?.chat?.complainChat[data?.chat?.complainChat.length - 1]
-    //         .status === 'inprogress'
-    //     ? 'cancel'
-    //     : data?.chat?.complainChat[data?.chat?.complainChat.length - 1]
-    //         .status === 'resolved'
-    //     ? 'reopen'
-    //     : null;
-    // if (status) {
-    //   navigation.navigate('UpdateComplaint', {
-    //     data: {
-    //       id: route?.params?.data?._id,
-    //       subject: complainTitle,
-    //       status: status,
-    //     },
-    //   });
-    // } else {
-    //   setAlertData({
-    //     visible: true,
-    //     message: 'Complaint Is Resolved, for new now create a New Complaint.',
-    //     iconType: 'error',
-    //   });
-    //   navigation.navigate('UpdateComplaint', {
-    //     data: {
-    //       id: route?.params?.data?._id,
-    //       subject: complainTitle,
-    //       status: 'reopen',
-    //     },
-    //   });
-    // }
+    navigation.navigate('UpdateComplaint', {
+      data: {
+        id: route?.params?.data?._id,
+        subject: complainTitle,
+        status: replyArray,
+      },
+    });
   };
 
   const AppAlert = msg => {
@@ -132,6 +92,36 @@ const ComplaintChatScreen = ({navigation, route}) => {
     });
   };
 
+  useEffect(() => {
+    if (data.length > 0) {
+      toReply(data[data.length - 1]);
+    }
+  }, [data]);
+
+  const toReply = item => {
+    //new,reopen,inprogress,resolved,cancel
+    let statusArray = [];
+
+    let obj = {
+      inprogress: {Title: 'In Progress', value: 'inprogress'},
+      resolved: {Title: 'Resolved', value: 'resolved'},
+      cancel: {Title: 'Cancel', value: 'cancel'},
+      reopen: {Title: 'Re-open', value: 'reopen'},
+    };
+
+    if (UserDetail.isAdmin) {
+      item.status === 'new' &&
+        statusArray.push(obj.inprogress, obj.resolved, obj.cancel);
+
+      item.status === 'inprogress' &&
+        statusArray.push(obj.resolved, obj.cancel);
+    } else {
+      item.status === 'new' && statusArray.push({Title: 'New', value: 'new'});
+      item.status === 'resolved' && statusArray.push(obj.reopen);
+    }
+    setReplyArray(...statusArray);
+  };
+
   return (
     <View style={globalStyle.cnt}>
       {/* Header */}
@@ -139,90 +129,99 @@ const ComplaintChatScreen = ({navigation, route}) => {
       <View style={{flex: 1, backgroundColor: '#F9F9F9'}}>
         <FlatList
           data={data?.chat?.complainChat}
-          renderItem={({item, index}) => (
-            <>
-              <View
-                style={{
-                  marginVertical: '5%',
-                }}>
-                <TitleText
-                  style={style.cardDate}
-                  text={moment(`${item.date}`).format('DD MMM, HH:MM a')}
-                />
+          renderItem={({item, index}) => {
+            return (
+              <>
                 <View
-                  style={[
-                    style.card,
-                    item.isAdmin && {
-                      backgroundColor: 'white',
-                      alignSelf: 'flex-start',
-                    },
-                  ]}>
+                  style={{
+                    marginVertical: '5%',
+                  }}>
                   <TitleText
-                    style={style.cardTitle}
-                    text={`${item.isAdmin ? 'By' : 'To'} ${item.name}`}
+                    style={style.cardDate}
+                    text={moment(`${item.date}`).format('DD MMM, HH:MM a')}
                   />
-                  <DescriptionText
+                  <View
                     style={[
-                      style.cardDescription,
-                      {color: item.isAdmin ? '#6B737F' : '#4C5564'},
-                    ]}
-                    text={item.description}
-                  />
-                </View>
-                <View
-                  style={[
-                    style.cardActionButtons,
-                    {alignSelf: item.isAdmin ? 'flex-start' : 'flex-end'},
-                  ]}>
-                  {[1, 2].map((i, index) => {
-                    return (
-                      <TouchableOpacity
-                        activeOpacity={1}
-                        onPress={() => manageActionOnChat(item, index)}
-                        key={index}
-                        style={[
-                          style.button,
-                          !item.isAdmin &&
-                            (index === 0
-                              ? styleOfLoggedInUser.actionButton
-                              : styleOfLoggedInUser.imageButton),
-                        ]}>
-                        <DescriptionText
-                          text={renderButtonTitle(item, index)}
+                      style.card,
+                      UserDetail.userDetail.data._id !== item.userId && {
+                        backgroundColor: 'white',
+                        alignSelf: 'flex-start',
+                      },
+                    ]}>
+                    <TitleText
+                      style={style.cardTitle}
+                      text={`${
+                        UserDetail.userDetail.data._id !== item.userId
+                          ? 'By'
+                          : 'To'
+                      } ${item.name}`}
+                    />
+                    <DescriptionText
+                      style={[
+                        style.cardDescription,
+                        {
+                          color:
+                            UserDetail.userDetail.data._id !== item.userId
+                              ? '#6B737F'
+                              : '#4C5564',
+                        },
+                      ]}
+                      text={item.description}
+                    />
+                  </View>
+                  <View
+                    style={[
+                      style.cardActionButtons,
+                      {
+                        alignSelf:
+                          UserDetail.userDetail.data._id !== item.userId
+                            ? 'flex-start'
+                            : 'flex-end',
+                      },
+                    ]}>
+                    {[1, 2].map((i, index) => {
+                      return (
+                        <TouchableOpacity
+                          activeOpacity={1}
+                          onPress={() => manageActionOnChat(item, index)}
+                          key={index}
                           style={[
-                            style.buttonTitle,
+                            style.button,
                             !item.isAdmin &&
                               (index === 0
-                                ? styleOfLoggedInUser.actionButtonTitle
-                                : styleOfLoggedInUser.imageButtonTitle),
-                          ]}
-                        />
-                      </TouchableOpacity>
-                    );
-                  })}
+                                ? styleOfLoggedInUser.actionButton
+                                : styleOfLoggedInUser.imageButton),
+                          ]}>
+                          <DescriptionText
+                            text={renderButtonTitle(item, index)}
+                            style={[
+                              style.buttonTitle,
+                              !item.isAdmin &&
+                                (index === 0
+                                  ? styleOfLoggedInUser.actionButtonTitle
+                                  : styleOfLoggedInUser.imageButtonTitle),
+                            ]}
+                          />
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
                 </View>
-              </View>
-              <Text
-                ellipsizeMode="clip"
-                numberOfLines={1}
-                style={{color: COLORS.greyFont, marginTop: '-3.5%'}}>
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-                - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-              </Text>
-            </>
-          )}
+              </>
+            );
+          }}
         />
       </View>
-      <View style={style.replyCnt}>
-        <TouchableOpacity style={style.replyButton} onPress={replyChat}>
-          <Text style={style.replyTitle}>
-            Reply {'  '}
-            <CurveNextAerrow />
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {replyArray && replyArray.length > 0 && (
+        <View style={style.replyCnt}>
+          <TouchableOpacity style={style.replyButton} onPress={replyChat}>
+            <Text style={style.replyTitle}>
+              Reply {'  '}
+              <CurveNextAerrow />
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -231,19 +230,19 @@ export default ComplaintChatScreen;
 
 const styleOfLoggedInUser = StyleSheet.create({
   actionButton: {
-    backgroundColor: '#E9F5F8',
+    backgroundColor: COLORS.white,
     marginRight: '2%',
     borderColor: COLORS.themeColor,
   },
   imageButton: {
-    backgroundColor: COLORS.themeColor,
+    backgroundColor: COLORS.white,
     borderColor: COLORS.themeColor,
   },
   actionButtonTitle: {
-    color: COLORS.themeColor,
+    color: COLORS.titleFont,
   },
   imageButtonTitle: {
-    color: 'white',
+    color: COLORS.titleFont,
   },
 });
 
@@ -293,7 +292,7 @@ const style = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1,
     width: '75%',
-    backgroundColor: COLORS.themeColor,
+    backgroundColor: COLORS.white,
     padding: 12,
     marginHorizontal: 12,
     borderRadius: 8,

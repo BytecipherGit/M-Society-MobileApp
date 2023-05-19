@@ -21,6 +21,7 @@ import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 import AppTextInput from '../../ReUsableComponents/AppTextInput';
+import {Dropdown} from 'react-native-element-dropdown';
 
 const AddComplaints = ({route}) => {
   const navigation = useNavigation();
@@ -38,6 +39,8 @@ const AddComplaints = ({route}) => {
   });
   const [statusOption, setStatusOption] = useState('');
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
+  const [isFocus, setIsFocus] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const user = useSelector(state => state.AuthReducer.userDetail.data);
 
@@ -92,7 +95,6 @@ const AddComplaints = ({route}) => {
       setAlertData({
         visible: true,
         message: 'You only select one image not more than 1.',
-        // iconType: 'error',
       });
     }
   };
@@ -105,18 +107,19 @@ const AddComplaints = ({route}) => {
 
   const ComplaintAction = async () => {
     if (!data.complainTitle || !data.description) {
-      return setAlertData({
-        visible: true,
-        message: 'Please Enter Subject and Note First',
-        iconType: 'error',
-      });
+      return ErrorAlert('Please Enter All Mendatory Fields');
     }
+
+    if (data.attachedImage.length <= 0) {
+      return ErrorAlert('Please Select Complaint Image.');
+    }
+
     if (route?.name === 'UpdateComplaint') {
       if (statusOption) {
         const payloadData = {
           id: route.params.data.id,
           description: data.description,
-          status: route.params.data.status,
+          status: statusOption,
           attachedImage: data.attachedImage,
         };
 
@@ -124,36 +127,28 @@ const AddComplaints = ({route}) => {
           url: API_URL + 'complaint/',
           body: payloadData,
         };
-
+        setLoader(true);
         const Result = await postFormData(payload, 'PUT');
         if (Result.success) {
           setAlertData({
             visible: true,
             message: Result.message,
-            // iconType: 'error',
           });
-          navigation.popToTop();
+          navigation.goBack();
         } else {
-          setAlertData({
-            visible: true,
-            message: Result.message,
-            iconType: 'error',
-          });
+          ErrorAlert(Result.message);
         }
       } else {
-        return setAlertData({
-          visible: true,
-          message: 'Please Select Status First For This Complaint.',
-          iconType: 'error',
-        });
+        return ErrorAlert('Please Select Status First For This Complaint.');
       }
+      setLoader(false);
     } else {
       try {
         const payload = {
           url: API_URL + 'complaint/',
           body: data,
         };
-
+        setLoader(true);
         const Result = await postFormData(payload);
 
         // Result = JSON.parse(Result);
@@ -161,24 +156,24 @@ const AddComplaints = ({route}) => {
           setAlertData({
             visible: true,
             message: Result.message,
-            // iconType: 'error',
           });
-          navigation.popToTop();
+          navigation.goBack();
         } else {
-          setAlertData({
-            visible: true,
-            message: Result.message,
-            iconType: 'error',
-          });
+          ErrorAlert(Result.message);
         }
       } catch (e) {
-        setAlertData({
-          visible: true,
-          message: 'Something went wrong please try again later.',
-          iconType: 'error',
-        });
+        ErrorAlert('Something went wrong please try again later.');
       }
+      setLoader(false);
     }
+  };
+
+  const ErrorAlert = msg => {
+    setAlertData({
+      visible: true,
+      message: msg,
+      iconType: 'error',
+    });
   };
 
   return (
@@ -205,12 +200,20 @@ const AddComplaints = ({route}) => {
             renderItem={() => {
               return (
                 <View>
-                  <Text style={styles.subject}>Subject</Text>
-                  <AppTextInput
-                    item={{title: 'Subject'}}
-                    value={data.complainTitle}
-                    setValue={text => setData({...data, complainTitle: text})}
-                  />
+                  {route?.params &&
+                  route?.params.data.status &&
+                  route?.params.data.status.length > 0 ? null : (
+                    <>
+                      <Text style={styles.subject}>Subject</Text>
+                      <AppTextInput
+                        item={{title: 'Subject'}}
+                        value={data.complainTitle}
+                        setValue={text =>
+                          setData({...data, complainTitle: text})
+                        }
+                      />
+                    </>
+                  )}
                   <Text style={styles.note}>Note</Text>
                   <AppTextInput
                     item={{title: 'Note'}}
@@ -259,22 +262,6 @@ const AddComplaints = ({route}) => {
                         )}
                       />
                     </Menu>
-                    {route?.name === 'UpdateComplaint' && (
-                      <TouchableOpacity style={styles.statusButton}>
-                        <View style={styles.statusCnt}>
-                          <DescriptionText
-                            text={'Status'}
-                            style={{color: '#ffffff'}}
-                          />
-                          <Image
-                            source={{
-                              uri: 'https://cdn-icons-png.flaticon.com/512/2985/2985150.png',
-                            }}
-                            style={styles.bottomAerrowStyle}
-                          />
-                        </View>
-                      </TouchableOpacity>
-                    )}
                   </View>
                   <Text style={styles.filePicknote}>
                     Mandotary Only PDF, JPG, PNG, JPEG File Accepted
@@ -300,10 +287,43 @@ const AddComplaints = ({route}) => {
                       );
                     }}
                   />
+                  {route?.params &&
+                    route?.params.data.status &&
+                    route?.params.data.status.length > 0 && (
+                      <>
+                        <Text style={styles.attachFileTxt}>Select Status</Text>
+                        <Dropdown
+                          style={[
+                            styles.dropdown,
+                            isFocus && {borderColor: 'blue'},
+                          ]}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          inputSearchStyle={styles.inputSearchStyle}
+                          iconStyle={styles.iconStyle}
+                          data={route.params.data.status}
+                          search
+                          maxHeight={300}
+                          labelField="Title"
+                          valueField="value"
+                          placeholder={!isFocus ? 'Select item' : '...'}
+                          searchPlaceholder="Search..."
+                          value={statusOption}
+                          onFocus={() => setIsFocus(true)}
+                          onBlur={() => setIsFocus(false)}
+                          onChange={item => {
+                            setStatusOption(item.value);
+                            setIsFocus(false);
+                          }}
+                        />
+                      </>
+                    )}
+
                   <View style={{marginTop: '7%'}}>
                     <AppButton
                       buttonTitle={'Submit'}
                       onPress={ComplaintAction}
+                      btnLoader={loader}
                     />
                   </View>
                 </View>
@@ -400,5 +420,43 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.descFont,
     marginVertical: '2%',
+  },
+
+  container: {
+    backgroundColor: 'white',
+    padding: 16,
+  },
+  dropdown: {
+    height: 50,
+    borderColor: 'gray',
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  label: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
   },
 });
