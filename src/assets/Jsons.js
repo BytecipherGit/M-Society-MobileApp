@@ -529,7 +529,7 @@ export let AddResidenceUserJson = [
     id: 5,
     title: 'Profession',
     keyboardType: 'default',
-    param: 'profession',
+    param: 'occupation',
     type: 'dropDown',
     value: [],
   },
@@ -545,11 +545,39 @@ export let AddResidenceUserJson = [
     id: 7,
     title: 'Resident Type',
     keyboardType: 'default',
-    param: 'residentType',
+    param: 'userType',
     type: 'dropDown',
     value: [
       {label: 'Rental', value: 'rental'},
       {label: 'Owner', value: 'owner'},
     ],
+  },
+];
+
+export const ColorsArray = [
+  {
+    id: 1,
+    title: 'Primary Color',
+    param: 'primaryColour',
+  },
+  {
+    id: 2,
+    title: 'Shadow Color',
+    param: 'shadowColour',
+  },
+  {
+    id: 3,
+    title: 'Button HoverBack Color',
+    param: 'buttonHoverBgColour',
+  },
+  {
+    id: 4,
+    title: 'Button HoverFront Color',
+    param: 'buttonHoverfontColour',
+  },
+  {
+    id: 5,
+    title: 'Font Colour',
+    param: 'fontColour',
   },
 ];

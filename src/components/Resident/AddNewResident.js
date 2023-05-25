@@ -23,11 +23,33 @@ import {
 } from '../../assets/services';
 import AppButton from '../../ReUsableComponents/AppButton';
 
-const AddNewResident = ({navigation}) => {
+const AddNewResident = ({navigation, route}) => {
   const [showData, setShowData] = useState(AddResidenceUserJson);
-  const [data, setData] = useState({});
+  const [data, setData] = useState(
+    route && route.params
+      ? route.params.item
+      : {
+          countryCode: '+91',
+        },
+  );
+  const [ownerDetail, setOwnerDetail] = useState(
+    route && route.params
+      ? {
+          ownerName: route.params.item.ownerName,
+          ownerEmail: route.params.item.ownerEmail,
+          ownerPhoneNumber: route.params.item.ownerPhoneNumber,
+          ownerCountryCode: route.params.item.ownerCountryCode,
+          ownerAddress: route.params.item.ownerAddress,
+        }
+      : {
+          ownerName: '',
+          ownerEmail: '',
+          ownerPhoneNumber: '',
+          ownerCountryCode: '+91',
+          ownerAddress: '',
+        },
+  );
   const [loader, setLoader] = useState(false);
-  const [countryCode, setCountryCode] = useState('+91');
   const phoneInput = useRef(null);
 
   useEffect(() => {
@@ -88,8 +110,8 @@ const AddNewResident = ({navigation}) => {
       !data.houseNumber ||
       !data.name ||
       !data.phoneNumber ||
-      !data.profession ||
-      !data.residentType ||
+      !data.occupation ||
+      !data.userType ||
       !data.role
     ) {
       return SnackError('Fill in the blanks.');
@@ -102,15 +124,24 @@ const AddNewResident = ({navigation}) => {
     if (data.phoneNumber.length !== 10) {
       return SnackError('Please Enter a valid phone number');
     }
+
+    if (
+      data.userType === 'rental' &&
+      (!ownerDetail.ownerName ||
+        !ownerDetail.ownerEmail ||
+        !ownerDetail.ownerAddress ||
+        !ownerDetail.ownerCountryCode ||
+        !ownerDetail.ownerPhoneNumber)
+    ) {
+      return SnackError('Please Fill Owner Detail First');
+    }
+
     setLoader(true);
 
     try {
       const Result = await PostData({
         url: API_URL + 'admin/residentialUser/add',
-        body: {
-          ...data,
-          ...{countryCode: countryCode},
-        },
+        body: data.userType === 'rental' ? {...data, ...ownerDetail} : data,
       });
       console.log(Result.data);
       setLoader(false);
@@ -126,9 +157,76 @@ const AddNewResident = ({navigation}) => {
     }
   };
 
+  const renderUI = (item, index, data, setData) => {
+    return (
+      <View style={{marginTop: '5%'}} key={index}>
+        <TitleText text={item.title} />
+        {item.type === 'Input' && (
+          <TextInput
+            placeholder={item.title}
+            style={styles.textInput}
+            value={data[item.param]}
+            onChangeText={text => setData({...data, [item.param]: text})}
+          />
+        )}
+        {item.type === 'phoneNumber' && (
+          <PhoneInput
+            ref={phoneInput}
+            layout="second"
+            inputStyle={{color: 'green'}}
+            containerStyle={styles.phoneContainerStyle}
+            buttonStyle={{}}
+            textContainerStyle={styles.phoneTextContainerStyle}
+            textInputStyle={{}}
+            codeTextStyle={{}}
+            dropdownStyle={{
+              height: 50,
+            }}
+            country={'IN'}
+            value={data[item.param]}
+            onChangeText={phone => setData({...data, [item.param]: phone})}
+            onChangeCountry={cn =>
+              setData({
+                ...data,
+                [data.countryCode
+                  ? countryCode
+                  : ownerCountryCode]: `+${cn.callingCode[0]}`,
+              })
+            }
+          />
+        )}
+        {item.type === 'dropDown' && (
+          <Dropdown
+            style={[styles.dropdown]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={item.value}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder={'Select item'}
+            searchPlaceholder="Search..."
+            value={data[item.param]}
+            // onFocus={() => setIsFocus(true)}
+            // onBlur={() => setIsFocus(false)}
+            onChange={i => {
+              setData({...data, [item.param]: i.value});
+              // setIsFocus(false);
+            }}
+          />
+        )}
+      </View>
+    );
+  };
+
   return (
     <View style={globalStyle.cnt}>
-      <AppHeader navigation={navigation} title="Add Residence" />
+      <AppHeader
+        navigation={navigation}
+        title={route && route.params ? 'View Residence' : 'Add Residence'}
+      />
       <FullCardBackground
         styles={styles.cnt}
         RenderUI={() => (
@@ -137,76 +235,55 @@ const AddNewResident = ({navigation}) => {
               showsVerticalScrollIndicator={false}
               automaticallyAdjustKeyboardInsets={true}
               contentContainerStyle={{flexGrow: 0.3}}>
-              {showData.map((item, index) => {
-                return (
-                  <View style={{marginTop: '5%'}} key={index}>
-                    <TitleText text={item.title} />
-                    {item.type === 'Input' && (
-                      <TextInput
-                        placeholder={item.title}
-                        style={styles.textInput}
-                        value={data[item.param]}
-                        onChangeText={text =>
-                          setData({...data, [item.param]: text})
-                        }
-                      />
-                    )}
-                    {item.type === 'phoneNumber' && (
-                      <PhoneInput
-                        ref={phoneInput}
-                        layout="second"
-                        inputStyle={{color: 'green'}}
-                        containerStyle={styles.phoneContainerStyle}
-                        buttonStyle={{}}
-                        textContainerStyle={styles.phoneTextContainerStyle}
-                        textInputStyle={{}}
-                        codeTextStyle={{}}
-                        dropdownStyle={{
-                          height: 50,
-                        }}
-                        country={'IN'}
-                        value={data[item.param]}
-                        onChangeText={phone =>
-                          setData({...data, [item.param]: phone})
-                        }
-                        onChangeCountry={cn =>
-                          setCountryCode(`+${cn.callingCode[0]}`)
-                        }
-                      />
-                    )}
-                    {item.type === 'dropDown' && (
-                      <Dropdown
-                        style={[styles.dropdown]}
-                        placeholderStyle={styles.placeholderStyle}
-                        selectedTextStyle={styles.selectedTextStyle}
-                        inputSearchStyle={styles.inputSearchStyle}
-                        iconStyle={styles.iconStyle}
-                        data={item.value}
-                        maxHeight={300}
-                        labelField="label"
-                        valueField="value"
-                        placeholder={'Select item'}
-                        searchPlaceholder="Search..."
-                        value={data[item.param]}
-                        // onFocus={() => setIsFocus(true)}
-                        // onBlur={() => setIsFocus(false)}
-                        onChange={i => {
-                          setData({...data, [item.param]: i.value});
-                          // setIsFocus(false);
-                        }}
-                      />
-                    )}
-                  </View>
-                );
-              })}
+              {showData.map((item, index) =>
+                renderUI(item, index, data, setData),
+              )}
+              {data.userType === 'rental' && (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-SemiBold',
+                      fontSize: 18,
+                      marginTop: '8%',
+                      color: COLORS.primary,
+                    }}>
+                    Owner Detail
+                  </Text>
+                  {[
+                    {id: 1, title: 'Name', param: 'ownerName', type: 'Input'},
+                    {id: 2, title: 'Email', param: 'ownerEmail', type: 'Input'},
+                    {
+                      id: 3,
+                      title: 'Phone Number',
+                      param: 'ownerPhoneNumber',
+                      type: 'phoneNumber',
+                    },
+                    {
+                      id: 4,
+                      title: 'Owner Address',
+                      param: 'ownerAddress',
+                      type: 'Input',
+                    },
+                  ].map((item, index) =>
+                    renderUI(item, index, ownerDetail, setOwnerDetail),
+                  )}
+                </View>
+              )}
+
               <View style={{height: 50}} />
             </ScrollView>
-            <AppButton
-              buttonStyle={{marginVertical: 10}}
-              buttonTitle={'Create'}
-              btnLoader={loader}
-              onPress={createResident}
-            />
+            {route && route.params && route.params.item ? null : (
+              <AppButton
+                buttonStyle={{marginVertical: 10}}
+                buttonTitle={
+                  route && route.params && route.params.item
+                    ? 'Update'
+                    : 'Create'
+                }
+                btnLoader={loader}
+                onPress={createResident}
+              />
+            )}
           </View>
         )}
       />

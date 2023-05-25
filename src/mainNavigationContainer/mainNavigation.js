@@ -43,6 +43,7 @@ import EditNotice from '../components/Notice/EditNotice';
 import CreateDocument from '../components/Document/CreateDocument';
 import EditDocument from '../components/Document/EditDocument';
 import CreateContact from '../components/Contact/CreateContact';
+import SocietyEditScreen from '../components/Society/SocietyEditScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -149,6 +150,7 @@ const mainNavigation = () => {
       {stackScreenWithNoHeader('UpdateComplaint', AddComplaints)}
       {stackScreenWithNoHeader('DocumentStack', DocumentStackNavigator)}
       {stackScreenWithNoHeader('SocietyInfoScreen', SocietyInfo)}
+      {stackScreenWithNoHeader('SocietyEditScreen', SocietyEditScreen)}
       {stackScreenWithNoHeader('Webview', AppWebview)}
     </Stack.Navigator>
   );

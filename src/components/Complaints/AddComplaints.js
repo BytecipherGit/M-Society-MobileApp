@@ -22,10 +22,10 @@ import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 import AppTextInput from '../../ReUsableComponents/AppTextInput';
 import {Dropdown} from 'react-native-element-dropdown';
+import AppFilePicker from '../../ReUsableComponents/AppFilePicker';
 
 const AddComplaints = ({route}) => {
   const navigation = useNavigation();
-  const [visible, setVisible] = useState(false);
   const [complaintImage, setComplaintImage] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const [data, setData] = useState({
@@ -43,9 +43,6 @@ const AddComplaints = ({route}) => {
   const [loader, setLoader] = useState(false);
 
   const user = useSelector(state => state.AuthReducer.userDetail.data);
-
-  const hideMenu = () => setVisible(false);
-  const showMenu = () => setVisible(true);
 
   useEffect(() => {
     if (user._id) {
@@ -226,43 +223,10 @@ const AddComplaints = ({route}) => {
                     }}
                   />
                   <Text style={styles.attachFileTxt}>Attach File</Text>
-                  <View style={styles.filePickerCnt}>
-                    <Menu
-                      visible={visible}
-                      style={styles.cameraOptionsCnt}
-                      anchor={
-                        <>
-                          <TouchableOpacity
-                            onPress={showMenu}
-                            style={{alignSelf: 'center'}}>
-                            <AddFileIcon />
-                          </TouchableOpacity>
-                          <Text>Upload Certificate </Text>
-                        </>
-                      }
-                      onRequestClose={hideMenu}>
-                      <FlatList
-                        data={['camera', 'gallery']}
-                        renderItem={({item, index}) => (
-                          <>
-                            <MenuItem
-                              onPress={() => {
-                                hideMenu(),
-                                  setTimeout(() => {
-                                    pickImage(item);
-                                  }, 500);
-                              }}>
-                              <Text style={{fontWeight: 'bold', color: 'grey'}}>
-                                {' '}
-                                Pick From {item?.toLocaleUpperCase()}
-                              </Text>
-                            </MenuItem>
-                            <MenuDivider />
-                          </>
-                        )}
-                      />
-                    </Menu>
-                  </View>
+                  <AppFilePicker
+                    titleText={'Upload Certificate'}
+                    onPress={op => pickImage(op)}
+                  />
                   <Text style={styles.filePicknote}>
                     Mandotary Only PDF, JPG, PNG, JPEG File Accepted
                   </Text>

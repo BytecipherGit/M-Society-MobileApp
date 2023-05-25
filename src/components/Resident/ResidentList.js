@@ -121,13 +121,13 @@ const ResidentList = ({navigation}) => {
         />
         {isAdmin && (
           <View style={style.actionButtonsCnt}>
-            {['EDIT', 'DELETE'].map((title, i) => {
+            {['VIEW', 'DELETE'].map((title, i) => {
               return (
                 <TouchableOpacity
                   key={i}
                   style={style.button}
                   activeOpacity={0.7}
-                  onPress={() => (i === 0 ? null : deleteUser(item, index))}>
+                  onPress={() => (i === 0 ? navigation.navigate('AddNewResident',{item:item}) : deleteUser(item, index))}>
                   <LinearGradient
                     colors={['#FF7334', '#FFA13C']}
                     start={{x: 0.0, y: 0.0}}

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   ScrollView,
+  Alert,
 } from 'react-native';
 import React, {Fragment, useEffect} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
@@ -32,7 +33,7 @@ const SocietyInfo = ({navigation, route}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch({type: SOCIETY_DETAIL_REQUEST, payload: SocietyId});
+    dispatch({type: SOCIETY_DETAIL_REQUEST, payload: SocietyId._id});
   }, []);
 
   return (
@@ -102,7 +103,11 @@ const SocietyInfo = ({navigation, route}) => {
                   ...shadow,
                 }}>
                 <Text style={[styles.MainTitle, {marginBottom: '7%'}]}>
-                  Society Name
+                  Society Name{' '}
+                  <Text
+                    onPress={() => navigation.navigate('SocietyEditScreen')}>
+                    <AntDesign name="edit" style={{fontSize: 20}} />
+                  </Text>
                 </Text>
                 <Text style={styles.detailTitle}>Registration Number</Text>
                 <Text style={styles.detailDesc}>{registrationNumber}</Text>
