@@ -44,6 +44,7 @@ import CreateDocument from '../components/Document/CreateDocument';
 import EditDocument from '../components/Document/EditDocument';
 import CreateContact from '../components/Contact/CreateContact';
 import SocietyEditScreen from '../components/Society/SocietyEditScreen';
+import CreateGuard from '../components/Guard/CreateGuard';
 
 const Stack = createNativeStackNavigator();
 
@@ -134,6 +135,7 @@ const mainNavigation = () => {
       {stackScreenWithNoHeader('OtpScreen', OtpScreen)}
       {stackScreenWithNoHeader('HomeScreen', HomeScreen)}
       {stackScreenWithNoHeader('GuardHomeScreen', GuardHomeScreen)}
+      {stackScreenWithNoHeader('CreateGuardScreen', CreateGuard)}
       {stackScreenWithNoHeader('AddVisitor', AddVisitor)}
       {stackScreenWithNoHeader('NoticeScreen', NoticeStackNavigator)}
       {stackScreenWithNoHeader('ComplaintScreen', ComplaintStackNavigator)}

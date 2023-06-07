@@ -26,6 +26,7 @@ import {
   SuccessAlert,
 } from '../../assets/services';
 import CreateDocument from './CreateDocument';
+import {useSelector} from 'react-redux';
 
 const EditDocument = ({navigation, route}) => {
   const {documentName, description, status, documentImageFile, _id} =
@@ -43,6 +44,7 @@ const EditDocument = ({navigation, route}) => {
     id: _id,
   });
   const [loader, setLoader] = useState(false);
+  const state = useSelector(state => state.AuthReducer.userDetail);
 
   const editDocument = async () => {
     if (
@@ -155,7 +157,9 @@ const EditDocument = ({navigation, route}) => {
                         style={{
                           backgroundColor:
                             data.status === st
-                              ? COLORS.buttonColor
+                              ? state && state.data && state.data.societyId
+                                ? state.data.societyId.buttonHoverBgColour
+                                : COLORS.buttonColor
                               : COLORS.greyFont,
                           padding: 15,
                           marginRight: 10,
@@ -166,7 +170,10 @@ const EditDocument = ({navigation, route}) => {
                         }}>
                         <Text
                           style={{
-                            color: COLORS.white,
+                            color:
+                              state && state.data && state.data.societyId
+                                ? state.data.societyId.fontColour
+                                : COLORS.white,
                             fontFamily: 'Axiforma-SemiBold',
                           }}>
                           {st.toLocaleUpperCase()}

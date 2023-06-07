@@ -1,8 +1,11 @@
 import {View, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {COLORS} from '../assets/theme';
 import TitleText from "./Text's/TitleText";
 import LinearGradient from 'react-native-linear-gradient';
+import {useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
+import {getAsyncValue} from '../assets/services';
 
 const AppButton = ({
   btnLoader,
@@ -12,10 +15,19 @@ const AppButton = ({
   TextStyle,
   renderIcon = () => null,
 }) => {
+  const state = useSelector(state => state.AuthReducer.userDetail);
+
   return (
     <TouchableOpacity onPress={onPress}>
       <LinearGradient
-        colors={['#FF7334', '#FFA13C']}
+        colors={[
+          state && state.data && state.data.societyId
+            ? state.data.societyId.buttonHoverBgColour
+            : '#FF7334',
+          state && state.data && state.data.societyId
+            ? state.data.societyId.buttonHoverBgColour
+            : '#FFA13C',
+        ]}
         start={{x: 0.0, y: 0.0}}
         end={{x: 1.0, y: 1.0}}
         locations={[0.0, 1.0]}
@@ -40,7 +52,10 @@ const AppButton = ({
               text={buttonTitle}
               style={[
                 {
-                  color: 'white',
+                  color:
+                    state && state.data && state.data.societyId
+                      ? state.data.societyId.fontColour
+                      : 'white',
                 },
                 TextStyle && TextStyle,
               ]}

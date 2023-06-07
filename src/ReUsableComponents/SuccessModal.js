@@ -10,6 +10,7 @@ import {COLORS} from '../assets/theme';
 import {RemoveStoreData} from '../assets/services';
 import {CommonActions} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useDispatch} from 'react-redux';
 
 const SuccessModal = ({
   isVisible,
@@ -19,11 +20,15 @@ const SuccessModal = ({
   type,
   onlyClosePopup,
   iconType,
+  onPress = () => null,
 }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const logout = async () => {
+    onPress();
     RemoveStoreData('user');
+    dispatch({type: 'LOG_OUT'});
     setIsVisible(false),
       setTimeout(() => {
         navigation.dispatch(

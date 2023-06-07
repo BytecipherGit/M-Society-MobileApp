@@ -9,6 +9,7 @@ import React from 'react';
 import BackIcon from '../assets/images/BackIcon.svg';
 import {COLORS} from '../assets/theme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useSelector} from 'react-redux';
 
 const AppHeader = ({
   title,
@@ -17,12 +18,16 @@ const AppHeader = ({
   ThreeActionDot,
   cntStyle,
 }) => {
+  const state = useSelector(state => state.AuthReducer.userDetail);
   return (
     <ImageBackground
       source={require('../assets/images/gridBackground.png')}
       style={{
         height: 120,
-        backgroundColor: COLORS.themeColor,
+        backgroundColor:
+          state && state.data && state.data.societyId
+            ? state.data.societyId.primaryColour
+            : COLORS.themeColor,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-end',
@@ -38,7 +43,10 @@ const AppHeader = ({
           name="arrowleft"
           style={{
             fontSize: 25,
-            color: COLORS.titleFont,
+            color:
+              state && state.data && state.data.societyId
+                ? state.data.societyId.fontColour
+                : COLORS.titleFont,
           }}
         />
       </TouchableOpacity>
@@ -48,7 +56,10 @@ const AppHeader = ({
             alignSelf: 'center',
             fontFamily: 'Axiforma-SemiBold',
             fontSize: 16,
-            color: COLORS.titleFont,
+            color:
+              state && state.data && state.data.societyId
+                ? state.data.societyId.fontColour
+                : COLORS.titleFont,
             marginLeft: '-14%',
           }}>
           {title}

@@ -11,10 +11,12 @@ import AddFileIcon from '../../assets/images/AddFileIcon.svg';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AppButton from '../../ReUsableComponents/AppButton';
 import {CreateSociety, SnackError, SuccessAlert} from '../../assets/services';
+import {useSelector} from 'react-redux';
 
 const CreateNotice = ({navigation}) => {
   const [data, setData] = useState({});
   const [loader, setLoader] = useState(false);
+  const state = useSelector(state => state.AuthReducer.userDetail);
 
   const createNotice = async () => {
     if (
@@ -101,7 +103,9 @@ const CreateNotice = ({navigation}) => {
                         style={{
                           backgroundColor:
                             data.status === st
-                              ? COLORS.buttonColor
+                              ? state && state.data && state.data.societyId
+                                ? state.data.societyId.buttonHoverBgColour
+                                : COLORS.buttonColor
                               : COLORS.greyFont,
                           padding: 15,
                           marginRight: 10,
@@ -112,7 +116,10 @@ const CreateNotice = ({navigation}) => {
                         }}>
                         <Text
                           style={{
-                            color: COLORS.white,
+                            color:
+                              state && state.data && state.data.societyId
+                                ? state.data.societyId.fontColour
+                                : COLORS.white,
                             fontFamily: 'Axiforma-SemiBold',
                           }}>
                           {st.toLocaleUpperCase()}

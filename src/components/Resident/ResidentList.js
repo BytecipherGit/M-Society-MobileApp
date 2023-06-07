@@ -37,6 +37,8 @@ const ResidentList = ({navigation}) => {
   const user = useSelector(state => state.AuthReducer.userDetail.data);
   const isFocus = useIsFocused();
 
+  const stateForTheme = useSelector(state => state.AuthReducer.userDetail);
+
   useEffect(() => {
     getResidentsList();
   }, [isFocus]);
@@ -109,7 +111,13 @@ const ResidentList = ({navigation}) => {
           <TitleText text={`${name} (${userType})`} />
           <ToggleSwitch
             isOn={status === 'active' ? true : false}
-            onColor={'#FF7334'}
+            onColor={
+              stateForTheme &&
+              stateForTheme.data &&
+              stateForTheme.data.societyId
+                ? stateForTheme.data.societyId.buttonHoverBgColour
+                : '#FF7334'
+            }
             offColor={COLORS.inputBorder}
             size="medium"
             onToggle={isOn => isAdmin && changeUserStatus(item, index)}
@@ -127,9 +135,24 @@ const ResidentList = ({navigation}) => {
                   key={i}
                   style={style.button}
                   activeOpacity={0.7}
-                  onPress={() => (i === 0 ? navigation.navigate('AddNewResident',{item:item}) : deleteUser(item, index))}>
+                  onPress={() =>
+                    i === 0
+                      ? navigation.navigate('AddNewResident', {item: item})
+                      : deleteUser(item, index)
+                  }>
                   <LinearGradient
-                    colors={['#FF7334', '#FFA13C']}
+                    colors={[
+                      stateForTheme &&
+                      stateForTheme.data &&
+                      stateForTheme.data.societyId
+                        ? stateForTheme.data.societyId.buttonHoverBgColour
+                        : '#FF7334',
+                      stateForTheme &&
+                      stateForTheme.data &&
+                      stateForTheme.data.societyId
+                        ? stateForTheme.data.societyId.buttonHoverBgColour
+                        : '#FFA13C',
+                    ]}
                     start={{x: 0.0, y: 0.0}}
                     end={{x: 1.0, y: 1.0}}
                     locations={[0.0, 1.0]}
@@ -143,7 +166,13 @@ const ResidentList = ({navigation}) => {
                     }}>
                     <DescriptionText
                       text={title}
-                      style={{color: 'white', fontWeight: '700'}}
+                      style={{
+                        color:
+                          state && state.data && state.data.societyId
+                            ? state.data.societyId.fontColour
+                            : 'white',
+                        fontWeight: '700',
+                      }}
                     />
                   </LinearGradient>
                 </TouchableOpacity>

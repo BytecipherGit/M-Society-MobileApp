@@ -23,10 +23,12 @@ import {
   SnackError,
   SuccessAlert,
 } from '../../assets/services';
+import {useSelector} from 'react-redux';
 
 const CreateDocument = ({navigation}) => {
   const [data, setData] = useState({});
   const [loader, setLoader] = useState(false);
+  const state = useSelector(state => state.AuthReducer.userDetail);
 
   const createDocumentfun = async () => {
     if (
@@ -113,7 +115,9 @@ const CreateDocument = ({navigation}) => {
                         style={{
                           backgroundColor:
                             data.status === st
-                              ? COLORS.buttonColor
+                              ? state && state.data && state.data.societyId
+                                ? state.data.societyId.buttonHoverBgColour
+                                : COLORS.buttonColor
                               : COLORS.greyFont,
                           padding: 15,
                           marginRight: 10,
@@ -124,7 +128,10 @@ const CreateDocument = ({navigation}) => {
                         }}>
                         <Text
                           style={{
-                            color: COLORS.white,
+                            color:
+                              state && state.data && state.data.societyId
+                                ? state.data.societyId.fontColour
+                                : COLORS.white,
                             fontFamily: 'Axiforma-SemiBold',
                           }}>
                           {st.toLocaleUpperCase()}

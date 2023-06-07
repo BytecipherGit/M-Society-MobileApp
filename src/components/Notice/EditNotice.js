@@ -17,6 +17,7 @@ import {
   SnackError,
   SuccessAlert,
 } from '../../assets/services';
+import {useSelector} from 'react-redux';
 
 const EditNotice = ({navigation, route}) => {
   const {title, description, status, attachedFile, _id} =
@@ -33,6 +34,7 @@ const EditNotice = ({navigation, route}) => {
     id: _id,
   });
   const [loader, setLoader] = useState(false);
+  const state = useSelector(state => state.AuthReducer.userDetail);
 
   const createNotice = async () => {
     if (
@@ -142,7 +144,9 @@ const EditNotice = ({navigation, route}) => {
                         style={{
                           backgroundColor:
                             data.status === st
-                              ? COLORS.buttonColor
+                              ? state && state.data && state.data.societyId
+                                ? state.data.societyId.buttonHoverBgColour
+                                : COLORS.buttonColor
                               : COLORS.greyFont,
                           padding: 15,
                           marginRight: 10,
@@ -153,7 +157,10 @@ const EditNotice = ({navigation, route}) => {
                         }}>
                         <Text
                           style={{
-                            color: COLORS.white,
+                            color:
+                              state && state.data && state.data.societyId
+                                ? state.data.societyId.fontColour
+                                : COLORS.white,
                             fontFamily: 'Axiforma-SemiBold',
                           }}>
                           {st.toLocaleUpperCase()}

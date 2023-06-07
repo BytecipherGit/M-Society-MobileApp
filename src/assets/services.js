@@ -325,3 +325,79 @@ export const SuccessAlert = title => {
     backgroundColor: 'green',
   });
 };
+
+export const putSocietyImages = async ({url, body}) => {
+  var formData = new FormData();
+  let Token = await getAsyncValue('user');
+  if (body.logo && body.logo.uri) {
+    formData.append('logo', body.logo);
+  }
+
+  if (body.images.length > 0) {
+    body.images.map((item, index) => {
+      formData.append('images', item);
+    });
+  }
+  formData.append('description', body.description);
+  formData.append('primaryColour', body.primaryColour);
+  formData.append('shadowColour', body.shadowColour);
+  formData.append('buttonHoverBgColour', body.buttonHoverBgColour);
+  formData.append('buttonHoverfontColour', body.buttonHoverfontColour);
+  formData.append('fontColour', body.fontColour);
+
+  return axios.put(url, formData, {
+    headers: {
+      Authorization: 'Bearer ' + Token.accessToken,
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+export const CreateGuardAPI = async payload => {
+  let Token = await getAsyncValue('user');
+  Token = JSON.parse(Token);
+
+  const formData = new FormData();
+  [payload.body].map(item => {
+    Object.keys(item).map(key => {
+      formData.append(key, item[key]);
+    });
+  });
+  if (payload.update) {
+    return axios
+      .put(
+        payload.url,
+        formData,
+        Token && {
+          headers: {
+            Authorization: 'Bearer ' + Token.accessToken,
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      )
+      .then(res => {
+        return res;
+      })
+      .catch(e => {
+        return e;
+      });
+  } else {
+    return axios
+      .post(
+        payload.url,
+        formData,
+        Token && {
+          headers: {
+            Authorization: 'Bearer ' + Token.accessToken,
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      )
+      .then(res => {
+        return res;
+      })
+      .catch(e => {
+        return e;
+      });
+  }
+};

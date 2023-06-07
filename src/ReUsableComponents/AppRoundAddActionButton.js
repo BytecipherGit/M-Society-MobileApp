@@ -3,12 +3,21 @@ import React from 'react';
 import {COLORS} from '../assets/theme';
 import AddSvg from '../assets/images/AddSvg.svg';
 import LinearGradient from 'react-native-linear-gradient';
+import {useSelector} from 'react-redux';
 
 const AppRoundAddActionButton = ({onPress = () => null}) => {
+  const state = useSelector(state => state.AuthReducer.userDetail);
   return (
     <LinearGradient
       // onPress={onPress}
-      colors={['#FFA13C', '#FF7334']}
+      colors={[
+        state && state.data && state.data.societyId
+          ? state.data.societyId.buttonHoverBgColour
+          : '#FF7334',
+        state && state.data && state.data.societyId
+          ? state.data.societyId.buttonHoverBgColour
+          : '#FFA13C',
+      ]}
       start={{x: 0.0, y: 1.0}}
       end={{x: 1.0, y: 0.0}}
       style={{

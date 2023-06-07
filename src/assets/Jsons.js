@@ -581,3 +581,48 @@ export const ColorsArray = [
     param: 'fontColour',
   },
 ];
+
+export const AddGuardJson = [
+  {
+    id: 1,
+    title: 'Name',
+    placeHolder: 'Enter guard name Here',
+    param: 'name',
+  },
+  {
+    id: 2,
+    title: 'Address',
+    placeHolder: 'Enter Address here.',
+    param: 'address',
+  },
+  {
+    id: 3,
+    title: 'Phone Number',
+    placeHolder: '0000000000',
+    param: 'phoneNumber',
+  },
+  {
+    id: 4,
+    title: 'Profile Image',
+    placeHolder: 'Click to add Guard profile image.',
+    param: 'profileImage',
+  },
+  {
+    id: 5,
+    title: 'Date Of Birth',
+    placeHolder: 'Click to select.',
+    param: 'dob',
+  },
+  {
+    id: 6,
+    title: 'Shift',
+    placeHolder: 'Select Guard Shift.',
+    param: 'shift',
+  },
+  {
+    id: 7,
+    title: 'Joining Date',
+    placeHolder: 'Select Guard Joining Date.',
+    param: 'joiningDate',
+  },
+];

@@ -32,6 +32,7 @@ const HomeScreen = ({navigation}) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const state = useSelector(state => state.AuthReducer);
   const Notice = useSelector(state => state.NoticeReducer);
+  const stateForTheme = useSelector(state => state.AuthReducer.userDetail);
   const isFocus = useIsFocused();
   const dispatch = useDispatch();
 
@@ -83,7 +84,13 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <LinearGradient
-      colors={[COLORS.themeColor, '#F9F9F9', '#F9F9F9']}
+      colors={[
+        stateForTheme && stateForTheme.data && stateForTheme.data.societyId
+          ? stateForTheme.data.societyId.primaryColour
+          : COLORS.themeColor,
+        '#F9F9F9',
+        '#F9F9F9',
+      ]}
       style={{
         flex: 1,
       }}>
@@ -99,7 +106,9 @@ const HomeScreen = ({navigation}) => {
           }}>
           <ImageBackground
             source={require('../assets/images/gridBackground.png')}
-            style={{flex: 0.8, marginHorizontal: 15, marginTop: '2%'}}>
+            style={{flex: 0.8, marginHorizontal: 15, marginTop: '2%'}}
+            tintColor="rgba(255,255,255,.2)" // Set the desired tint color here
+          >
             {/* Header */}
             <View style={styles.headerCnt}>
               {/* User normal Detail */}
@@ -108,7 +117,7 @@ const HomeScreen = ({navigation}) => {
                   onPress={() => navigation.navigate('ProfileStackScreen')}>
                   <Image
                     source={{
-                      uri: state?.userDetail?.data.profileImage
+                      uri: state?.userDetail?.data?.profileImage
                         ? state?.userDetail?.data.profileImage
                         : 'https://static.vecteezy.com/system/resources/thumbnails/001/840/612/small_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg',
                     }}

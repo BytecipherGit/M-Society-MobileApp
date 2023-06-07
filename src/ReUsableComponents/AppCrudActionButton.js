@@ -1,6 +1,7 @@
 import {View, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
 import React from 'react';
 import {COLORS} from '../assets/theme';
+import {useSelector} from 'react-redux';
 
 const AppCrudActionButton = ({
   doActions = () => null,
@@ -8,6 +9,7 @@ const AppCrudActionButton = ({
   index,
   loaderIndex = '',
 }) => {
+  const state = useSelector(state => state.AuthReducer.userDetail);
   return (
     <View
       style={{
@@ -19,7 +21,10 @@ const AppCrudActionButton = ({
         <TouchableOpacity
           style={{
             flex: 0.3,
-            backgroundColor: COLORS.buttonColor,
+            backgroundColor:
+              state && state.data && state.data.societyId
+                ? state.data.societyId.buttonHoverBgColour
+                : COLORS.buttonColor,
             padding: 10,
             borderRadius: 5,
             justifyContent: 'center',
@@ -34,7 +39,10 @@ const AppCrudActionButton = ({
             <Text
               style={{
                 fontFamily: 'Axiforma-Medium',
-                color: COLORS.white,
+                color:
+                  state && state.data && state.data.societyId
+                    ? state.data.societyId.fontColour
+                    : COLORS.white,
               }}>
               {action.toUpperCase()}
             </Text>

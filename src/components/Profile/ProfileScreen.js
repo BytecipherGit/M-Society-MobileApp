@@ -18,13 +18,18 @@ import {GuardprofileOptions, profileOptions} from '../../assets/Jsons';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import ForwardAerrow from '../../assets/images/ForwardAerrow.svg';
 import SuccessModal from '../../ReUsableComponents/SuccessModal';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import AppButton from '../../ReUsableComponents/AppButton';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const ProfileScreen = ({navigation, route}) => {
   const [logoutPopup, setLogoutPopup] = useState(false);
   const User = useSelector(state => state.AuthReducer.userDetail);
+  const dispatch = useDispatch();
+
+  const logout = () => {
+    dispatch({type: 'LOG_OUT'});
+  };
 
   const renderOptions = () => {
     let array =
@@ -83,6 +88,7 @@ const ProfileScreen = ({navigation, route}) => {
       <SuccessModal
         isVisible={logoutPopup}
         setIsVisible={setLogoutPopup}
+        onPress={logout}
         type={'Logout'}
         navigationScreenName="Logout"
         desc="Do you want to Logout Your Account ?"

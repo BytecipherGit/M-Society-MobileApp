@@ -18,6 +18,12 @@ import ColorPicker from 'react-native-wheel-color-picker';
 import AppButton from '../../ReUsableComponents/AppButton';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {ColorsArray} from '../../assets/Jsons';
+import {
+  API_URL,
+  PutData,
+  SnackError,
+  putSocietyImages,
+} from '../../assets/services';
 
 const SocietyEditScreen = ({navigation}) => {
   const [societyImages, setSocietyImages] = useState([]);
@@ -28,6 +34,7 @@ const SocietyEditScreen = ({navigation}) => {
     buttonHoverfontColour: '#ffffff',
     fontColour: '#ffffff',
   });
+  const [loader, setLoader] = useState(false);
 
   const pickImage = (type, setType) => {
     // Image, Logo
@@ -74,6 +81,32 @@ const SocietyEditScreen = ({navigation}) => {
         },
       });
     }
+  };
+
+  const updateSociety = async () => {
+    setLoader(true);
+    try {
+      // ((data.logo && data.logo.uri) || societyImages.length) > 0
+      // ? await putSocietyImages({
+      //     url: API_URL + 'society/',
+      //     body: {
+      //       ...data,
+      //       ...{images: societyImages},
+      //       ...{body: data && data.logo ? data.logo : ''},
+      //     },
+      //   })
+      // :
+      const Result = await PutData({
+        url: API_URL + 'society/',
+        body: data,
+      });
+
+      console.log(Result);
+    } catch (e) {
+      SnackError('Something went wrong, please try again later.');
+    }
+
+    setLoader(false);
   };
 
   return (
@@ -191,6 +224,7 @@ const SocietyEditScreen = ({navigation}) => {
           marginBottom: '2%',
         }}
         buttonTitle={'Update Society Theme'}
+        onPress={updateSociety}
       />
     </View>
   );

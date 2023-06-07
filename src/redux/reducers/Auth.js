@@ -4,7 +4,9 @@ let initialState = {
   loader: false,
   data: {},
   error: '',
-  userDetail: {},
+  userDetail: {
+    data: {},
+  },
   type: false,
   loginOption: null,
   isAdmin: false,
@@ -28,6 +30,13 @@ export const AuthReducer = (state = initialState, action) => {
       return {...state, type: action.payload};
     case LOGIN_OPTION:
       return {...state, loginOption: action.payload};
+    case 'LOG_OUT':
+      return {
+        ...initialState, // Use spread operator to copy all properties from initialState
+        userDetail: {
+          data: {},
+        },
+      };
     default:
       return state;
   }
