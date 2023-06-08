@@ -34,7 +34,7 @@ const TakePaymentScreen = ({navigation}) => {
   return (
     <View style={[globalStyle.cnt, {backgroundColor: 'white'}]}>
       <AppHeader title={'Take Payment'} navigation={navigation} />
-      <View style={{}}>
+      <View style={{flex: 1}}>
         <AppTextInput
           item={{title: 'Search'}}
           renderIcon={() => (
@@ -50,8 +50,10 @@ const TakePaymentScreen = ({navigation}) => {
           cntStyle={{marginHorizontal: '4%', marginTop: '7%'}}
         />
         <TitleText style={styles.title} text="Results" />
+
         <FlatList
           data={users.data}
+          style={{flex: 1}}
           ListEmptyComponent={() => (
             <AppLoaderSrceen loader={users.loader} error={users.error} />
           )}

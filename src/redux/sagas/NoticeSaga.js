@@ -20,7 +20,9 @@ function* getNoticeList(action) {
     const Data = yield call(GetData, payload);
 
     if (Data.data.success === true) {
-      yield put({type: NOTICE_LIST_SUCCESS, payload: Data?.data?.data});
+      Data?.data?.data.length > 0
+        ? yield put({type: NOTICE_LIST_SUCCESS, payload: Data?.data?.data})
+        : yield put({type: NOTICE_LIST_FAIL, payload: 'No Notice found'});
     } else {
       yield put({type: NOTICE_LIST_FAIL, payload: Data?.data?.message});
     }

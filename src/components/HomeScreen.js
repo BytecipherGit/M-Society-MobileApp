@@ -8,24 +8,20 @@ import {
   Dimensions,
   Image,
   ImageBackground,
-  StatusBar,
   Platform,
 } from 'react-native';
-import React, {Fragment, useEffect, useState} from 'react';
-import {COLORS, globalStyle, shadow} from '../assets/theme';
+import React, {useEffect, useState} from 'react';
+import {COLORS} from '../assets/theme';
 import {SocietyOptions} from '../assets/Jsons';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  NOTICE_LIST_REQUEST,
-  NOTICE_LIST_REQUEST_SILENT,
-  SET_USER_TYPE,
-} from '../redux/Actions';
+import {NOTICE_LIST_REQUEST_SILENT, SET_USER_TYPE} from '../redux/Actions';
 import {getAsyncValue} from '../assets/services';
 import TakePayment from '../assets/images/TakePayment.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import HomeNoticeCrousal from './HomeNoticeCrousal';
 import {useIsFocused} from '@react-navigation/native';
+import axios from 'axios';
 
 const HomeScreen = ({navigation}) => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -42,6 +38,12 @@ const HomeScreen = ({navigation}) => {
       getUserType();
     }
   }, [isFocus]);
+
+  useEffect(() => {
+    axios
+      .get('https://ibuyexotic.com/terms-of-use')
+      .then(url => console.log(url));
+  }, []);
 
   const getNoticeList = () => {
     dispatch({type: NOTICE_LIST_REQUEST_SILENT});
@@ -65,7 +67,6 @@ const HomeScreen = ({navigation}) => {
       }
     } else {
       // remove the take payment and resident here.
-
       const index = SocietyOptions.findIndex(
         item => item.title === 'TAKE PAYMENT',
       );
@@ -81,13 +82,15 @@ const HomeScreen = ({navigation}) => {
   };
 
   const Label = Platform.OS === 'ios' ? SafeAreaView : View;
+  const isSocietyDetail =
+    stateForTheme && stateForTheme.data && stateForTheme.data.societyId
+      ? stateForTheme.data.societyId
+      : false;
 
   return (
     <LinearGradient
       colors={[
-        stateForTheme && stateForTheme.data && stateForTheme.data.societyId
-          ? stateForTheme.data.societyId.primaryColour
-          : COLORS.themeColor,
+        isSocietyDetail ? isSocietyDetail.primaryColour : COLORS.themeColor,
         '#F9F9F9',
         '#F9F9F9',
       ]}
@@ -124,9 +127,20 @@ const HomeScreen = ({navigation}) => {
                     style={styles.userIcon}
                   />
                 </TouchableOpacity>
-                <View style={{marginHorizontal: '3%'}}>
-                  <Text style={styles.helloTxt}>Hello</Text>
-                  <Text style={styles.userName}>
+                <View style={{marginHorizontal: '3%', width: '80%'}}>
+                  <Text
+                    style={[
+                      styles.helloTxt,
+                      isSocietyDetail && {color: isSocietyDetail.fontColour},
+                    ]}>
+                    Hello
+                  </Text>
+                  <Text
+                    numberOfLines={1}
+                    style={[
+                      styles.userName,
+                      isSocietyDetail && {color: isSocietyDetail.fontColour},
+                    ]}>
                     {state?.userDetail?.data.name}
                   </Text>
                 </View>
@@ -159,6 +173,7 @@ const HomeScreen = ({navigation}) => {
           <FlatList
             data={SocietyOptions}
             showsVerticalScrollIndicator={false}
+            style={{flex: 1}}
             numColumns={2}
             renderItem={({item, index}) => (
               <View style={styles.cardCnt}>
@@ -175,7 +190,6 @@ const HomeScreen = ({navigation}) => {
                 </TouchableOpacity>
               </View>
             )}
-            ListFooterComponent={() => <View style={{height: 400}} />}
           />
         </View>
       </Label>
@@ -225,7 +239,7 @@ const styles = StyleSheet.create({
     marginHorizontal: '20%',
     fontSize: 10,
   },
-  societyServices: {marginHorizontal: 15, marginTop: '10%'},
+  societyServices: {marginHorizontal: 15, marginTop: '10%', flex: 1},
   societyServicesTxt: {
     fontFamily: 'Axiforma-Bold',
     fontSize: 20,

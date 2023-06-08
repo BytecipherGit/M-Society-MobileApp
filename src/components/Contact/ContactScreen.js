@@ -137,7 +137,7 @@ const ContactScreen = ({navigation, route}) => {
               }
               style={style.detailCard}>
               <PhoneIcon />
-              <View style={{marginLeft: '3%'}}>
+              <View style={{marginLeft: '3%', width: '80%'}}>
                 <Text style={style.contactDetail}>
                   {item.name + (item.profession ? ' - ' + item.profession : '')}
                 </Text>

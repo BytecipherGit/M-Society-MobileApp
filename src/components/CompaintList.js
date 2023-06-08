@@ -43,11 +43,6 @@ const CompaintList = ({navigation}) => {
 
       <View style={{flex: 1, justifyContent: 'flex-end'}}>
         <View style={{flex: 1}}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}></View>
           <FlatList
             data={
               defaultComplaint === 'My'

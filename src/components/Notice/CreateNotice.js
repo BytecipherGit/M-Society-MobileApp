@@ -1,4 +1,11 @@
-import {View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+} from 'react-native';
 import React, {useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
@@ -12,6 +19,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import AppButton from '../../ReUsableComponents/AppButton';
 import {CreateSociety, SnackError, SuccessAlert} from '../../assets/services';
 import {useSelector} from 'react-redux';
+import {createNoticeJson} from '../../assets/Jsons';
 
 const CreateNotice = ({navigation}) => {
   const [data, setData] = useState({});
@@ -71,25 +79,13 @@ const CreateNotice = ({navigation}) => {
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <AppHeader navigation={navigation} title={'Create New Notice'} />
       <FlatList
-        data={[
-          {id: 1, title: 'Title', params: 'title'},
-          {id: 2, title: 'Description', params: 'description'},
-          {id: 3, title: 'Status', params: 'status'},
-          {id: 4, title: 'Attach File', params: 'attachedFile'},
-        ]}
+        data={createNoticeJson}
         showsVerticalScrollIndicator={false}
         style={{marginTop: '0%'}}
         renderItem={({item, index}) => {
           return (
             <View style={{width: '90%', alignSelf: 'center'}}>
-              <DescriptionText
-                text={item.title}
-                style={{
-                  marginBottom: '2%',
-                  color: COLORS.titleFont,
-                  marginTop: '7%',
-                }}
-              />
+              <DescriptionText text={item.title} style={style.title} />
               {item.id === 3 ? (
                 <View
                   style={{
@@ -100,20 +96,17 @@ const CreateNotice = ({navigation}) => {
                       <TouchableOpacity
                         onPress={() => setData({...data, status: st})}
                         key={index}
-                        style={{
-                          backgroundColor:
-                            data.status === st
-                              ? state && state.data && state.data.societyId
-                                ? state.data.societyId.buttonHoverBgColour
-                                : COLORS.buttonColor
-                              : COLORS.greyFont,
-                          padding: 15,
-                          marginRight: 10,
-                          width: 120,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          borderRadius: 7,
-                        }}>
+                        style={[
+                          style.statusButton,
+                          {
+                            backgroundColor:
+                              data.status === st
+                                ? state && state.data && state.data.societyId
+                                  ? state.data.societyId.buttonHoverBgColour
+                                  : COLORS.buttonColor
+                                : COLORS.greyFont,
+                          },
+                        ]}>
                         <Text
                           style={{
                             color:
@@ -137,46 +130,19 @@ const CreateNotice = ({navigation}) => {
                       resizeMode="contain"
                     />
                     <TouchableOpacity
-                      style={{
-                        position: 'absolute',
-                        height: 30,
-                        width: 30,
-                        backgroundColor: COLORS.themeColor,
-                        borderRadius: 1000,
-                        alignSelf: 'flex-end',
-                        marginTop: -10,
-                        marginRight: -5,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
+                      style={style.deleteImageIcon}
                       onPress={() => setData({...data, attachedFile: {}})}>
                       <Entypo name="cross" size={23} color="red" />
                     </TouchableOpacity>
                   </View>
                 ) : (
-                  <View
-                    style={{
-                      borderRadius: 10,
-                      borderWidth: 2,
-                      height: 130,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginVertical: '1%',
-                      borderColor: '#DEDEDE',
-                      borderStyle: 'dashed',
-                    }}>
+                  <View style={style.fileUploadCnt}>
                     <TouchableOpacity
                       onPress={() => pickDocument()}
                       style={{alignSelf: 'center'}}>
                       <AddFileIcon />
                     </TouchableOpacity>
-                    <Text
-                      style={{
-                        color: COLORS.titleFont,
-                        fontFamily: 'Axiforma-SemiBold',
-                      }}>
-                      Upload File
-                    </Text>
+                    <Text style={style.uploadFileTxt}>Upload File</Text>
                   </View>
                 )
               ) : (
@@ -193,11 +159,7 @@ const CreateNotice = ({navigation}) => {
         ListFooterComponent={() => <View style={{height: 400}} />}
       />
       <AppButton
-        buttonStyle={{
-          width: '90%',
-          alignSelf: 'center',
-          marginBottom: '2%',
-        }}
+        buttonStyle={style.submitButton}
         btnLoader={loader}
         buttonTitle="Create Notice"
         onPress={createNotice}
@@ -207,3 +169,50 @@ const CreateNotice = ({navigation}) => {
 };
 
 export default CreateNotice;
+
+const style = StyleSheet.create({
+  title: {
+    marginBottom: '2%',
+    color: COLORS.titleFont,
+    marginTop: '7%',
+  },
+  statusButton: {
+    padding: 15,
+    marginRight: 10,
+    width: 120,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 7,
+  },
+  deleteImageIcon: {
+    position: 'absolute',
+    height: 30,
+    width: 30,
+    backgroundColor: COLORS.themeColor,
+    borderRadius: 1000,
+    alignSelf: 'flex-end',
+    marginTop: -10,
+    marginRight: -5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fileUploadCnt: {
+    borderRadius: 10,
+    borderWidth: 2,
+    height: 130,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: '1%',
+    borderColor: '#DEDEDE',
+    borderStyle: 'dashed',
+  },
+  uploadFileTxt: {
+    color: COLORS.titleFont,
+    fontFamily: 'Axiforma-SemiBold',
+  },
+  submitButton: {
+    width: '90%',
+    alignSelf: 'center',
+    marginBottom: '2%',
+  },
+});

@@ -16,7 +16,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useNavigation} from '@react-navigation/native';
 import SuccessModal from '../../ReUsableComponents/SuccessModal';
 import {useSelector} from 'react-redux';
-import {API_URL, postFormData} from '../../assets/services';
+import {API_URL, SnackError, postFormData} from '../../assets/services';
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
@@ -58,41 +58,48 @@ const AddComplaints = ({route}) => {
   const pickImage = type => {
     if (data.attachedImage.length < 1) {
       if (type === 'camera') {
-        launchCamera({}, response => {
-          // setPhotoURI(response.uri); // update the local state, this will rerender your TomarFoto component with the photo uri path.
-          if (response.didCancel) {
-            console.log('Permission cancelled', response);
-          } else if (response.error) {
-            console.log('error =>', response);
-          } else {
-            const source = {uri: response.uri};
-            if (response && response?.assets?.length > 0) {
+        launchCamera(
+          {
+            opacity: 0.5,
+          },
+          response => {
+            // setPhotoURI(response.uri); // update the local state, this will rerender your TomarFoto component with the photo uri path.
+            if (response.didCancel) {
+              console.log('Permission cancelled', response);
+            } else if (response.error) {
+              console.log('error =>', response);
+            } else {
+              const source = {uri: response.uri};
+              if (response && response?.assets?.length > 0) {
+                let arr = [];
+                arr = complaintImage;
+                arr.push(response.assets[0]);
+                setData({...data, attachedImage: [...arr]});
+              }
+            }
+          },
+        );
+      } else {
+        launchImageLibrary(
+          {
+            opacity: 0.5,
+          },
+          response => {
+            if (response.didCancel) {
+              console.log('Permission cancelled', response);
+            } else if (response.error) {
+              console.log('error =>', response);
+            } else {
               let arr = [];
               arr = complaintImage;
               arr.push(response.assets[0]);
               setData({...data, attachedImage: [...arr]});
             }
-          }
-        });
-      } else {
-        launchImageLibrary({}, response => {
-          if (response.didCancel) {
-            console.log('Permission cancelled', response);
-          } else if (response.error) {
-            console.log('error =>', response);
-          } else {
-            let arr = [];
-            arr = complaintImage;
-            arr.push(response.assets[0]);
-            setData({...data, attachedImage: [...arr]});
-          }
-        });
+          },
+        );
       }
     } else {
-      setAlertData({
-        visible: true,
-        message: 'You only select one image not more than 1.',
-      });
+      SnackError('You only select one image not more than 1.');
     }
   };
 
@@ -104,11 +111,11 @@ const AddComplaints = ({route}) => {
 
   const ComplaintAction = async () => {
     if (!data.complainTitle || !data.description) {
-      return ErrorAlert('Please Enter All Mendatory Fields');
+      return SnackError('Please Enter All Mendatory Fields');
     }
 
     if (data.attachedImage.length <= 0) {
-      return ErrorAlert('Please Select Complaint Image.');
+      return SnackError('Please Select Complaint Image.');
     }
 
     if (route?.name === 'UpdateComplaint') {

@@ -10,6 +10,9 @@ import Snackbar from 'react-native-snackbar';
 export const GetData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
+  console.log('====================================');
+  console.log('Token =>', Token.accessToken);
+  console.log('====================================');
   return axios
     .get(
       payload.url,
@@ -334,16 +337,20 @@ export const putSocietyImages = async ({url, body}) => {
   }
 
   if (body.images.length > 0) {
-    body.images.map((item, index) => {
-      formData.append('images', item);
-    });
+    // body.images.map((item, index) => {
+    formData.append('images', body.logo);
+    // });
   }
-  formData.append('description', body.description);
+  formData.append('description', body.description ? body.description : '');
   formData.append('primaryColour', body.primaryColour);
-  formData.append('shadowColour', body.shadowColour);
+  // formData.append('shadowColour', body.shadowColour);
   formData.append('buttonHoverBgColour', body.buttonHoverBgColour);
   formData.append('buttonHoverfontColour', body.buttonHoverfontColour);
   formData.append('fontColour', body.fontColour);
+
+  console.log('====================================');
+  console.log(formData);
+  console.log('====================================');
 
   return axios.put(url, formData, {
     headers: {

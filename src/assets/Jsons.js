@@ -561,11 +561,6 @@ export const ColorsArray = [
     param: 'primaryColour',
   },
   {
-    id: 2,
-    title: 'Shadow Color',
-    param: 'shadowColour',
-  },
-  {
     id: 3,
     title: 'Button HoverBack Color',
     param: 'buttonHoverBgColour',
@@ -625,4 +620,11 @@ export const AddGuardJson = [
     placeHolder: 'Select Guard Joining Date.',
     param: 'joiningDate',
   },
+];
+
+export const createNoticeJson = [
+  {id: 1, title: 'Title', params: 'title'},
+  {id: 2, title: 'Description', params: 'description'},
+  {id: 3, title: 'Status', params: 'status'},
+  {id: 4, title: 'Attach File', params: 'attachedFile'},
 ];

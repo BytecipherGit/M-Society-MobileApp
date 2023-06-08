@@ -23,6 +23,7 @@ import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import moment from 'moment';
 import {SocietyInfoArray} from '../../assets/Jsons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useIsFocused} from '@react-navigation/native';
 
 const SocietyInfo = ({navigation, route}) => {
   const SocietyId = useSelector(
@@ -31,10 +32,12 @@ const SocietyInfo = ({navigation, route}) => {
   const data = useSelector(state => state.SocietyReducer);
 
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    dispatch({type: SOCIETY_DETAIL_REQUEST, payload: SocietyId._id});
-  }, []);
+    isFocused &&
+      dispatch({type: SOCIETY_DETAIL_REQUEST, payload: SocietyId._id});
+  }, [isFocused]);
 
   return (
     <View style={globalStyle.cnt}>
@@ -106,7 +109,11 @@ const SocietyInfo = ({navigation, route}) => {
                 <Text style={[styles.MainTitle, {marginBottom: '7%'}]}>
                   Society Name{' '}
                   <Text
-                    onPress={() => navigation.navigate('SocietyEditScreen')}>
+                    onPress={() =>
+                      navigation.navigate('SocietyEditScreen', {
+                        data: data.data.society,
+                      })
+                    }>
                     <AntDesign name="edit" style={{fontSize: 20}} />
                   </Text>
                 </Text>
@@ -195,7 +202,10 @@ const SocietyInfo = ({navigation, route}) => {
                         justifyContent: 'center',
                         marginTop: '5%',
                       }}>
-                      {/* {data.data.society &&
+                      {console.log(
+                        data.data.society && data.data.society.images.length,
+                      )}
+                      {data.data.society &&
                         data.data.society.images.map((item, index) => {
                           return (
                             <TouchableOpacity
@@ -225,7 +235,7 @@ const SocietyInfo = ({navigation, route}) => {
                               />
                             </TouchableOpacity>
                           );
-                        })} */}
+                        })}
                     </View>
                   </ScrollView>
                 </View>

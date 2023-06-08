@@ -20,33 +20,39 @@ const NoticeDetailScreen = ({navigation, route}) => {
   return (
     <View style={[globalStyle.cnt]}>
       <AppHeader title={'Notice'} navigation={navigation} />
-      <View style={style.card}>
-        <View style={style.dateCnt}>
-          <BellIcon />
-          <Text style={style.dateTxt}>
-            {moment(`${createdDate}`).format('DD/MMM/YYYY')}
-          </Text>
-        </View>
-        <Text style={style.title}>{title}</Text>
-        <Text style={style.desc}>{description}</Text>
-        <Text style={style.secretory}>{'Secretory'}</Text>
-        <Text style={style.adminName}>{societyAdminId.name}</Text>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('ImageViewScreen', {
-              img: attachedFile,
-            })
-          }
-          style={style.imgCnt}>
-          <Image
-            source={{
-              uri: attachedFile,
-            }}
-            style={{height: '100%', width: '100%', borderRadius: 8}}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-      </View>
+      <FlatList
+        data={[1]}
+        renderItem={() => (
+          <View style={style.card}>
+            <View style={style.dateCnt}>
+              <BellIcon />
+              <Text style={style.dateTxt}>
+                {moment(`${createdDate}`).format('DD/MMM/YYYY')}
+              </Text>
+            </View>
+            <Text style={style.title}>{title}</Text>
+            <Text style={style.desc}>{description}</Text>
+            <Text style={style.secretory}>{'Secretory'}</Text>
+            <Text style={style.adminName}>{societyAdminId}</Text>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('ImageViewScreen', {
+                  img: attachedFile,
+                })
+              }
+              activeOpacity={0.8}
+              style={style.imgCnt}>
+              <Image
+                source={{
+                  uri: attachedFile,
+                }}
+                style={{height: '100%', width: '100%', borderRadius: 8}}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
+        )}
+      />
     </View>
   );
 };

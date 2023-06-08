@@ -63,9 +63,12 @@ const Notices = ({navigation}) => {
 
       if (Result.success === true) {
         let arr = Notice.data;
-
         arr.splice(index, 1);
-        setData([...arr]);
+        if (arr.length > 0) {
+          setData([...arr]);
+        } else {
+          dispatch({type: NOTICE_LIST_REQUEST});
+        }
       } else {
         SnackError(Result.message);
       }

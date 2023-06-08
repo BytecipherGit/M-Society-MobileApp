@@ -25,14 +25,15 @@ import {
   putSocietyImages,
 } from '../../assets/services';
 
-const SocietyEditScreen = ({navigation}) => {
+const SocietyEditScreen = ({navigation, route}) => {
   const [societyImages, setSocietyImages] = useState([]);
   const [data, setData] = useState({
-    primaryColour: '#ffffff',
-    shadowColour: '#ffffff',
-    buttonHoverBgColour: '#ffffff',
-    buttonHoverfontColour: '#ffffff',
-    fontColour: '#ffffff',
+    primaryColour: route.params.data.primaryColour,
+    buttonHoverBgColour: route.params.data.buttonHoverBgColour,
+    buttonHoverfontColour: route.params.data.buttonHoverfontColour,
+    fontColour: route.params.data.fontColour,
+    id: route.params.data._id,
+    description: route.params.data.description,
   });
   const [loader, setLoader] = useState(false);
 
@@ -86,23 +87,26 @@ const SocietyEditScreen = ({navigation}) => {
   const updateSociety = async () => {
     setLoader(true);
     try {
-      // ((data.logo && data.logo.uri) || societyImages.length) > 0
-      // ? await putSocietyImages({
-      //     url: API_URL + 'society/',
-      //     body: {
-      //       ...data,
-      //       ...{images: societyImages},
-      //       ...{body: data && data.logo ? data.logo : ''},
-      //     },
-      //   })
-      // :
-      const Result = await PutData({
-        url: API_URL + 'society/',
-        body: data,
-      });
+      const Result =
+        ((data.logo && data.logo.uri) || societyImages.length) > 0
+          ? await putSocietyImages({
+              url: API_URL + 'society/',
+              body: {
+                ...data,
+                ...{images: societyImages},
+                ...{body: data && data.logo ? data.logo : ''},
+              },
+            })
+          : await PutData({
+              url: API_URL + 'society/',
+              body: data,
+            });
 
-      console.log(Result);
+      console.log(Result.response);
     } catch (e) {
+      console.log('====================================');
+      console.log(e.response);
+      console.log('====================================');
       SnackError('Something went wrong, please try again later.');
     }
 
@@ -118,6 +122,15 @@ const SocietyEditScreen = ({navigation}) => {
         contentContainerStyle={{
           flexGrow: 1,
         }}>
+        {/* Description */}
+        <View style={styles.cardCnt}>
+          <Text style={styles.attachFileTxt}>Description</Text>
+          <AppTextInput
+            item={{title: 'Description'}}
+            value={data.description}
+            setValue={text => setData({...data, description: text})}
+          />
+        </View>
         {/* Pick Images */}
         <View style={styles.cardCnt}>
           <Text style={styles.attachFileTxt}>Pick Society View Images</Text>
@@ -181,14 +194,7 @@ const SocietyEditScreen = ({navigation}) => {
             />
           )}
         </View>
-        {/* Description */}
-        <View style={styles.cardCnt}>
-          <Text style={styles.attachFileTxt}>Description</Text>
-          <AppTextInput
-            item={{title: 'Description'}}
-            setValue={text => setData({...data, description: text})}
-          />
-        </View>
+
         {/* Primary Color */}
         {ColorsArray.map((item, index) => (
           <View style={styles.cardCnt} key={item.id}>

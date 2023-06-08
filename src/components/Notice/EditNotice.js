@@ -18,6 +18,7 @@ import {
   SuccessAlert,
 } from '../../assets/services';
 import {useSelector} from 'react-redux';
+import {createNoticeJson} from '../../assets/Jsons';
 
 const EditNotice = ({navigation, route}) => {
   const {title, description, status, attachedFile, _id} =
@@ -112,12 +113,7 @@ const EditNotice = ({navigation, route}) => {
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <AppHeader navigation={navigation} title={'Edit Notice'} />
       <FlatList
-        data={[
-          {id: 1, title: 'Title', params: 'title'},
-          {id: 2, title: 'Description', params: 'description'},
-          {id: 3, title: 'Status', params: 'status'},
-          {id: 4, title: 'Attach File', params: 'attachedFile'},
-        ]}
+        data={createNoticeJson}
         showsVerticalScrollIndicator={false}
         style={{marginTop: '0%'}}
         renderItem={({item, index}) => {
@@ -241,7 +237,7 @@ const EditNotice = ({navigation, route}) => {
           marginBottom: '2%',
         }}
         btnLoader={loader}
-        buttonTitle="Create Notice"
+        buttonTitle="Update Notice"
         onPress={createNotice}
       />
     </View>

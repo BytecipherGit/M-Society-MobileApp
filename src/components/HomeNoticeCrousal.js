@@ -1,21 +1,24 @@
-import {View, Text, Dimensions, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import React from 'react';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {COLORS} from '../assets/theme';
 import Calendor from '../assets/images/Caledor.svg';
 import moment from 'moment';
+import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
 const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
+  const stateForTheme = useSelector(state => state.AuthReducer.userDetail);
+  const navigation = useNavigation();
   return (
     <View style={{marginVertical: 25}}>
-      <Text
-        style={{
-          fontFamily: 'Axiforma-Bold',
-          fontSize: 18,
-          color: COLORS.titleFont,
-        }}>
-        Society Notice
-      </Text>
+      <Text style={style.headerTitle}>Society Notice</Text>
       <Carousel
         layout={'default'}
         ref={ref => null}
@@ -27,50 +30,23 @@ const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => {
-                null;
+                navigation.navigate('NoticeScreen', {
+                  screen: 'NoticeDetailScreen',
+                  params: {item: item},
+                });
               }}
-              style={{
-                width: Dimensions.get('window').width / 1.07,
-                // height: 220,
-                backgroundColor: 'white',
-                marginTop: 15,
-                borderRadius: 20,
-                padding: 20,
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
+              style={style.cardCnt}>
+              <View style={style.cardIconAndDate}>
                 <Calendor />
-                <Text
-                  style={{
-                    fontFamily: 'Axiforma-Regular',
-                    fontSize: 12,
-                    color: '#ABACB0',
-                  }}>
+                <Text style={style.cardDate}>
                   {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
                 </Text>
               </View>
               <View>
-                <Text
-                  style={{
-                    fontFamily: 'Axiforma-Medium',
-                    fontSize: 18,
-                    color: '#262626',
-                    marginVertical: '3%',
-                    marginTop: '7%',
-                  }}>
+                <Text style={style.cardTitle} numberOfLines={1}>
                   {item.title}
                 </Text>
-                <Text
-                  numberOfLines={3}
-                  styl={{
-                    fontFamily: 'Axiforma-Regular',
-                    fontSize: 16,
-                    color: '#72767C',
-                    lineHeight: 25,
-                  }}>
+                <Text numberOfLines={1} styl={style.cardDesc}>
                   {item.description}
                 </Text>
               </View>
@@ -88,11 +64,14 @@ const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
           }
         }
         dotStyle={{
-          width: 12,
-          height: 10,
+          width: 15,
+          height: 7,
           borderRadius: 1000,
           marginHorizontal: -5,
-          backgroundColor: '#A9A9A9',
+          backgroundColor:
+            stateForTheme && stateForTheme.data && stateForTheme.data.societyId
+              ? stateForTheme.data.societyId.primaryColour
+              : 'white',
         }}
         activeDotStyle={
           {
@@ -107,3 +86,41 @@ const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
 };
 
 export default HomeNoticeCrousal;
+
+const style = StyleSheet.create({
+  headerTitle: {
+    fontFamily: 'Axiforma-Bold',
+    fontSize: 18,
+    color: COLORS.titleFont,
+  },
+  cardCnt: {
+    width: Dimensions.get('window').width / 1.07,
+    // height: 220,
+    backgroundColor: 'white',
+    marginTop: 15,
+    borderRadius: 20,
+    padding: 20,
+  },
+  cardIconAndDate: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  cardDate: {
+    fontFamily: 'Axiforma-Regular',
+    fontSize: 12,
+    color: '#ABACB0',
+  },
+  cardTitle: {
+    fontFamily: 'Axiforma-Medium',
+    fontSize: 18,
+    color: '#262626',
+    marginVertical: '3%',
+    marginTop: '7%',
+  },
+  cardDesc: {
+    fontFamily: 'Axiforma-Regular',
+    fontSize: 16,
+    color: '#72767C',
+    lineHeight: 25,
+  },
+});
