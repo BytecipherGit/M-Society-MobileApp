@@ -201,22 +201,14 @@ const EditProfileScreen = ({navigation, route}) => {
           showsVerticalScrollIndicator={false}
           automaticallyAdjustKeyboardInsets={true}
           contentContainerStyle={{flexGrow: 0.3}}>
-          <View
-            style={{
-              height: 200,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
+          <View style={styles.pickerOptionCnt}>
             <Menu
               visible={visible}
               style={{marginTop: '25%'}}
               anchor={
                 <View style={styles.profileImageCnt}>
                   <ImageBackground
-                    style={{
-                      height: '100%',
-                      width: '100%',
-                    }}
+                    style={styles.profileImg}
                     imageStyle={[
                       {borderRadius: 30},
                       !data.profileImage && {tintColor: COLORS.buttonColor},
@@ -225,27 +217,14 @@ const EditProfileScreen = ({navigation, route}) => {
                       uri: data.profileImage,
                     }}></ImageBackground>
                   <TouchableOpacity
-                    style={{
-                      height: 30,
-                      width: 30,
-                      borderRadius: 1000,
-                      borderWidth: 3,
-                      borderColor: 'white',
-                      position: 'absolute',
-                    }}
+                    style={styles.optionButton}
                     onPress={showMenu}>
                     <LinearGradient
                       colors={['#FF7334', '#FFA13C']}
                       start={{x: 0.0, y: 0.0}}
                       end={{x: 1.0, y: 1.0}}
                       locations={[0.0, 1.0]}
-                      style={{
-                        height: '100%',
-                        width: '100%',
-                        borderRadius: 1000,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
+                      style={styles.linearBackground}>
                       <MaterialIcons
                         name="edit"
                         style={{
@@ -338,4 +317,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardTitle: {fontWeight: '400', color: COLORS.blackFont},
+  pickerOptionCnt: {
+    height: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profileImg: {
+    height: '100%',
+    width: '100%',
+  },
+  optionButton: {
+    height: 30,
+    width: 30,
+    borderRadius: 1000,
+    borderWidth: 3,
+    borderColor: 'white',
+    position: 'absolute',
+  },
+  linearBackground: {
+    height: '100%',
+    width: '100%',
+    borderRadius: 1000,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

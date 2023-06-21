@@ -9,6 +9,7 @@ import {
   ImageBackground,
   SafeAreaView,
   Dimensions,
+  Platform,
 } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import HomeSvg from '../assets/images/HomeSvg';
@@ -47,7 +48,7 @@ const OnboardingScreen = ({navigation, route}) => {
   };
 
   const _renderItem = ({item}) => (
-    <View style={styles.cnt}>
+    <View style={[styles.cnt]}>
       <View
         style={{
           flex: 1,
@@ -178,13 +179,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#5FB6FF',
     width: 25,
     height: 6,
-    marginBottom: Dimensions.get('window').height / 1.8,
+    marginBottom:
+      Dimensions.get('window').height / (Platform.OS === 'android' ? 1.4 : 1.8),
   },
   inActiveDot: {
     width: 16,
     height: 6,
     backgroundColor: '#D1D1D1',
-    marginBottom: Dimensions.get('window').height / 1.8,
+    marginBottom:
+      Dimensions.get('window').height / (Platform.OS === 'android' ? 1.4 : 1.8),
   },
   cnt: {flex: 1, backgroundColor: COLORS.themeColor},
   topImageCnt: {width: '100%', height: '17%'},

@@ -110,12 +110,14 @@ const Notices = ({navigation}) => {
                   </Text>
                 </View>
               </TouchableOpacity>
-              <AppCrudActionButton
-                item={item}
-                index={index}
-                loaderIndex={deleteLoader}
-                doActions={doActions}
-              />
+              {isAdmin && (
+                <AppCrudActionButton
+                  item={item}
+                  index={index}
+                  loaderIndex={deleteLoader}
+                  doActions={doActions}
+                />
+              )}
             </View>
           );
         }}

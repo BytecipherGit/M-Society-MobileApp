@@ -39,12 +39,6 @@ const HomeScreen = ({navigation}) => {
     }
   }, [isFocus]);
 
-  useEffect(() => {
-    axios
-      .get('https://ibuyexotic.com/terms-of-use')
-      .then(url => console.log(url));
-  }, []);
-
   const getNoticeList = () => {
     dispatch({type: NOTICE_LIST_REQUEST_SILENT});
   };
@@ -216,7 +210,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Axiforma-Regular',
     color: '#808080',
     fontSize: 14,
-    marginBottom: '3%',
+    marginBottom: '0%',
   },
   userName: {
     fontFamily: 'Axiforma-Regular',

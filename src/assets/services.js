@@ -10,9 +10,6 @@ import Snackbar from 'react-native-snackbar';
 export const GetData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
-  console.log('====================================');
-  console.log('Token =>', Token.accessToken);
-  console.log('====================================');
   return axios
     .get(
       payload.url,

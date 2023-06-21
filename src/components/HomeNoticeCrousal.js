@@ -18,7 +18,21 @@ const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
   const navigation = useNavigation();
   return (
     <View style={{marginVertical: 25}}>
-      <Text style={style.headerTitle}>Society Notice</Text>
+      <Text
+        style={[
+          style.headerTitle,
+          stateForTheme &&
+            stateForTheme.data &&
+            stateForTheme.data.societyId && {
+              color:
+                stateForTheme &&
+                stateForTheme.data &&
+                stateForTheme.data.societyId &&
+                stateForTheme.data.societyId.fontColour,
+            },
+        ]}>
+        Society Notice
+      </Text>
       <Carousel
         layout={'default'}
         ref={ref => null}

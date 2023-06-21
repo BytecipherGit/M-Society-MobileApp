@@ -22,6 +22,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import AppRoundAddActionButton from '../../ReUsableComponents/AppRoundAddActionButton';
 import {useIsFocused} from '@react-navigation/native';
 import AppCrudActionButton from '../../ReUsableComponents/AppCrudActionButton';
+import {useSelector} from 'react-redux';
 
 const GuardList = ({navigation}) => {
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
@@ -32,6 +33,7 @@ const GuardList = ({navigation}) => {
   });
   const [deleteLoader, setDeleteLoader] = useState('');
   const focused = useIsFocused();
+  const {isAdmin} = useSelector(state => state.AuthReducer);
 
   useEffect(() => {
     focused && getGuardsList();
@@ -136,19 +138,23 @@ const GuardList = ({navigation}) => {
                   </LinearGradient>
                 </View>
               </View>
-              <AppCrudActionButton
-                item={item}
-                index={index}
-                loaderIndex={deleteLoader}
-                doActions={doActions}
-              />
+              {isAdmin && (
+                <AppCrudActionButton
+                  item={item}
+                  index={index}
+                  loaderIndex={deleteLoader}
+                  doActions={doActions}
+                />
+              )}
             </>
           )}
           extraData={item => item._id}
         />
-        <AppRoundAddActionButton
-          onPress={() => navigation.navigate('CreateGuardScreen')}
-        />
+        {isAdmin && (
+          <AppRoundAddActionButton
+            onPress={() => navigation.navigate('CreateGuardScreen')}
+          />
+        )}
       </View>
     </View>
   );

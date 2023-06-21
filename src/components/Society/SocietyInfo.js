@@ -30,6 +30,7 @@ const SocietyInfo = ({navigation, route}) => {
     state => state.AuthReducer.userDetail.data.societyId,
   );
   const data = useSelector(state => state.SocietyReducer);
+  const {isAdmin} = useSelector(state => state.AuthReducer);
 
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
@@ -84,7 +85,6 @@ const SocietyInfo = ({navigation, route}) => {
           showsVerticalScrollIndicator={false}
           style={{marginTop: '-18%'}}
           renderItem={() => {
-            console.log(data);
             const {
               registrationNumber,
               country,
@@ -114,7 +114,9 @@ const SocietyInfo = ({navigation, route}) => {
                         data: data.data.society,
                       })
                     }>
-                    <AntDesign name="edit" style={{fontSize: 20}} />
+                    {isAdmin && (
+                      <AntDesign name="edit" style={{fontSize: 20}} />
+                    )}
                   </Text>
                 </Text>
                 <Text style={styles.detailTitle}>Registration Number</Text>
@@ -202,9 +204,6 @@ const SocietyInfo = ({navigation, route}) => {
                         justifyContent: 'center',
                         marginTop: '5%',
                       }}>
-                      {console.log(
-                        data.data.society && data.data.society.images.length,
-                      )}
                       {data.data.society &&
                         data.data.society.images.map((item, index) => {
                           return (

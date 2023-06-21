@@ -23,6 +23,7 @@ import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 import AppRoundAddActionButton from '../../ReUsableComponents/AppRoundAddActionButton';
 import {useIsFocused} from '@react-navigation/native';
 import AppCrudActionButton from '../../ReUsableComponents/AppCrudActionButton';
+import {useSelector} from 'react-redux';
 
 const ContactScreen = ({navigation, route}) => {
   const [loader, setLoader] = useState(false);
@@ -31,6 +32,7 @@ const ContactScreen = ({navigation, route}) => {
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
   const [deleteLoader, setDeleteLoader] = useState('');
   const isFocused = useIsFocused();
+  const {isAdmin} = useSelector(state => state.AuthReducer);
 
   useEffect(() => {
     const getContactDetails = async () => {
@@ -81,7 +83,9 @@ const ContactScreen = ({navigation, route}) => {
     //Edit,Delete
 
     if (type === 'Edit') {
-      return;
+      return navigation.navigate('CreateContact', {
+        data: item,
+      });
       // return navigation.navigate('EditContact', {documentDetail: item});
     }
     setDeleteLoader(item._id);
@@ -91,8 +95,6 @@ const ContactScreen = ({navigation, route}) => {
         url: API_URL + 'directory/',
         body: {id: item._id},
       });
-
-      console.log(Result);
 
       if (Result.response) {
         SnackError(
@@ -143,18 +145,22 @@ const ContactScreen = ({navigation, route}) => {
                 </Text>
               </View>
             </TouchableOpacity>
-            <AppCrudActionButton
-              item={item}
-              index={index}
-              loaderIndex={deleteLoader}
-              doActions={doActions}
-            />
+            {route?.params?.screenName !== 'Service' && isAdmin && (
+              <AppCrudActionButton
+                item={item}
+                index={index}
+                loaderIndex={deleteLoader}
+                doActions={doActions}
+              />
+            )}
           </>
         )}
       />
-      <AppRoundAddActionButton
-        onPress={() => navigation.navigate('CreateContact')}
-      />
+      {route?.params?.screenName !== 'Service' && isAdmin && (
+        <AppRoundAddActionButton
+          onPress={() => navigation.navigate('CreateContact')}
+        />
+      )}
     </View>
   );
 };

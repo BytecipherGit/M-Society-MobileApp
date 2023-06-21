@@ -1,4 +1,4 @@
-import {View, FlatList} from 'react-native';
+import {View, FlatList, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
@@ -8,17 +8,26 @@ import AppButton from '../../ReUsableComponents/AppButton';
 import {
   API_URL,
   PostData,
+  PutData,
   SnackError,
   SuccessAlert,
 } from '../../assets/services';
 import {useDispatch} from 'react-redux';
 import {GET_CONTACT_PROFESSION_REQUEST} from '../../redux/Actions';
 
-const CreateContact = ({navigation}) => {
+const CreateContact = ({navigation, route}) => {
+  const isUpdate = route && route.params && route.params.data ? true : false;
+
   const [data, setData] = useState({});
   const [loader, setLoader] = useState(false);
   const [countryCode, setCountryCode] = useState('91');
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isUpdate) {
+      setData(route.params.data);
+    }
+  }, [isUpdate]);
 
   const createDocumentfun = async () => {
     if (!data.name || !data.address || !data.phoneNumber || !data.profession) {
@@ -26,20 +35,31 @@ const CreateContact = ({navigation}) => {
     }
     try {
       setLoader(true);
-      const Result = await PostData({
-        url: API_URL + 'directory',
-        body: {
-          ...data,
-          ...{
-            latitude: 0,
-            longitude: 0,
-          },
-          countryCode: '+' + countryCode,
+      const paylaod = {
+        ...data,
+        ...{
+          latitude: 0,
+          longitude: 0,
         },
-      });
+        countryCode: '+' + countryCode,
+      };
+      const Result = isUpdate
+        ? await PutData({
+            url: API_URL + 'directory',
+            body: {
+              ...paylaod,
+              id: data._id,
+            },
+          })
+        : await PostData({
+            url: API_URL + 'directory',
+            body: paylaod,
+          });
 
       if (Result.data.success) {
-        SuccessAlert('Contact Created Successfully.');
+        SuccessAlert(
+          `Contact ${isUpdate ? 'Updated' : 'Created'} Successfully.`,
+        );
         navigation.goBack();
       } else {
         SnackError(Result.data.message);
@@ -57,7 +77,10 @@ const CreateContact = ({navigation}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <AppHeader navigation={navigation} title={'Create New Contact'} />
+      <AppHeader
+        navigation={navigation}
+        title={isUpdate ? 'Update Contact' : 'Create New Contact'}
+      />
       <FlatList
         data={[
           {id: 1, title: 'Name', params: 'name'},
@@ -109,7 +132,7 @@ const CreateContact = ({navigation}) => {
           marginBottom: '2%',
         }}
         btnLoader={loader}
-        buttonTitle="Create Contact"
+        buttonTitle={isUpdate ? 'Update' : 'Create Contact'}
         onPress={createDocumentfun}
       />
     </View>

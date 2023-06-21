@@ -52,6 +52,8 @@ const LoginScreen = ({navigation}) => {
         phoneNumber: data.phoneNumber,
         password: data.password,
         countryCode: '+' + inputFieldsClone[0].countryCode,
+        // deviceToken:'',
+        // deviceType:''
       };
 
       const payload =

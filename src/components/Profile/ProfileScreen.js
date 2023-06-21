@@ -48,7 +48,9 @@ const ProfileScreen = ({navigation, route}) => {
               <TouchableOpacity
                 style={styles.optionCards}
                 onPress={() => {
-                  item.param
+                  item.id === 10
+                    ? Alert.alert('We work on this screen')
+                    : item.param
                     ? navigation.navigate(item.navigationScreen, {
                         screenName: item.param.screenName,
                         url: User[item.urlParam],

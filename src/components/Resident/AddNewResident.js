@@ -143,7 +143,7 @@ const AddNewResident = ({navigation, route}) => {
         url: API_URL + 'admin/residentialUser/add',
         body: data.userType === 'rental' ? {...data, ...ownerDetail} : data,
       });
-      console.log(Result.data);
+
       setLoader(false);
       if (Result.data.success) {
         SuccessAlert('Your Data Was Created.');

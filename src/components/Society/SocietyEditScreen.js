@@ -101,12 +101,7 @@ const SocietyEditScreen = ({navigation, route}) => {
               url: API_URL + 'society/',
               body: data,
             });
-
-      console.log(Result.response);
     } catch (e) {
-      console.log('====================================');
-      console.log(e.response);
-      console.log('====================================');
       SnackError('Something went wrong, please try again later.');
     }
 
