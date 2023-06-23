@@ -40,7 +40,7 @@
 			</dict>
 		</dict>
 	</dict>
-  	<key>NSCameraUsageDescription</key>
+	<key>NSCameraUsageDescription</key>
 	<string>We Need a Camera Permission to click image From your device Camera please click on Allow Button.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
@@ -65,6 +65,11 @@
 		<string>Axiforma-Regular.ttf</string>
 		<string>Axiforma-SemiBold.ttf</string>
 		<string>Axiforma-Light.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>processing</string>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

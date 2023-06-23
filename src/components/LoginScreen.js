@@ -20,7 +20,10 @@ import {API_URL, PostData, StoreData} from '../assets/services';
 import {useDispatch, useSelector} from 'react-redux';
 import {USER_DATA} from '../redux/Actions';
 import {useRecoilState} from 'recoil';
-import {GlobalAppAlert} from '../assets/GlobalStates/RecoilGloabalState';
+import {
+  DeviceFcmToken,
+  GlobalAppAlert,
+} from '../assets/GlobalStates/RecoilGloabalState';
 import DescriptionText from "../ReUsableComponents/Text's/DescriptionText";
 import {CommonActions} from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -38,6 +41,7 @@ const LoginScreen = ({navigation}) => {
   const [loader, setLoader] = useState(false);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
   const [inputFieldsClone, setInputFieldsClone] = useState(inputFields);
+  const [fcmToken, setFcmTooken] = useRecoilState(DeviceFcmToken);
   const dispatch = useDispatch();
   loginOption = useSelector(state => state.AuthReducer);
 
@@ -52,8 +56,8 @@ const LoginScreen = ({navigation}) => {
         phoneNumber: data.phoneNumber,
         password: data.password,
         countryCode: '+' + inputFieldsClone[0].countryCode,
-        // deviceToken:'',
-        // deviceType:''
+        deviceToken: fcmToken.token,
+        deviceType: Platform.OS,
       };
 
       const payload =

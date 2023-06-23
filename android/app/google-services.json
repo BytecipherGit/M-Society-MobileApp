@@ -1,34 +1,41 @@
 {
   "project_info": {
-    "project_number": "434034727670",
-    "project_id": "msociety-8fed9",
-    "storage_bucket": "msociety-8fed9.appspot.com"
+    "project_number": "312189834927",
+    "project_id": "m-society-decb2",
+    "storage_bucket": "m-society-decb2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:434034727670:android:492e4f3be47c3fa47f6ad7",
+        "mobilesdk_app_id": "1:312189834927:android:a4e96680b3b585151c265a",
         "android_client_info": {
           "package_name": "com.msociety"
         }
       },
       "oauth_client": [
         {
-          "client_id": "434034727670-0eup7t4nc548hf388kruuoeld17pmuev.apps.googleusercontent.com",
+          "client_id": "312189834927-c6vcada96l9f9p7ptrrnggrhklplpa3c.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCqb4-hncTyEJuCwymbpHYRHzyx8N0dkok"
+          "current_key": "AIzaSyDLk1TVik8sN_LJySVZw6LePFvYmvGh5Ak"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "434034727670-0eup7t4nc548hf388kruuoeld17pmuev.apps.googleusercontent.com",
+              "client_id": "312189834927-c6vcada96l9f9p7ptrrnggrhklplpa3c.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "312189834927-ptd06m5tr73b91h4sc2hll11h9f652fn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.msociety.app"
+              }
             }
           ]
         }

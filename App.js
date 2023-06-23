@@ -13,8 +13,7 @@ import {RecoilRoot} from 'recoil';
 import NetInfo from '@react-native-community/netinfo';
 import ReactNativeModal from 'react-native-modal';
 import TitleText from "./src/ReUsableComponents/Text's/TitleText";
-// import messaging from '@react-native-firebase/messaging';
-// import notifee from '@notifee/react-native';
+import Notificatrion from './src/ReUsableComponents/Notificatrion';
 
 const App = () => {
   // Uncomment when you want to use Redux in project
@@ -32,56 +31,13 @@ const App = () => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   getDeviceToken();
-  // }, []);
-
-  // useEffect(() => {
-  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
-  //     Alert.alert(
-  //       'A new FCM token arrived in foreground',
-  //       JSON.stringify(remoteMessage),
-  //     );
-  //     onDisplayNotification(remoteMessage);
-  //   });
-
-  //   return unsubscribe;
-  // }, []);
-
-  // async function onDisplayNotification(data) {
-  //   // Request permissions (required for iOS)
-  //   await notifee.requestPermission();
-
-  //   // Create a channel (required for Android)
-  //   const channelId = await notifee.createChannel({
-  //     id: 'default',
-  //     name: 'Default Channel',
-  //   });
-
-  //   // Display a notification
-  //   await notifee.displayNotification({
-  //     title: data.notification.title,
-  //     body: data.notification.body,
-  //     android: {
-  //       channelId,
-  //       importance: 3, // Set importance to 4 for high importance level
-  //       headless: false,
-  //     },
-  //   });
-  // }
-
-  // const getDeviceToken = async () => {
-  //   let token = await messaging().getToken();
-
-  //   console.log(token);
-  // };
-
   return (
     <RecoilRoot>
       <Provider store={store}>
         {/* <StatusBar animated={true} backgroundColor={'#CAE7FF'} hidden={true} /> */}
         <NavigationContainer>
           <AppAlert />
+          <Notificatrion />
           <ReactNativeModal isVisible={isInternet ? false : true}>
             <Image
               source={{

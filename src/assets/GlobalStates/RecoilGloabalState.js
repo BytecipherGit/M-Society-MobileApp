@@ -8,3 +8,10 @@ export const GlobalAppAlert = atom({
     iconType: '',
   }, // default value (aka initial value)
 });
+
+export const DeviceFcmToken = atom({
+  key: 'fcmTokenRecoil', // unique ID (with respect to other atoms/selectors)
+  default: {
+    token: '',
+  }, // default value (aka initial value)
+});
