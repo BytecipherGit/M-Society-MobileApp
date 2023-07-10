@@ -140,11 +140,14 @@ const HomeScreen = ({navigation}) => {
                 </View>
               </View>
               {/* notification icon */}
-              <TouchableOpacity style={{marginRight: '4%'}}>
+              <TouchableOpacity
+                style={{marginRight: '4%'}}
+                onPress={() => navigation.navigate('NotificationList')}>
                 <FontAwesome
                   name="bell-o"
                   style={{
                     fontSize: 25,
+                    color: isSocietyDetail.fontColour,
                   }}
                 />
                 <View style={styles.notificationNumberCnt}>

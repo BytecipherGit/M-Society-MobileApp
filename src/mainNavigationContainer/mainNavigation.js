@@ -45,6 +45,9 @@ import EditDocument from '../components/Document/EditDocument';
 import CreateContact from '../components/Contact/CreateContact';
 import SocietyEditScreen from '../components/Society/SocietyEditScreen';
 import CreateGuard from '../components/Guard/CreateGuard';
+import NotificationList from '../components/NotificationList';
+import ServiceDetail from '../components/Service/ServiceDetail';
+import SupportScreen from '../components/Service/SupportScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -142,6 +145,7 @@ const mainNavigation = () => {
       {stackScreenWithNoHeader('ImageViewScreen', ImageViewScreen)}
       {stackScreenWithNoHeader('ContactScreen', ContactScreen)}
       {stackScreenWithNoHeader('ContactDetailScreen', ContactDetail)}
+      {stackScreenWithNoHeader('ServiceDetailScreen', ServiceDetail)}
       {stackScreenWithNoHeader('CreateContact', CreateContact)}
       {stackScreenWithNoHeader('ProfileStackScreen', ProfileStackNavigator)}
       {stackScreenWithNoHeader('PaymentHistoryScreen', PaymentHistory)}
@@ -154,6 +158,8 @@ const mainNavigation = () => {
       {stackScreenWithNoHeader('SocietyInfoScreen', SocietyInfo)}
       {stackScreenWithNoHeader('SocietyEditScreen', SocietyEditScreen)}
       {stackScreenWithNoHeader('Webview', AppWebview)}
+      {stackScreenWithNoHeader('NotificationList', NotificationList)}
+      {stackScreenWithNoHeader('SupportScreen', SupportScreen)}
     </Stack.Navigator>
   );
 };

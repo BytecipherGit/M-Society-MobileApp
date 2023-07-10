@@ -28,7 +28,7 @@ const AppTextInput = ({
           justifyContent: 'space-between',
           alignItems: 'center',
           paddingHorizontal: 15,
-          paddingVertical: 8,
+          // paddingVertical: 8,
           backgroundColor: COLORS.inputBackground,
           borderRadius: 10,
           marginVertical: 2,

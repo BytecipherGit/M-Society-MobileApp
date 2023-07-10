@@ -24,6 +24,8 @@ import AppRoundAddActionButton from '../../ReUsableComponents/AppRoundAddActionB
 import {useIsFocused} from '@react-navigation/native';
 import AppCrudActionButton from '../../ReUsableComponents/AppCrudActionButton';
 import {useSelector} from 'react-redux';
+import Rating from 'react-native-rating';
+import {Easing} from 'react-native';
 
 const ContactScreen = ({navigation, route}) => {
   const [loader, setLoader] = useState(false);
@@ -131,30 +133,65 @@ const ContactScreen = ({navigation, route}) => {
           <AppLoaderSrceen loader={loader} error={error} />
         )}
         style={{marginTop: '3%'}}
-        renderItem={({item, index}) => (
-          <>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ContactDetailScreen', {detail: item})
-              }
-              style={style.detailCard}>
-              <PhoneIcon />
-              <View style={{marginLeft: '3%', width: '80%'}}>
-                <Text style={style.contactDetail}>
-                  {item.name + (item.profession ? ' - ' + item.profession : '')}
-                </Text>
-              </View>
-            </TouchableOpacity>
-            {route?.params?.screenName !== 'Service' && isAdmin && (
-              <AppCrudActionButton
-                item={item}
-                index={index}
-                loaderIndex={deleteLoader}
-                doActions={doActions}
-              />
-            )}
-          </>
-        )}
+        renderItem={({item, index}) => {
+          return (
+            <View style={style.detailCard}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate(
+                    route.params.screenName === 'Service'
+                      ? 'ServiceDetailScreen'
+                      : 'ContactDetailScreen',
+                    {
+                      detail: item,
+                    },
+                  )
+                }
+                style={{flexDirection: 'row', alignItems: 'center'}}>
+                <PhoneIcon />
+                <View style={{marginLeft: '3%', width: '80%'}}>
+                  <Text style={style.contactDetail}>
+                    {item.name +
+                      (item.profession ? ' - ' + item.profession : '')}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              {route?.params?.screenName === 'Service' && (
+                <View
+                  style={{
+                    marginVertical: '3%',
+                  }}>
+                  <Rating
+                    onChange={rating => console.log(rating)}
+                    selectedStar={require('../../assets/images/likeHighlight.png')}
+                    unselectedStar={require('../../assets/images/likeUnhighlight.png')}
+                    config={{
+                      easing: Easing.inOut(Easing.ease),
+                      duration: 350,
+                    }}
+                    initial={item.rating}
+                    stagger={80}
+                    maxScale={0.5}
+                    starStyle={{
+                      width: 25,
+                      height: 20,
+                    }}
+                    editable={false}
+                  />
+                </View>
+              )}
+
+              {route?.params?.screenName !== 'Service' && isAdmin && (
+                <AppCrudActionButton
+                  item={item}
+                  index={index}
+                  loaderIndex={deleteLoader}
+                  doActions={doActions}
+                />
+              )}
+            </View>
+          );
+        }}
       />
       {route?.params?.screenName !== 'Service' && isAdmin && (
         <AppRoundAddActionButton
@@ -191,14 +228,14 @@ const style = StyleSheet.create({
     ...shadow,
     shadowOpacity: 0.4,
     shadowRadius: 1.5,
-    flexDirection: 'row',
+    // flexDirection: 'row',
     // justifyContent: 'space-between',
     marginVertical: '2%',
     padding: 15,
     backgroundColor: 'white',
     borderRadius: 8,
     marginHorizontal: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     marginHorizontal: 15,
   },
   phoneIconView: {

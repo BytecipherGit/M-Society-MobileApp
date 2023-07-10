@@ -324,7 +324,7 @@ export const profileOptions = [
   {
     id: 10,
     title: 'Support',
-    navigationScreen: 'ContactScreen',
+    navigationScreen: 'SupportScreen',
     icon: <TermService />,
     param: {screenName: 'Support'},
   },

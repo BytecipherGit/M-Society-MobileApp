@@ -307,6 +307,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.inputBorder,
     fontFamily: 'Inter-Regular',
     fontSize: 14,
+    color: COLORS.titleFont,
   },
   phoneContainerStyle: {
     ...shadow,

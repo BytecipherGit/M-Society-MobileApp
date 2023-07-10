@@ -49,7 +49,10 @@ const ProfileScreen = ({navigation, route}) => {
                 style={styles.optionCards}
                 onPress={() => {
                   item.id === 10
-                    ? Alert.alert('We work on this screen')
+                    ? navigation.navigate(item.navigationScreen, {
+                        screenName: item.param.screenName,
+                        url: User[item.urlParam],
+                      })
                     : item.param
                     ? navigation.navigate(item.navigationScreen, {
                         screenName: item.param.screenName,
