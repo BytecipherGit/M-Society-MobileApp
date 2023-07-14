@@ -31,7 +31,7 @@ export const GetData = async payload => {
 export const PostData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
-  console.log(Token.accessToken);
+  // console.log(Token.accessToken);
   return axios
     .post(
       payload.url,
