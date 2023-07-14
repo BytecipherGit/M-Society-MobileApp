@@ -34,8 +34,8 @@ const PaymentHistory = ({navigation}) => {
           API_URL +
           `maintenance/userPaymentHistory/${state.userDetail.data._id}`,
       };
-      console.log(payload);
       const Result = await GetData(payload);
+
       if (Result.data.success) {
         setData({
           data: state.isAdmin ? Result.data.allHistory : Result.data.data,

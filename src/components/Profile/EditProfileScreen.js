@@ -30,6 +30,7 @@ import {
   PutData,
   SnackError,
   StoreData,
+  getAsyncValue,
   updatProfile,
 } from '../../assets/services';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
@@ -41,6 +42,7 @@ import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AppTextInput from '../../ReUsableComponents/AppTextInput';
+import axios from 'axios';
 
 const EditProfileScreen = ({navigation, route}) => {
   const [visible, setVisible] = useState(false);
@@ -90,7 +92,7 @@ const EditProfileScreen = ({navigation, route}) => {
 
   const pickImage = type => {
     if (type === 'camera') {
-      launchCamera({}, response => {
+      launchCamera({quality: 0.5}, response => {
         // setPhotoURI(response.uri); // update the local state, this will rerender your TomarFoto component with the photo uri path.
         if (response.didCancel) {
           console.log('Permission cancelled', response);
@@ -104,11 +106,12 @@ const EditProfileScreen = ({navigation, route}) => {
             arr = profilePic;
             arr.push(response.assets[0]);
             setProfilePic([...arr]);
+            updateProfile('silent');
           }
         }
       });
     } else {
-      launchImageLibrary({}, response => {
+      launchImageLibrary({quality: 0.5}, response => {
         if (response.didCancel) {
           console.log('Permission cancelled', response);
         } else if (response.error) {
@@ -124,40 +127,62 @@ const EditProfileScreen = ({navigation, route}) => {
     }
   };
 
+  const updatProfileAndroid = async (
+    payload = {data: {...data, images: profilePic}},
+  ) => {
+    try {
+      const Token = await getAsyncValue('user');
+      const parsedToken = JSON.parse(Token);
+
+      const formData = new FormData();
+
+      if (payload.data.images.length > 0) {
+        const my_file = {
+          uri: payload.data.images[0].uri,
+          type: payload.data.images[0].type,
+          name: payload.data.images[0].fileName,
+        };
+        formData.append('profileImage', my_file);
+      }
+
+      formData.append('name', payload.data.name);
+      formData.append('address', payload.data.address);
+      formData.append('houseNumber', payload.data.houseNumber);
+      formData.append('phoneNumber', payload.data.phoneNumber);
+      formData.append('id', payload.data._id);
+
+      const response = await axios.put(API_URL + 'user/', formData, {
+        headers: {
+          Authorization: 'Bearer ' + parsedToken.accessToken,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const updateProfile = async () => {
     setSaveLoader(true);
     try {
-      const Result = await updatProfile({data: {...data, images: profilePic}});
-
+      const Result = await updatProfileAndroid();
       if (Result.response) {
         SnackError(Result.response.data.message);
       } else {
         let obj = User;
-        console.log(obj);
-        obj.data = {...Result.data.data, societyId: User.data.societyId};
+        console.log(Result.data);
+        obj.data = {...Result.data, societyId: User.data.societyId};
         console.log(obj);
 
         dispatch({type: USER_DATA, payload: obj});
         StoreData('user', JSON.stringify(obj));
         navigation.goBack();
       }
-
-      // if (Result) {
-      //   if (Result.data && Result.data.success) {
-      //     // let obj = User;
-      //     // obj.data = Result.data.data;
-      //     // console.log(obj);
-      //     // dispatch({type: USER_DATA, payload: Result.data});
-      //     // StoreData('user', JSON.stringify(obj));
-      //     // navigation.goBack();
-      //   } else {
-      //     errorAlert('Please Update Old Data First');
-      //   }
-      // } else {
-      //   errorAlert('Something went wrong please try again later');
-      // }
     } catch (e) {
-      SnackError('Something went wrong please try again later.');
+      console.log(e.response);
+      SnackError('Something went wrong. Please try again later.');
     }
     setSaveLoader(false);
   };

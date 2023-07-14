@@ -94,7 +94,7 @@ const AddNewResident = ({navigation, route}) => {
           if (item.status === 'active') {
             arr.push({
               label: item.name,
-              value: item._id,
+              value: item.name,
             });
           }
         });
@@ -113,8 +113,7 @@ const AddNewResident = ({navigation, route}) => {
       !data.name ||
       !data.phoneNumber ||
       !data.occupation ||
-      !data.userType ||
-      !data.role
+      !data.userType
     ) {
       return SnackError('Fill in the blanks.');
     }
@@ -141,9 +140,22 @@ const AddNewResident = ({navigation, route}) => {
     setLoader(true);
 
     try {
+      let bodyforapi =
+        data.userType === 'rental'
+          ? {
+              ...data,
+              ...ownerDetail,
+              designationId: '64acf3a46731512c4a371ffe',
+            }
+          : {...data, designationId: '64acf3a46731512c4a371ffe'};
+
+      delete bodyforapi.role;
+
+      console.log(bodyforapi);
+
       const Result = await PostData({
         url: API_URL + 'admin/residentialUser/add',
-        body: data.userType === 'rental' ? {...data, ...ownerDetail} : data,
+        body: bodyforapi,
       });
 
       setLoader(false);

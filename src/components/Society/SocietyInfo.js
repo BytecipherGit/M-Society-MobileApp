@@ -96,6 +96,7 @@ const SocietyInfo = ({navigation, route}) => {
               createdDate,
               subscriptionType,
               description,
+              name,
             } = data.data.society;
             return (
               <View
@@ -107,7 +108,7 @@ const SocietyInfo = ({navigation, route}) => {
                   ...shadow,
                 }}>
                 <Text style={[styles.MainTitle, {marginBottom: '7%'}]}>
-                  Society Name{' '}
+                  {name}{' '}
                   <Text
                     onPress={() =>
                       navigation.navigate('SocietyEditScreen', {
