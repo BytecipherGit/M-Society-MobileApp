@@ -28,6 +28,7 @@ import {
   GetData,
   PostData,
   PutData,
+  SnackError,
   StoreData,
   updatProfile,
 } from '../../assets/services';
@@ -125,20 +126,38 @@ const EditProfileScreen = ({navigation, route}) => {
 
   const updateProfile = async () => {
     setSaveLoader(true);
-    const Result = await updatProfile({data: {...data, images: profilePic}});
+    try {
+      const Result = await updatProfile({data: {...data, images: profilePic}});
 
-    if (Result) {
-      if (Result.data && Result.data.success) {
+      if (Result.response) {
+        SnackError(Result.response.data.message);
+      } else {
         let obj = User;
-        obj.data = Result.data.data;
-        dispatch({type: USER_DATA, payload: Result.data});
+        console.log(obj);
+        obj.data = {...Result.data.data, societyId: User.data.societyId};
+        console.log(obj);
+
+        dispatch({type: USER_DATA, payload: obj});
         StoreData('user', JSON.stringify(obj));
         navigation.goBack();
-      } else {
-        errorAlert('Please Update Old Data First');
       }
-    } else {
-      errorAlert('Something went wrong please try again later');
+
+      // if (Result) {
+      //   if (Result.data && Result.data.success) {
+      //     // let obj = User;
+      //     // obj.data = Result.data.data;
+      //     // console.log(obj);
+      //     // dispatch({type: USER_DATA, payload: Result.data});
+      //     // StoreData('user', JSON.stringify(obj));
+      //     // navigation.goBack();
+      //   } else {
+      //     errorAlert('Please Update Old Data First');
+      //   }
+      // } else {
+      //   errorAlert('Something went wrong please try again later');
+      // }
+    } catch (e) {
+      SnackError('Something went wrong please try again later.');
     }
     setSaveLoader(false);
   };

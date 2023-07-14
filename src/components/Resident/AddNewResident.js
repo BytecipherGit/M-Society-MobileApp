@@ -5,6 +5,7 @@ import {
   TextInput,
   ScrollView,
   StyleSheet,
+  Appearance,
 } from 'react-native';
 import React, {Fragment, useEffect, useRef, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
@@ -51,6 +52,7 @@ const AddNewResident = ({navigation, route}) => {
   );
   const [loader, setLoader] = useState(false);
   const phoneInput = useRef(null);
+  const colorScheme = Appearance.getColorScheme();
 
   useEffect(() => {
     getProffesion();
@@ -198,10 +200,14 @@ const AddNewResident = ({navigation, route}) => {
         {item.type === 'dropDown' && (
           <Dropdown
             style={[styles.dropdown]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
+            containerStyle={
+              colorScheme === 'dark' ? {backgroundColor: COLORS.titleFont} : {}
+            }
+            placeholderStyle={[styles.placeholderStyle]}
+            selectedTextStyle={[styles.selectedTextStyle]}
+            inputSearchStyle={[styles.inputSearchStyle]}
+            iconStyle={[styles.iconStyle]}
+            activeColor={colorScheme === 'dark' ? 'black' : 'white'}
             data={item.value}
             maxHeight={300}
             labelField="label"
@@ -363,6 +369,7 @@ const styles = StyleSheet.create({
   selectedTextStyle: {
     fontFamily: 'Inter-Regular',
     fontSize: 14,
+    color: COLORS.blackFont,
   },
   iconStyle: {
     width: 20,
@@ -372,5 +379,6 @@ const styles = StyleSheet.create({
     height: 40,
     fontFamily: 'Inter-Regular',
     fontSize: 14,
+    color: COLORS.blackFont,
   },
 });

@@ -17,6 +17,7 @@ const PaymentHistory = ({navigation}) => {
     loader: false,
     error: '',
   });
+
   useEffect(() => {
     getPaymentHistory();
   }, []);
@@ -33,10 +34,11 @@ const PaymentHistory = ({navigation}) => {
           API_URL +
           `maintenance/userPaymentHistory/${state.userDetail.data._id}`,
       };
+      console.log(payload);
       const Result = await GetData(payload);
       if (Result.data.success) {
         setData({
-          data: Result.data.data,
+          data: state.isAdmin ? Result.data.allHistory : Result.data.data,
           loader: false,
           error: '',
         });
@@ -53,6 +55,56 @@ const PaymentHistory = ({navigation}) => {
         loader: false,
         error: 'Something went wrong please try again later.',
       });
+    }
+  };
+
+  const convertToMonth = mth => {
+    if (mth === 0) {
+      return 'Jan';
+    }
+
+    if (mth === 1) {
+      return 'Feb';
+    }
+
+    if (mth === 2) {
+      return 'March';
+    }
+
+    if (mth === 3) {
+      return 'Apr';
+    }
+
+    if (mth === 4) {
+      return 'May';
+    }
+
+    if (mth === 5) {
+      return 'Jun';
+    }
+
+    if (mth === 6) {
+      return 'Jul';
+    }
+
+    if (mth === 7) {
+      return 'Aug';
+    }
+
+    if (mth === 8) {
+      return 'Sep';
+    }
+
+    if (mth === 9) {
+      return 'Auc';
+    }
+
+    if (mth === 10) {
+      return 'Nov';
+    }
+
+    if (mth === 11) {
+      return 'Dec';
     }
   };
 
@@ -74,9 +126,12 @@ const PaymentHistory = ({navigation}) => {
               <View style={style.detailCnt}>
                 <TitleText style={style.cardPrice} text={`₹ ${item.amount}`} />
                 <Text style={style.paidTxt}>
-                  Paid- <Text style={style.dateTxt}>January,2023</Text>
+                  Paid-{' '}
+                  <Text style={style.dateTxt}>
+                    {convertToMonth(item.month)},{item.year}
+                  </Text>
                 </Text>
-                <Text style={style.dateTxt}>09/Mar/2023</Text>
+                <Text style={style.dateTxt}>{item.status}</Text>
               </View>
             </View>
             <View style={style.devider} />
@@ -88,13 +143,13 @@ const PaymentHistory = ({navigation}) => {
                   },
                   style.dateTxt,
                 ]}>
-                Transaction ID{' '}
+                Transaction ID:{' '}
                 <Text
                   style={{
                     fontSize: 14,
                     color: '#202937',
                   }}>
-                  6553 8236 876238
+                  {item.transactionId}
                 </Text>
               </Text>
             </View>

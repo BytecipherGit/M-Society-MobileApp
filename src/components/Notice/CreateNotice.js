@@ -53,7 +53,7 @@ const CreateNotice = ({navigation}) => {
   async function pickDocument() {
     try {
       const result = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
+        type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
       });
 
       setData({
@@ -124,11 +124,43 @@ const CreateNotice = ({navigation}) => {
               ) : item.id === 4 ? (
                 data.attachedFile && data.attachedFile.uri ? (
                   <View>
-                    <Image
-                      style={{height: 200, width: '100%', borderRadius: 10}}
-                      source={{uri: data.attachedFile.uri}}
-                      resizeMode="contain"
-                    />
+                    <View style={{height: 200, width: '100%'}}>
+                      {data.attachedFile.type === 'image/jpeg' ? (
+                        <Image
+                          style={{
+                            height: '100%',
+                            width: '100%',
+                            borderRadius: 10,
+                          }}
+                          source={{uri: data.attachedFile.uri}}
+                          // resizeMode="cover"
+                        />
+                      ) : (
+                        <View
+                          style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderWidth: 0.5,
+                            borderRadius: 10,
+                          }}>
+                          <Text
+                            style={{
+                              color: COLORS.titleFont,
+                              fontFamily: 'Axiforma-Bold',
+                              fontSize: 15,
+                            }}>
+                            {data.attachedFile.name}
+                          </Text>
+                          <Text
+                            style={{
+                              color: 'red',
+                            }}>
+                            No Preview Available
+                          </Text>
+                        </View>
+                      )}
+                    </View>
                     <TouchableOpacity
                       style={style.deleteImageIcon}
                       onPress={() => setData({...data, attachedFile: {}})}>

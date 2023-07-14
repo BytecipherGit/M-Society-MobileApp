@@ -12,11 +12,18 @@ import AppHeader from '../ReUsableComponents/AppHeader';
 import {COLORS, globalStyle, shadow} from '../assets/theme';
 import moment from 'moment';
 import BellIcon from '../assets/images/Caledor.svg';
+import WebView from 'react-native-webview';
+import Pdf from 'react-native-pdf';
 
 const NoticeDetailScreen = ({navigation, route}) => {
   const {title, description, createdDate, attachedFile, societyAdminId} =
     route?.params?.item;
 
+  let path = attachedFile ? attachedFile.split('.') : '';
+  if (path.length > 0) {
+    path = path[path.length - 1];
+  }
+  console.log(path);
   return (
     <View style={[globalStyle.cnt]}>
       <AppHeader title={'Notice'} navigation={navigation} />
@@ -32,23 +39,35 @@ const NoticeDetailScreen = ({navigation, route}) => {
             </View>
             <Text style={style.title}>{title}</Text>
             <Text style={style.desc}>{description}</Text>
-            <Text style={style.secretory}>{'Secretory'}</Text>
-            <Text style={style.adminName}>{societyAdminId}</Text>
+            {/* <Text style={style.secretory}>{'Secretory'}</Text>
+            <Text style={style.adminName}>{societyAdminId}</Text> */}
             <TouchableOpacity
               onPress={() =>
+                path !== 'pdf' &&
                 navigation.navigate('ImageViewScreen', {
                   img: attachedFile,
                 })
               }
               activeOpacity={0.8}
               style={style.imgCnt}>
-              <Image
-                source={{
-                  uri: attachedFile,
-                }}
-                style={{height: '100%', width: '100%', borderRadius: 8}}
-                resizeMode="contain"
-              />
+              {path === 'pdf' ? (
+                <Pdf
+                  source={{
+                    uri: attachedFile,
+                  }}
+                  style={{
+                    flex: 1,
+                  }}
+                />
+              ) : (
+                <Image
+                  source={{
+                    uri: attachedFile,
+                  }}
+                  style={{height: '100%', width: '100%', borderRadius: 8}}
+                  resizeMode="contain"
+                />
+              )}
             </TouchableOpacity>
           </View>
         )}

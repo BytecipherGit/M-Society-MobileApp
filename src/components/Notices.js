@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../assets/theme';
@@ -37,7 +38,10 @@ const Notices = ({navigation}) => {
 
   useEffect(() => {
     if (isFocus) {
-      dispatch({type: NOTICE_LIST_REQUEST});
+      dispatch({
+        type: NOTICE_LIST_REQUEST,
+        url: isAdmin ? 'notice/all' : 'notice/resident/all',
+      });
     }
   }, [isFocus]);
 
@@ -53,6 +57,7 @@ const Notices = ({navigation}) => {
     if (type === 'Edit') {
       return navigation.navigate('EditNotice', {noticeDetail: item});
     }
+
     setDeleteLoader(item._id);
 
     try {
@@ -62,12 +67,16 @@ const Notices = ({navigation}) => {
       });
 
       if (Result.success === true) {
-        let arr = Notice.data;
-        arr.splice(index, 1);
-        if (arr.length > 0) {
-          setData([...arr]);
-        } else {
+        if (Result.data.length === 1) {
           dispatch({type: NOTICE_LIST_REQUEST});
+        } else {
+          let arr = Notice.data;
+          arr.splice(index, 1);
+          if (arr.length > 0) {
+            setData([...arr]);
+          } else {
+            dispatch({type: NOTICE_LIST_REQUEST});
+          }
         }
       } else {
         SnackError(Result.message);
@@ -101,7 +110,12 @@ const Notices = ({navigation}) => {
                 style={style.card}>
                 <Calendor />
                 <View style={{marginHorizontal: '5%'}}>
-                  <Text style={style.cardTitle}>{item.title}</Text>
+                  <Text style={style.cardTitle}>
+                    {item.title}{' '}
+                    {isAdmin && (
+                      <Text style={{color: 'red'}}>-{item.status}</Text>
+                    )}
+                  </Text>
                   <Text numberOfLines={2} style={style.cardDesc}>
                     {item.description}
                   </Text>
@@ -114,6 +128,7 @@ const Notices = ({navigation}) => {
                 <AppCrudActionButton
                   item={item}
                   index={index}
+                  hideEdit={item.status !== 'draft'}
                   loaderIndex={deleteLoader}
                   doActions={doActions}
                 />

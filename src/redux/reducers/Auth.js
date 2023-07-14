@@ -1,3 +1,4 @@
+import {Alert} from 'react-native';
 import {LOGIN_OPTION, SET_USER_TYPE, USER_DATA} from '../Actions';
 
 let initialState = {

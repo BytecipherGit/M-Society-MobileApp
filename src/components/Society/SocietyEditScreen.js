@@ -6,6 +6,7 @@ import {
   FlatList,
   ImageBackground,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import {COLORS, globalStyle} from '../../assets/theme';
@@ -22,8 +23,13 @@ import {
   API_URL,
   PutData,
   SnackError,
+  StoreData,
+  SuccessAlert,
+  getAsyncValue,
   putSocietyImages,
 } from '../../assets/services';
+import {useDispatch} from 'react-redux';
+import {USER_DATA} from '../../redux/Actions';
 
 const SocietyEditScreen = ({navigation, route}) => {
   const [societyImages, setSocietyImages] = useState([]);
@@ -32,10 +38,11 @@ const SocietyEditScreen = ({navigation, route}) => {
     buttonHoverBgColour: route.params.data.buttonHoverBgColour,
     buttonHoverfontColour: route.params.data.buttonHoverfontColour,
     fontColour: route.params.data.fontColour,
-    id: route.params.data._id,
-    description: route.params.data.description,
+    id: route?.params?.data?._id,
+    description: route?.params?.data?.description,
   });
   const [loader, setLoader] = useState(false);
+  const dispatch = useDispatch();
 
   const pickImage = (type, setType) => {
     // Image, Logo
@@ -62,24 +69,30 @@ const SocietyEditScreen = ({navigation, route}) => {
     }
   };
 
-  const setImage = (data, type) => {
+  const setImage = (Imagedata, type) => {
     if (type === 'Image') {
       setSocietyImages([
         ...societyImages,
         {
-          uri: data.uri,
-          type: data.type,
-          name: data.fileName,
+          uri: Imagedata.uri,
+          type: Imagedata.type,
+          name: Imagedata.fileName,
         },
       ]);
     } else {
       setData({
         ...data,
         logo: {
-          uri: data.uri,
-          type: data.type,
-          name: data.fileName,
+          uri: Imagedata.uri,
+          type: Imagedata.type,
+          name: Imagedata.fileName,
         },
+        primaryColour: data.primaryColour,
+        buttonHoverBgColour: data.buttonHoverBgColour,
+        buttonHoverfontColour: data.buttonHoverfontColour,
+        fontColour: data.fontColour,
+
+        description: data?.description,
       });
     }
   };
@@ -87,20 +100,34 @@ const SocietyEditScreen = ({navigation, route}) => {
   const updateSociety = async () => {
     setLoader(true);
     try {
-      const Result =
-        ((data.logo && data.logo.uri) || societyImages.length) > 0
-          ? await putSocietyImages({
-              url: API_URL + 'society/',
-              body: {
-                ...data,
-                ...{images: societyImages},
-                ...{body: data && data.logo ? data.logo : ''},
-              },
-            })
-          : await PutData({
-              url: API_URL + 'society/',
-              body: data,
-            });
+      console.log(route?.params?.data?._id);
+      let Result = '';
+      if ((data?.logo && data?.logo?.uri) || societyImages.length > 0) {
+        Result = await putSocietyImages({
+          url: API_URL + 'society/',
+          body: {
+            ...data,
+            ...{images: societyImages, description: data.description},
+            ...{body: data && data.logo ? data.logo : ''},
+          },
+        });
+      } else {
+        Result = await PutData({
+          url: API_URL + 'society/',
+          body: data,
+        });
+      }
+      if (Result.response) {
+        SnackError(Result.response.data.message);
+      } else {
+        let User = await getAsyncValue('user');
+        User = JSON.parse(User);
+        User.societyId = Result.data.data;
+        await StoreData('user', JSON.stringify(User));
+        dispatch({type: USER_DATA, payload: User});
+        SuccessAlert('Society Info Updated Succefully.');
+        navigation.goBack();
+      }
     } catch (e) {
       SnackError('Something went wrong, please try again later.');
     }
@@ -224,6 +251,7 @@ const SocietyEditScreen = ({navigation, route}) => {
           alignSelf: 'center',
           marginBottom: '2%',
         }}
+        btnLoader={loader}
         buttonTitle={'Update Society Theme'}
         onPress={updateSociety}
       />

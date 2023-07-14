@@ -43,6 +43,8 @@ const GuardHomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const visitors = useSelector(state => state.GuardReducer);
 
+  console.log(state);
+
   useEffect(() => {
     getVisitorsList();
   }, []);

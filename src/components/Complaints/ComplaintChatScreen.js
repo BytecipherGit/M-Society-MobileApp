@@ -1,4 +1,11 @@
-import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  Alert,
+} from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
@@ -93,8 +100,13 @@ const ComplaintChatScreen = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    if (data.length > 0) {
-      toReply(data[data.length - 1]);
+    if (
+      data &&
+      data?.chat &&
+      data?.chat?.complainChat &&
+      data?.chat?.complainChat.length > 0
+    ) {
+      toReply(data?.chat?.complainChat[data?.chat?.complainChat.length - 1]);
     }
   }, [data]);
 
@@ -108,7 +120,7 @@ const ComplaintChatScreen = ({navigation, route}) => {
       cancel: {Title: 'Cancel', value: 'cancel'},
       reopen: {Title: 'Re-open', value: 'reopen'},
     };
-
+    console.log(item.status);
     if (UserDetail.isAdmin) {
       item.status === 'new' &&
         statusArray.push(obj.inprogress, obj.resolved, obj.cancel);
@@ -116,10 +128,11 @@ const ComplaintChatScreen = ({navigation, route}) => {
       item.status === 'inprogress' &&
         statusArray.push(obj.resolved, obj.cancel);
     } else {
+      console.log('is normal user');
       item.status === 'new' && statusArray.push({Title: 'New', value: 'new'});
       item.status === 'resolved' && statusArray.push(obj.reopen);
     }
-    setReplyArray(...statusArray);
+    setReplyArray(statusArray);
   };
 
   return (

@@ -11,7 +11,7 @@ import {
 } from '../Actions';
 
 function* getNoticeList(action) {
-  let url = API_URL + 'notice/all';
+  let url = API_URL + action.url;
   try {
     let payload = {
       url: url,

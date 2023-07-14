@@ -10,7 +10,7 @@ const SupportScreen = ({navigation}) => {
       <AppHeader title={'Support'} navigation={navigation} />
       <TouchableOpacity
         style={{margin: 10, flexDirection: 'row', alignItems: 'center'}}
-        onPress={() => Linking.openURL(`tel:0000000011`)}>
+        onPress={() => Linking.openURL(`tel:1234567890`)}>
         <View
           style={{
             backgroundColor: COLORS.themeColor,
@@ -21,10 +21,15 @@ const SupportScreen = ({navigation}) => {
             alignItems: 'center',
             marginRight: '2%',
           }}>
-          <Feather name="phone" size={20} />
+          <Feather name="phone" size={20} color={COLORS.titleFont} />
         </View>
-        <Text style={{fontSize: 15, fontFamily: 'Axiforma-Medium'}}>
-          +91 0000000011
+        <Text
+          style={{
+            fontSize: 15,
+            fontFamily: 'Axiforma-Medium',
+            color: COLORS.titleFont,
+          }}>
+          +91 1234567890
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -52,12 +57,26 @@ const SupportScreen = ({navigation}) => {
             alignItems: 'center',
             marginRight: '2%',
           }}>
-          <Feather name="mail" size={20} />
+          <Feather name="mail" size={20} color={COLORS.titleFont} />
         </View>
-        <Text style={{fontSize: 15, fontFamily: 'Axiforma-Medium'}}>
-          abc@gmail.com
+        <Text
+          style={{
+            fontSize: 15,
+            fontFamily: 'Axiforma-Medium',
+            color: COLORS.titleFont,
+          }}>
+          support@msociety.com
         </Text>
       </TouchableOpacity>
+      <Text
+        style={{
+          color: 'red',
+          alignSelf: 'center',
+          fontFamily: 'Axiforma-SemiBold',
+          marginTop: '5%',
+        }}>
+        Our team respond within 24 hours.
+      </Text>
     </View>
   );
 };

@@ -48,6 +48,7 @@ import CreateGuard from '../components/Guard/CreateGuard';
 import NotificationList from '../components/NotificationList';
 import ServiceDetail from '../components/Service/ServiceDetail';
 import SupportScreen from '../components/Service/SupportScreen';
+import ServiceCategories from '../components/Society/ServiceCategories';
 
 const Stack = createNativeStackNavigator();
 
@@ -145,6 +146,7 @@ const mainNavigation = () => {
       {stackScreenWithNoHeader('ImageViewScreen', ImageViewScreen)}
       {stackScreenWithNoHeader('ContactScreen', ContactScreen)}
       {stackScreenWithNoHeader('ContactDetailScreen', ContactDetail)}
+      {stackScreenWithNoHeader('ServiceCategories', ServiceCategories)}
       {stackScreenWithNoHeader('ServiceDetailScreen', ServiceDetail)}
       {stackScreenWithNoHeader('CreateContact', CreateContact)}
       {stackScreenWithNoHeader('ProfileStackScreen', ProfileStackNavigator)}

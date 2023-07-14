@@ -29,7 +29,7 @@ const AddVisitor = ({navigation, route}) => {
     houseNumber: '',
     reasone: '',
     image: {},
-    countryCode: '+91',
+    countryCode: '91',
   });
   const [loader, setLoader] = useState(false);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
@@ -103,6 +103,9 @@ const AddVisitor = ({navigation, route}) => {
     }
     setLoader(false);
   };
+
+  let countryOptionCode = data.countryCode;
+  console.log(countryOptionCode);
 
   return (
     <View style={[globalStyle.cnt, {backgroundColor: 'white'}]}>
@@ -185,9 +188,12 @@ const AddVisitor = ({navigation, route}) => {
                 ) : (
                   <AppTextInput
                     item={item}
-                    countryCode={item.countryCode}
+                    countryCode={item.countryCode ? countryOptionCode : ''}
                     value={data[item.param]}
                     setValue={text => setData({...data, [item.param]: text})}
+                    onSelectCountry={e => {
+                      setData({...data, countryCode: `${e.callingCode[0]}`});
+                    }}
                   />
                 )}
               </View>

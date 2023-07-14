@@ -11,11 +11,11 @@ const AppRoundAddActionButton = ({onPress = () => null}) => {
     <LinearGradient
       // onPress={onPress}
       colors={[
-        state && state.data && state.data.societyId
-          ? state.data.societyId.buttonHoverBgColour
+        state && state?.data && state?.data?.societyId
+          ? state?.data?.societyId?.buttonHoverBgColour
           : '#FF7334',
-        state && state.data && state.data.societyId
-          ? state.data.societyId.buttonHoverBgColour
+        state && state?.data && state?.data?.societyId
+          ? state?.data?.societyId?.buttonHoverBgColour
           : '#FFA13C',
       ]}
       start={{x: 0.0, y: 1.0}}

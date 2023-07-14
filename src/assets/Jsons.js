@@ -236,7 +236,7 @@ export let SocietyOptions = [
   },
   {
     id: 4,
-    title: 'CONTACT',
+    title: 'PHONE DIRECTORY',
     navigationScreen: 'ContactScreen',
     image: <Contact />,
   },
@@ -261,7 +261,7 @@ export let SocietyOptions = [
   {
     id: 9,
     title: 'SERVICE PROVIDER',
-    navigationScreen: 'ContactScreen',
+    navigationScreen: 'ServiceCategories',
     param: {screenName: 'Service'},
     image: <Contact />,
   },
@@ -280,7 +280,7 @@ export const profileOptions = [
     navigationScreen: 'Webview',
     icon: <FaqIcon />,
     param: {screenName: 'FAQ'},
-    urlParam: 'FAQ',
+    urlParam: 'http://43.231.127.169:9004/faqs',
   },
   {
     id: 3,
@@ -319,7 +319,7 @@ export const profileOptions = [
     navigationScreen: 'Webview',
     icon: <TermService />,
     param: {screenName: 'Terms & Conditions'},
-    urlParam: 'termsCondition',
+    urlParam: 'http://43.231.127.169:9004/terms-conditions',
   },
   {
     id: 10,
@@ -561,17 +561,17 @@ export const ColorsArray = [
     param: 'primaryColour',
   },
   {
-    id: 3,
+    id: 2,
     title: 'Button HoverBack Color',
     param: 'buttonHoverBgColour',
   },
   {
-    id: 4,
+    id: 3,
     title: 'Button HoverFront Color',
     param: 'buttonHoverfontColour',
   },
   {
-    id: 5,
+    id: 4,
     title: 'Font Colour',
     param: 'fontColour',
   },

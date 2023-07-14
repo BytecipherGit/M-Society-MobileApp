@@ -21,19 +21,26 @@ import SuccessModal from '../../ReUsableComponents/SuccessModal';
 import {useDispatch, useSelector} from 'react-redux';
 import AppButton from '../../ReUsableComponents/AppButton';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useIsFocused} from '@react-navigation/native';
 
 const ProfileScreen = ({navigation, route}) => {
   const [logoutPopup, setLogoutPopup] = useState(false);
+  const focus = useIsFocused();
   const User = useSelector(state => state.AuthReducer.userDetail);
   const dispatch = useDispatch();
+  let array =
+    User.data.userType === 'guard' ? GuardprofileOptions : profileOptions;
 
   const logout = () => {
     dispatch({type: 'LOG_OUT'});
   };
 
-  const renderOptions = () => {
-    let array =
+  useEffect(() => {
+    array =
       User.data.userType === 'guard' ? GuardprofileOptions : profileOptions;
+  }, [focus]);
+
+  const renderOptions = () => {
     return (
       <View
         style={{
@@ -51,12 +58,12 @@ const ProfileScreen = ({navigation, route}) => {
                   item.id === 10
                     ? navigation.navigate(item.navigationScreen, {
                         screenName: item.param.screenName,
-                        url: User[item.urlParam],
+                        url: item.urlParam,
                       })
                     : item.param
                     ? navigation.navigate(item.navigationScreen, {
                         screenName: item.param.screenName,
-                        url: User[item.urlParam],
+                        url: item.urlParam,
                       })
                     : navigation.navigate(item.navigationScreen, {item: User});
                 }}>

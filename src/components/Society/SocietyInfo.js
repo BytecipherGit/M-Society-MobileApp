@@ -79,7 +79,7 @@ const SocietyInfo = ({navigation, route}) => {
         </SafeAreaView>
       </ImageBackground>
       {/* Society Detail */}
-      {data.data.society ? (
+      {data?.data?.society ? (
         <FlatList
           data={[1]}
           showsVerticalScrollIndicator={false}
@@ -189,54 +189,54 @@ const SocietyInfo = ({navigation, route}) => {
                 </View>
                 <View>
                   <Text style={styles.MainTitle}>Society Image</Text>
-                  <ScrollView
+                  {/* <ScrollView
                     contentContainerStyle={{
                       flexDirection: 'row',
                       alignItems: 'center',
                       justifyContent: 'flex-start',
                     }}
-                    horizontal={true}>
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
-                        justifyContent: 'center',
-                        marginTop: '5%',
-                      }}>
-                      {data.data.society &&
-                        data.data.society.images.map((item, index) => {
-                          return (
-                            <TouchableOpacity
-                              key={index}
-                              onPress={() =>
-                                navigation.navigate('ImageViewScreen', {
-                                  img: item,
-                                })
-                              }
+                    horizontal={true}> */}
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      flexWrap: 'wrap',
+                      justifyContent: 'center',
+                      marginTop: '5%',
+                    }}>
+                    {data?.data?.society &&
+                      data?.data?.society?.images.map((item, index) => {
+                        return (
+                          <TouchableOpacity
+                            key={index}
+                            onPress={() =>
+                              navigation.navigate('ImageViewScreen', {
+                                img: item,
+                              })
+                            }
+                            style={{
+                              width: 90,
+                              height: 90,
+                              margin: '3%',
+                              marginHorizontal: '1.90%',
+                              borderRadius: 7,
+                              backgroundColor: COLORS.themeColor,
+                              marginBottom: '3%',
+                              ...shadow,
+                            }}>
+                            <Image
                               style={{
-                                width: 90,
-                                height: 90,
-                                margin: '3%',
-                                marginHorizontal: '1.90%',
+                                flex: 1,
                                 borderRadius: 7,
-                                backgroundColor: COLORS.themeColor,
-                                marginBottom: '3%',
-                                ...shadow,
-                              }}>
-                              <Image
-                                style={{
-                                  flex: 1,
-                                  borderRadius: 7,
-                                  backgroundColor: 'red',
-                                }}
-                                source={{uri: item}}
-                              />
-                            </TouchableOpacity>
-                          );
-                        })}
-                    </View>
-                  </ScrollView>
+                                backgroundColor: 'red',
+                              }}
+                              source={{uri: item}}
+                            />
+                          </TouchableOpacity>
+                        );
+                      })}
+                  </View>
+                  {/* </ScrollView> */}
                 </View>
               </View>
             );

@@ -31,6 +31,7 @@ const ContactScreen = ({navigation, route}) => {
   const [loader, setLoader] = useState(false);
   const [data, setData] = useState([]);
   const [error, setError] = useState('');
+  const [professionArray, setProfessionArray] = useState([]);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
   const [deleteLoader, setDeleteLoader] = useState('');
   const isFocused = useIsFocused();
@@ -39,11 +40,12 @@ const ContactScreen = ({navigation, route}) => {
   useEffect(() => {
     const getContactDetails = async () => {
       setLoader(true);
+      console.log(route);
       const payload = {
         url:
           API_URL +
           (route?.params?.screenName === 'Service'
-            ? 'serviceProvider/all'
+            ? 'serviceProvider/all?serviceName=' + route?.params?.serviceName
             : 'directory/resident/all'),
       };
       try {
@@ -63,7 +65,7 @@ const ContactScreen = ({navigation, route}) => {
               setError('');
             }
           } else {
-            setError('No Contact Found');
+            setError('No Service Found');
           }
         } else {
           setAlertData({
@@ -139,7 +141,7 @@ const ContactScreen = ({navigation, route}) => {
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate(
-                    route.params.screenName === 'Service'
+                    route?.params?.screenName === 'Service'
                       ? 'ServiceDetailScreen'
                       : 'ContactDetailScreen',
                     {

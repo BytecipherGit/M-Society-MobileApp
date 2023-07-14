@@ -40,7 +40,10 @@ const HomeScreen = ({navigation}) => {
   }, [isFocus]);
 
   const getNoticeList = () => {
-    dispatch({type: NOTICE_LIST_REQUEST_SILENT});
+    dispatch({
+      type: NOTICE_LIST_REQUEST_SILENT,
+      url: isAdmin ? 'notice/all' : 'notice/resident/all',
+    });
   };
 
   const getUserType = async () => {

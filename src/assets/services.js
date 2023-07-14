@@ -1,4 +1,4 @@
-// export const API_URL = 'https://b60f-27-57-133-50.ngrok-free.app/api/';
+// export const API_URL = 'https://0a60-27-57-133-50.ngrok-free.app/api/';
 export const API_URL = 'http://43.231.127.169:9001/api/';
 
 // swagger https://deed-122-168-229-41.ngrok-free.app/api-docs/#/
@@ -10,6 +10,7 @@ import Snackbar from 'react-native-snackbar';
 export const GetData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
+  console.log(Token);
   return axios
     .get(
       payload.url,
@@ -205,6 +206,7 @@ export const addVisitorFormData = async payload => {
   formData.append('houseNumber', payload.houseNumber);
   formData.append('reasone', payload.reasone);
   formData.append('image', payload.image);
+  formData.append('countryCode', payload.countryCode);
 
   var requestOptions = {
     method: 'POST',
@@ -329,25 +331,22 @@ export const SuccessAlert = title => {
 export const putSocietyImages = async ({url, body}) => {
   var formData = new FormData();
   let Token = await getAsyncValue('user');
-  if (body.logo && body.logo.uri) {
+  Token = JSON.parse(Token);
+
+  if (body?.logo && body?.logo?.uri) {
     formData.append('logo', body.logo);
   }
 
-  if (body.images.length > 0) {
-    // body.images.map((item, index) => {
-    formData.append('images', body.logo);
-    // });
+  if (body?.images?.length > 0) {
+    formData.append('images', body.images[0]);
   }
-  formData.append('description', body.description ? body.description : '');
+  formData.append('id', body.id);
+  formData.append('description', body.description);
   formData.append('primaryColour', body.primaryColour);
   // formData.append('shadowColour', body.shadowColour);
   formData.append('buttonHoverBgColour', body.buttonHoverBgColour);
   formData.append('buttonHoverfontColour', body.buttonHoverfontColour);
   formData.append('fontColour', body.fontColour);
-
-  console.log('====================================');
-  console.log(formData);
-  console.log('====================================');
 
   return axios.put(url, formData, {
     headers: {

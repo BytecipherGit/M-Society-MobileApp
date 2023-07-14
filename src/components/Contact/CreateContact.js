@@ -1,4 +1,4 @@
-import {View, FlatList, Alert} from 'react-native';
+import {View, FlatList, Alert, Appearance} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
@@ -7,6 +7,7 @@ import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import AppButton from '../../ReUsableComponents/AppButton';
 import {
   API_URL,
+  GetData,
   PostData,
   PutData,
   SnackError,
@@ -14,6 +15,7 @@ import {
 } from '../../assets/services';
 import {useDispatch} from 'react-redux';
 import {GET_CONTACT_PROFESSION_REQUEST} from '../../redux/Actions';
+import {Dropdown} from 'react-native-element-dropdown';
 
 const CreateContact = ({navigation, route}) => {
   const isUpdate = route && route.params && route.params.data ? true : false;
@@ -21,7 +23,36 @@ const CreateContact = ({navigation, route}) => {
   const [data, setData] = useState({});
   const [loader, setLoader] = useState(false);
   const [countryCode, setCountryCode] = useState('91');
+  const [professionArray, setProfessionArray] = useState([]);
   const dispatch = useDispatch();
+  const colorScheme = Appearance.getColorScheme();
+
+  useEffect(() => {
+    getProfession();
+  }, []);
+
+  const getProfession = async () => {
+    try {
+      const Result = await GetData({
+        url: API_URL + 'profession',
+      });
+
+      if (Result.response) {
+      } else {
+        console.log('Professions =>', Result.data.data);
+        let arr = [];
+
+        Result?.data?.data.map(item => {
+          if (item.status === 'active') {
+            arr.push({label: item.name, value: item.name});
+          }
+        });
+        setProfessionArray(arr);
+      }
+    } catch (e) {
+      // SnackError("Something ")
+    }
+  };
 
   useEffect(() => {
     if (isUpdate) {
@@ -110,6 +141,31 @@ const CreateContact = ({navigation, route}) => {
                     setValue={txt => setData({...data, [item.params]: txt})}
                     onSelectCountry={e => {
                       setData({...data, countryCode: e.callingCode});
+                    }}
+                  />
+                ) : item.id === 4 ? (
+                  <Dropdown
+                    style={[{}]}
+                    containerStyle={
+                      colorScheme === 'dark'
+                        ? {backgroundColor: COLORS.titleFont}
+                        : {}
+                    }
+                    activeColor={colorScheme === 'dark' ? 'black' : 'white'}
+                    placeholderStyle={{color: COLORS.descFont}}
+                    selectedTextStyle={{color: COLORS.blackFont}}
+                    inputSearchStyle={{}}
+                    iconStyle={{}}
+                    data={professionArray}
+                    search
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    placeholder={'Select Profession'}
+                    searchPlaceholder="Search..."
+                    value={data[item.params]}
+                    onChange={i => {
+                      setData({...data, [item.params]: i.value});
                     }}
                   />
                 ) : (

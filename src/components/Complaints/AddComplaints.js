@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  ImageBackground,
+  Appearance,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
@@ -23,6 +25,7 @@ import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 import AppTextInput from '../../ReUsableComponents/AppTextInput';
 import {Dropdown} from 'react-native-element-dropdown';
 import AppFilePicker from '../../ReUsableComponents/AppFilePicker';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const AddComplaints = ({route}) => {
   const navigation = useNavigation();
@@ -43,6 +46,7 @@ const AddComplaints = ({route}) => {
   const [loader, setLoader] = useState(false);
 
   const user = useSelector(state => state.AuthReducer.userDetail.data);
+  const colorScheme = Appearance.getColorScheme();
 
   useEffect(() => {
     if (user._id) {
@@ -250,10 +254,9 @@ const AddComplaints = ({route}) => {
                             })
                           }
                           onLongPress={() => deleteImage(index)}>
-                          <Image
+                          <ImageBackground
                             source={{uri: item?.uri}}
-                            style={[styles.img]}
-                          />
+                            style={[styles.img]}></ImageBackground>
                         </TouchableOpacity>
                       );
                     }}
@@ -268,6 +271,14 @@ const AddComplaints = ({route}) => {
                             styles.dropdown,
                             isFocus && {borderColor: 'blue'},
                           ]}
+                          containerStyle={
+                            colorScheme === 'dark'
+                              ? {backgroundColor: COLORS.titleFont}
+                              : {}
+                          }
+                          activeColor={
+                            colorScheme === 'dark' ? 'black' : 'white'
+                          }
                           placeholderStyle={styles.placeholderStyle}
                           selectedTextStyle={styles.selectedTextStyle}
                           inputSearchStyle={styles.inputSearchStyle}
