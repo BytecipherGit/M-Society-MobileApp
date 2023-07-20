@@ -1,4 +1,11 @@
-import {View, Text, SafeAreaView, ScrollView, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  FlatList,
+  Image,
+} from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
@@ -38,33 +45,53 @@ const GuardEditProfile = ({navigation, route}) => {
   };
 
   return (
-    <Fragment>
-      <SafeAreaView style={globalStyle.cntWithTheme}>
-        <AppHeader navigation={navigation} title="Your Details" />
-        <View style={{flex: 1, backgroundColor: COLORS.themeBackground}}>
-          <FlatList
-            data={guardDetailOptions}
-            style={{padding: 6}}
-            ListFooterComponent={() => (
-              <View>
-                {error && (
-                  <TitleText
-                    text={error}
-                    style={{
-                      alignSelf: 'center',
-                      marginTop: '10%',
-                      color: 'red',
-                    }}
-                  />
-                )}
-              </View>
-            )}
-            renderItem={({item, index}) => (
-              <View style={{margin: 10}}>
-                <DescriptionText
-                  text={item.title}
-                  style={{fontSize: 16, color: '#384252'}}
+    <View style={globalStyle.cntWithTheme}>
+      <AppHeader navigation={navigation} title="Your Details" />
+      <View style={{flex: 1, backgroundColor: COLORS.themeBackground}}>
+        <FlatList
+          data={guardDetailOptions}
+          style={{padding: 6}}
+          ListFooterComponent={() => (
+            <View>
+              {error && (
+                <TitleText
+                  text={error}
+                  style={{
+                    alignSelf: 'center',
+                    marginTop: '10%',
+                    color: 'red',
+                  }}
                 />
+              )}
+            </View>
+          )}
+          renderItem={({item, index}) => (
+            <View style={{margin: 10}}>
+              <DescriptionText
+                text={item.title}
+                style={{fontSize: 16, color: '#384252'}}
+              />
+              {item.id === 5 ? (
+                <View
+                  style={{
+                    height: 200,
+                    width: '98%',
+                    backgroundColor: COLORS.white,
+                    ...shadow,
+                    alignSelf: 'center',
+                    marginTop: '5%',
+                    borderRadius: 10,
+                  }}>
+                  <Image
+                    style={{
+                      flex: 1,
+                      borderRadius: 10,
+                    }}
+                    resizeMode="contain"
+                    source={{uri: data[item.param]}}
+                  />
+                </View>
+              ) : (
                 <View
                   style={{
                     ...shadow,
@@ -86,19 +113,18 @@ const GuardEditProfile = ({navigation, route}) => {
                   />
                   {item.icon}
                 </View>
-              </View>
-            )}
-            extraData={item => item.id}
-          />
-          <AppButton
-            buttonStyle={{width: '90%', alignSelf: 'center'}}
-            buttonTitle="Ok"
-            onPress={() => navigation.goBack()}
-          />
-        </View>
-      </SafeAreaView>
-      <SafeAreaView style={{backgroundColor: COLORS.themeBackground}} />
-    </Fragment>
+              )}
+            </View>
+          )}
+          extraData={item => item.id}
+        />
+        <AppButton
+          buttonStyle={{width: '90%', alignSelf: 'center'}}
+          buttonTitle="Ok"
+          onPress={() => navigation.goBack()}
+        />
+      </View>
+    </View>
   );
 };
 

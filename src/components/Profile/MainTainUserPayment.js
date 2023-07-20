@@ -48,7 +48,7 @@ const MainTainUserPayment = ({navigation, route}) => {
   useEffect(() => {
     if (payment.payment.length > 0) {
       setPaymentData(payment.payment);
-     
+
       setLastSelectedIndex(null);
     }
   }, [payment]);
@@ -205,7 +205,7 @@ const MainTainUserPayment = ({navigation, route}) => {
                       fontSize: 14,
                       color: COLORS.blackFont,
                     }}>
-                    2000 ₹
+                    {item.amount} ₹
                   </Text>
                 </View>
               </View>
@@ -215,11 +215,13 @@ const MainTainUserPayment = ({navigation, route}) => {
         />
       </View>
 
-      <AppButton
-        buttonStyle={{width: '90%', alignSelf: 'center', marginBottom: '5%'}}
-        buttonTitle="Update Payment"
-        onPress={() => payPayment()}
-      />
+      {!payment.error && (
+        <AppButton
+          buttonStyle={{width: '90%', alignSelf: 'center', marginBottom: '5%'}}
+          buttonTitle="Update Payment"
+          onPress={() => payPayment()}
+        />
+      )}
     </View>
   );
 };

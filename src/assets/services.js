@@ -1,5 +1,5 @@
-// export const API_URL = 'https://0a60-27-57-133-50.ngrok-free.app/api/';
-export const API_URL = 'http://43.231.127.169:9001/api/';
+export const API_URL = 'https://a1ab-223-229-196-128.ngrok-free.app/api/';
+// export const API_URL = 'http://43.231.127.169:9001/api/';
 
 // swagger https://deed-122-168-229-41.ngrok-free.app/api-docs/#/
 

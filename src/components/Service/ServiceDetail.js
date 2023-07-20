@@ -11,7 +11,7 @@ import React, {useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
 import PhoneIcon from '../../assets/images/PhoneIcon.svg';
-import {API_URL, GetData, SnackError} from '../../assets/services';
+import {API_URL, GetData, PostData, SnackError} from '../../assets/services';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import Rating from 'react-native-rating';
 import {Easing} from 'react-native';
@@ -28,11 +28,23 @@ const ServiceDetail = ({navigation, route}) => {
   useEffect(() => {
     console.log(route.params.detail._id); // eslint-disable-line no-console
     getDetail();
+    postCount();
   }, []);
+
+  const postCount = async silent => {
+    try {
+      await PostData({
+        url: API_URL + 'serviceProvider/count',
+        body: {
+          serviceProviderId: route.params.detail._id,
+        },
+      });
+    } catch (e) {}
+  };
 
   const getDetail = async silent => {
     try {
-      !silent && changeDatavalue(true, {}, '');
+      changeDatavalue(true, {}, '');
 
       const Result = await GetData({
         url: API_URL + 'serviceProvider/' + route.params.detail._id,

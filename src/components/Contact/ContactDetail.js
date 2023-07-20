@@ -16,7 +16,7 @@ const ContactDetail = ({navigation, route}) => {
   } = route.params.detail;
   return (
     <View style={globalStyle.cnt}>
-      <AppHeader navigation={navigation} title={'Contact Detail'} />
+      <AppHeader navigation={navigation} title={'Phone Directory Detail'} />
       <View style={style.cardCnt}>
         {profession && (
           <Text style={style.cardProfessionTitle}>

@@ -9,12 +9,19 @@ import {
   Image,
   ImageBackground,
   Platform,
+  Alert,
+  ActivityIndicator,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS} from '../assets/theme';
 import {SocietyOptions} from '../assets/Jsons';
 import {useDispatch, useSelector} from 'react-redux';
-import {NOTICE_LIST_REQUEST_SILENT, SET_USER_TYPE} from '../redux/Actions';
+import {
+  NOTICE_LIST_REQUEST_SILENT,
+  SET_USER_TYPE,
+  SOCIETY_DETAIL_REQUEST,
+} from '../redux/Actions';
 import {getAsyncValue} from '../assets/services';
 import TakePayment from '../assets/images/TakePayment.svg';
 import LinearGradient from 'react-native-linear-gradient';
@@ -22,13 +29,24 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import HomeNoticeCrousal from './HomeNoticeCrousal';
 import {useIsFocused} from '@react-navigation/native';
 import axios from 'axios';
+import ReactNativeModal from 'react-native-modal';
+import AppButton from '../ReUsableComponents/AppButton';
 
 const HomeScreen = ({navigation}) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [inActiveModal, setInActiveModal] = useState({
+    visible: false,
+    title: '',
+    type: '',
+  });
   const state = useSelector(state => state.AuthReducer);
   const Notice = useSelector(state => state.NoticeReducer);
   const stateForTheme = useSelector(state => state.AuthReducer.userDetail);
+  const data = useSelector(state => state.SocietyReducer);
+  const SocietyId = useSelector(
+    state => state.AuthReducer.userDetail.data.societyId,
+  );
   const isFocus = useIsFocused();
   const dispatch = useDispatch();
 
@@ -36,8 +54,46 @@ const HomeScreen = ({navigation}) => {
     if (isFocus) {
       getNoticeList();
       getUserType();
+      getSocietyInfo();
     }
   }, [isFocus]);
+
+  useEffect(() => {
+    if (data?.data?.society?._id) {
+      if (data?.data?.society?.status === 'inactive') {
+        setInActiveModal({
+          visible: true,
+          title: 'Your Society is Not Activate please contact Society Admin.',
+          type: 'status',
+        });
+      } else if (data?.data?.society?.subscriptionType === 'expired') {
+        setInActiveModal({
+          visible: true,
+          title:
+            'Your Subscription Expired Please Activate Again From Website.',
+          type: 'subscription',
+        });
+      } else if (
+        data?.data?.society?.status === 'active' &&
+        data?.data?.society?.subscriptionType === 'paid'
+      ) {
+        setInActiveModal({
+          visible: false,
+          title: '',
+          type: '',
+        });
+      }
+    }
+  }, [data]);
+
+  const getSocietyInfo = () => {
+    if (SocietyId._id) {
+      dispatch({
+        type: SOCIETY_DETAIL_REQUEST,
+        payload: SocietyId._id,
+      });
+    }
+  };
 
   const getNoticeList = () => {
     dispatch({
@@ -94,6 +150,64 @@ const HomeScreen = ({navigation}) => {
       style={{
         flex: 1,
       }}>
+      <ReactNativeModal
+        isVisible={inActiveModal.visible}
+        style={{
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          margin: 0,
+        }}>
+        <View
+          style={{
+            flex: 0.5,
+            backgroundColor: COLORS.white,
+            borderRadius: 10,
+            margin: 10,
+            justifyContent: 'center',
+          }}>
+          <Text
+            style={{
+              fontFamily: 'Axiforma-SemiBold',
+              fontSize: 15,
+              textAlign: 'center',
+              marginTop: '3%',
+              lineHeight: 25,
+            }}>
+            {inActiveModal.title}
+          </Text>
+          {inActiveModal.type === 'subscription' && (
+            <Text
+              style={{
+                alignSelf: 'center',
+                marginTop: '1%',
+                color: 'blue',
+              }}
+              onPress={() =>
+                Linking.openURL('http://43.231.127.169:9004/society-admin')
+              }>
+              http://43.231.127.169:9004/society-admin
+            </Text>
+          )}
+          <AppButton
+            buttonStyle={{
+              width: '70%',
+              alignSelf: 'center',
+              marginTop: '3%',
+            }}
+            buttonTitle={
+              data.loader ? (
+                <ActivityIndicator color={COLORS.white} />
+              ) : (
+                'Refresh'
+              )
+            }
+            onPress={() => {
+              getNoticeList();
+              getUserType();
+              getSocietyInfo();
+            }}
+          />
+        </View>
+      </ReactNativeModal>
       <Label style={{flex: 1}}>
         <View
           style={{

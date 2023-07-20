@@ -1,4 +1,10 @@
-import {View, Text, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
 import React from 'react';
 import {COLORS} from '../assets/theme';
 import {useSelector} from 'react-redux';
@@ -43,7 +49,21 @@ const AppCrudActionButton = ({
               flexDirection: 'row',
             }}
             key={i}
-            onPress={() => doActions(item, action, index)}>
+            onPress={() =>
+              action === 'Delete'
+                ? Alert.alert('', 'Are you sure you want to delete?', [
+                    {
+                      text: 'Cancel',
+                      onPress: () => console.log('Cancel Pressed'),
+                      style: 'cancel',
+                    },
+                    {
+                      text: 'Yes',
+                      onPress: () => doActions(item, action, index),
+                    },
+                  ])
+                : doActions(item, action, index)
+            }>
             {loaderIndex === item._id ? (
               <ActivityIndicator color={'white'} />
             ) : (

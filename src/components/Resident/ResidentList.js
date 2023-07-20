@@ -6,6 +6,7 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
@@ -120,7 +121,20 @@ const ResidentList = ({navigation}) => {
             }
             offColor={COLORS.inputBorder}
             size="medium"
-            onToggle={isOn => isAdmin && changeUserStatus(item, index)}
+            onToggle={isOn =>
+              isAdmin &&
+              Alert.alert('', 'Are you sure you want to update the Status?', [
+                {
+                  text: 'Cancel',
+                  onPress: () => console.log('Cancel Pressed'),
+                  style: 'cancel',
+                },
+                {
+                  text: 'Yes',
+                  onPress: () => changeUserStatus(item, index),
+                },
+              ])
+            }
           />
         </View>
         <DescriptionText
@@ -138,7 +152,17 @@ const ResidentList = ({navigation}) => {
                   onPress={() =>
                     i === 0
                       ? navigation.navigate('AddNewResident', {item: item})
-                      : deleteUser(item, index)
+                      : Alert.alert('', 'Are you sure you want to delete?', [
+                          {
+                            text: 'Cancel',
+                            onPress: () => console.log('Cancel Pressed'),
+                            style: 'cancel',
+                          },
+                          {
+                            text: 'Yes',
+                            onPress: () => deleteUser(item, index),
+                          },
+                        ])
                   }>
                   <LinearGradient
                     colors={[

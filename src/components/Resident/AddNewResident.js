@@ -33,6 +33,7 @@ const AddNewResident = ({navigation, route}) => {
           countryCode: '+91',
         },
   );
+  console.log(route.params);
   const [ownerDetail, setOwnerDetail] = useState(
     route && route.params
       ? {
@@ -145,9 +146,8 @@ const AddNewResident = ({navigation, route}) => {
           ? {
               ...data,
               ...ownerDetail,
-              designationId: '64acf3a46731512c4a371ffe',
             }
-          : {...data, designationId: '64acf3a46731512c4a371ffe'};
+          : {...data};
 
       delete bodyforapi.role;
 
@@ -169,6 +169,7 @@ const AddNewResident = ({navigation, route}) => {
       SnackError('Something Went Wrong, please try again later.');
       setLoader(false);
     }
+    setLoader(false);
   };
 
   const renderUI = (item, index, data, setData) => {
@@ -179,6 +180,7 @@ const AddNewResident = ({navigation, route}) => {
           <TextInput
             placeholder={item.title}
             style={styles.textInput}
+            editable={!route?.params?.item}
             value={data[item.param]}
             onChangeText={text => setData({...data, [item.param]: text})}
           />

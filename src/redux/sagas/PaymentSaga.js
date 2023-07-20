@@ -63,7 +63,10 @@ function* getPaymentDetail(action) {
       });
       yield put({type: PAYMENT_DETAIL_SUCCESS, payload: [...arr]});
     } else {
-      yield put({type: PAYMENT_DETAIL_FAIL, payload: Data?.data?.message});
+      yield put({
+        type: PAYMENT_DETAIL_FAIL,
+        payload: 'Please Add maintance First.',
+      });
     }
   } catch (e) {
     yield put({

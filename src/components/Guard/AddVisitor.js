@@ -78,8 +78,12 @@ const AddVisitor = ({navigation, route}) => {
       });
     }
     setLoader(true);
+    const paylaod = {
+      ...data,
+      countryCode: '+' + data.countryCode,
+    };
     try {
-      const Result = await addVisitorFormData(data);
+      const Result = await addVisitorFormData(paylaod);
       if (Result.success) {
         setAlertData({
           visible: true,

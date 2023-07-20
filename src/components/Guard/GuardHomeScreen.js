@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
@@ -16,7 +17,13 @@ import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 import VisitorFilters from './VisitorFilters';
-import {API_URL, GetData, PostData, PutData} from '../../assets/services';
+import {
+  API_URL,
+  GetData,
+  PostData,
+  PutData,
+  SnackError,
+} from '../../assets/services';
 import {
   GET_VISITORS_LIST_REQUEST,
   UPDATE_VISITORS_LIST,
@@ -62,33 +69,45 @@ const GuardHomeScreen = ({navigation}) => {
   };
 
   const checkOutUser = async (item, index) => {
-    setOutIndex(index);
-    const payload = {
-      url: API_URL + 'visitor/out',
-      body: {
-        visitorId: item._id,
+    Alert.alert('', 'Are you sure you want to Exit?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
       },
-    };
+      {
+        text: 'Yes',
+        onPress: async () => {
+          setOutIndex(index);
+          const payload = {
+            url: API_URL + 'visitor/out',
+            body: {
+              visitorId: item._id,
+            },
+          };
 
-    try {
-      const Result = await PutData(payload);
-      if (Result.data.success) {
-        if (filter.data.length > 0) {
-          const arr = filter.data;
-          arr[index].outTime = moment().format('HH:MM a');
-          setFilter({...filter, data: [...arr]});
-        } else {
-          const arr = visitors.data;
-          arr[index].outTime = moment().format('HH:MM a');
-          dispatch({type: UPDATE_VISITORS_LIST, payload: arr});
-        }
-      } else {
-        errorAlert(Result.data.message);
-      }
-    } catch (e) {
-      errorAlert('Something went wrong please try again later.');
-    }
-    setOutIndex(null);
+          try {
+            const Result = await PutData(payload);
+            if (Result.data.success) {
+              if (filter.data.length > 0) {
+                const arr = filter.data;
+                arr[index].outTime = moment().format('HH:MM a');
+                setFilter({...filter, data: [...arr]});
+              } else {
+                const arr = visitors.data;
+                arr[index].outTime = moment().format('HH:MM a');
+                dispatch({type: UPDATE_VISITORS_LIST, payload: arr});
+              }
+            } else {
+              errorAlert(Result.data.message);
+            }
+          } catch (e) {
+            errorAlert('Something went wrong please try again later.');
+          }
+          setOutIndex(null);
+        },
+      },
+    ]);
 
     // const Result = await PostData(payload);
   };
@@ -104,8 +123,15 @@ const GuardHomeScreen = ({navigation}) => {
     setFilter({...filter, loader: true});
     try {
       const Result = await GetData(payload);
+      console.log(Result.data);
       if (Result.data.success) {
-        setFilter({loader: false, data: Result.data.data});
+        if (Result.data.data.length > 0) {
+          setFilter({loader: false, data: Result.data.data});
+        } else {
+          SnackError('No Filter Data Found.');
+          setFilter({loader: false, data: []});
+          setFilters({From: '', To: ''});
+        }
       } else {
         errorAlert(Result.data.message);
         setFilter({...filter, loader: false});
@@ -117,7 +143,8 @@ const GuardHomeScreen = ({navigation}) => {
   };
 
   const visitorsListUI = ({item, index}) => {
-    const {image, houseNumber, phoneNumber, createdDate, name} = item;
+    const {image, houseNumber, phoneNumber, createdDate, name, countryCode} =
+      item;
     return (
       <View style={[styles.cardCnt]}>
         <View style={{flexDirection: 'row'}}>
@@ -125,7 +152,9 @@ const GuardHomeScreen = ({navigation}) => {
           <View style={styles.cardUserMainDetail}>
             <View style={{marginLeft: 10}}>
               <Text style={styles.cardName}>{name}</Text>
-              <Text style={styles.cardPhoneNumber}>{phoneNumber}</Text>
+              <Text style={styles.cardPhoneNumber}>
+                {countryCode + ' ' + phoneNumber}
+              </Text>
             </View>
             <View style={{height: '80%'}}>
               <Text style={styles.cardDate}>
@@ -166,7 +195,7 @@ const GuardHomeScreen = ({navigation}) => {
         <TouchableOpacity
           onPress={() => !item.outTime && checkOutUser(item, index)}>
           <Text style={styles.outTimeButton}>
-            {item.outTime ? item.outTime : 'Exit Visitor'}
+            {item.outTime ? 'Out Time: ' + item.outTime : 'Exit Visitor'}
           </Text>
         </TouchableOpacity>
       </View>

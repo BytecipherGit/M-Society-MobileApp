@@ -126,7 +126,11 @@ const ContactScreen = ({navigation, route}) => {
     <View style={globalStyle.cnt}>
       <AppHeader
         navigation={navigation}
-        title={route?.params?.screenName === 'Service' ? 'Service' : 'Contact'}
+        title={
+          route?.params?.screenName === 'Service'
+            ? 'Service'
+            : 'Phone Directory'
+        }
       />
 
       <FlatList

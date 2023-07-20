@@ -247,17 +247,33 @@ const AddComplaints = ({route}) => {
                     style={{alignSelf: 'flex-end', marginTop: '3%'}}
                     renderItem={({item, index}) => {
                       return (
-                        <TouchableOpacity
-                          onPress={() =>
-                            navigation.navigate('ImageViewScreen', {
-                              img: item.uri,
-                            })
-                          }
-                          onLongPress={() => deleteImage(index)}>
-                          <ImageBackground
-                            source={{uri: item?.uri}}
-                            style={[styles.img]}></ImageBackground>
-                        </TouchableOpacity>
+                        <View style={{padding: 20}}>
+                          <TouchableOpacity
+                            onPress={() =>
+                              navigation.navigate('ImageViewScreen', {
+                                img: item.uri,
+                              })
+                            }>
+                            <ImageBackground
+                              source={{uri: item?.uri}}
+                              style={[styles.img]}
+                              imageStyle={{borderRadius: 5}}></ImageBackground>
+                            <TouchableOpacity
+                              style={styles.closeIconCnt}
+                              onPress={() => deleteImage(index)}>
+                              <Entypo
+                                name="cross"
+                                size={23}
+                                color="red"
+                                style={{
+                                  backgroundColor: 'white',
+                                  borderRadius: 1000,
+                                  marginBottom: '4%',
+                                }}
+                              />
+                            </TouchableOpacity>
+                          </TouchableOpacity>
+                        </View>
                       );
                     }}
                   />
@@ -333,8 +349,8 @@ const styles = StyleSheet.create({
   },
 
   img: {
-    height: 44,
-    width: 44,
+    height: 50,
+    width: 50,
     backgroundColor: COLORS.themeColor,
     marginHorizontal: 3,
     borderRadius: 5,
@@ -440,5 +456,14 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
+  },
+  closeIconCnt: {
+    alignSelf: 'flex-end',
+    position: 'absolute',
+    marginTop: '-7%',
+    marginRight: '-10%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 1000,
   },
 });

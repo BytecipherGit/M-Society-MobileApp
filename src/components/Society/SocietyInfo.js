@@ -45,7 +45,9 @@ const SocietyInfo = ({navigation, route}) => {
       {/* Header */}
       <ImageBackground
         source={{
-          uri: 'https://img.freepik.com/free-photo/analog-landscape-city-with-buildings_23-2149661456.jpg?w=1800&t=st=1681467853~exp=1681468453~hmac=2a4d43b5ce3021fa00974f7761f613faf74ba2e68427231142da0ae1a17a11f4',
+          uri: data?.data?.society?.logo
+            ? data?.data?.society?.logo
+            : 'https://img.freepik.com/free-photo/analog-landscape-city-with-buildings_23-2149661456.jpg?w=1800&t=st=1681467853~exp=1681468453~hmac=2a4d43b5ce3021fa00974f7761f613faf74ba2e68427231142da0ae1a17a11f4',
         }}
         style={{
           height: 347,
@@ -272,5 +274,23 @@ const styles = StyleSheet.create({
     color: '#707070',
     marginBottom: 15,
     lineHeight: 25,
+  },
+  logoStyle: {
+    height: 100,
+    width: 100,
+    borderRadius: 1000,
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.white,
+    backgroundColor: COLORS.white,
+    shadowColor: 'white',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+
+    elevation: 10,
   },
 });

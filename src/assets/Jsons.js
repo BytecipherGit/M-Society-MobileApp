@@ -438,6 +438,12 @@ export const guardDetailOptions = [
     param: 'dob',
     icon: <CalendotWithTheme />,
   },
+  {
+    id: 5,
+    title: 'ID Proof',
+    param: 'idProof',
+    icon: <CalendotWithTheme />,
+  },
 ];
 export const VisitorsFakeList = [
   {
@@ -533,14 +539,14 @@ export let AddResidenceUserJson = [
     type: 'dropDown',
     value: [],
   },
-  // {
-  //   id: 6,
-  //   title: 'Role',
-  //   keyboardType: 'default',
-  //   param: 'role',
-  //   type: 'dropDown',
-  //   value: [],
-  // },
+  {
+    id: 6,
+    title: 'Role',
+    keyboardType: 'default',
+    param: 'designationId',
+    type: 'dropDown',
+    value: [],
+  },
   {
     id: 7,
     title: 'Resident Type',
