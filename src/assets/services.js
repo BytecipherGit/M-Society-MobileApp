@@ -1,5 +1,6 @@
-export const API_URL = 'https://a1ab-223-229-196-128.ngrok-free.app/api/';
+// export const API_URL = 'https://a1ab-223-229-196-128.ngrok-free.app/api/';
 // export const API_URL = 'http://43.231.127.169:9001/api/';
+export const API_URL = 'http://msociety.in:9001/api/';
 
 // swagger https://deed-122-168-229-41.ngrok-free.app/api-docs/#/
 
@@ -31,6 +32,9 @@ export const GetData = async payload => {
 export const PostData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
+  console.log('====================================');
+  console.log(payload.url, payload.body);
+  console.log('====================================');
   // console.log(Token.accessToken);
   return axios
     .post(

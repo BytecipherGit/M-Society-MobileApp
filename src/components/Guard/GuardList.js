@@ -47,6 +47,9 @@ const GuardList = ({navigation}) => {
     });
     try {
       const Result = await GetData({url: API_URL + 'guard/app/all'});
+      console.log('====================================');
+      console.log(Result.data.data);
+      console.log('====================================');
       if (Result.data.success) {
         if (Result.data.data.length > 0) {
           setData({
@@ -102,6 +105,17 @@ const GuardList = ({navigation}) => {
     });
   };
 
+  const extractCountryCode = inputString => {
+    const countryCode = inputString.replace(/[^0-9]/g, '');
+
+    // Check if the countryCode starts with multiple '+' symbols and remove them
+    if (countryCode.startsWith('++')) {
+      return countryCode.replace(/^[\+]+/, '');
+    }
+
+    return countryCode;
+  };
+
   return (
     <View style={globalStyle.cnt}>
       <AppHeader navigation={navigation} title="Society Guards" />
@@ -112,42 +126,54 @@ const GuardList = ({navigation}) => {
           ListEmptyComponent={() => (
             <AppLoaderSrceen loader={data.loader} error={data.error} />
           )}
-          renderItem={({item, index}) => (
-            <>
-              <View style={style.card}>
-                <Image
-                  style={style.profileImg}
-                  source={{uri: item?.profileImage}}
-                />
-                <View style={style.cardDetailCnt}>
-                  <TitleText
-                    text={item?.name}
-                    style={{marginBottom: '1%', marginLeft: '1%'}}
+          renderItem={({item, index}) => {
+            let test = item.countryCode;
+            console.log('====================================');
+            console.log(extractCountryCode(item.countryCode));
+            console.log('====================================');
+            return (
+              <>
+                <View style={style.card}>
+                  <Image
+                    style={style.profileImg}
+                    source={{uri: item?.profileImage}}
+                    resizeMode="stretch"
                   />
-                  <LinearGradient
-                    colors={['#FF7334', '#FFA13C']}
-                    start={{x: 0.0, y: 0.0}}
-                    end={{x: 1.0, y: 1.0}}
-                    locations={[0.0, 1.0]}
-                    style={style.linearGradient}>
-                    {item.shift === 'day' ? <Sun /> : <Moon />}
-                    <DescriptionText
-                      text={'+' + item.countryCode + ' ' + item.phoneNumber}
-                      style={style.shiftTxt}
+                  <View style={style.cardDetailCnt}>
+                    <TitleText
+                      text={item?.name}
+                      style={{marginBottom: '1%', marginLeft: '1%'}}
                     />
-                  </LinearGradient>
+                    <LinearGradient
+                      colors={['#FF7334', '#FFA13C']}
+                      start={{x: 0.0, y: 0.0}}
+                      end={{x: 1.0, y: 1.0}}
+                      locations={[0.0, 1.0]}
+                      style={style.linearGradient}>
+                      {item.shift === 'day' ? <Sun /> : <Moon />}
+                      <DescriptionText
+                        text={
+                          '+' +
+                          extractCountryCode(item.countryCode) +
+                          ' ' +
+                          item.phoneNumber
+                        }
+                        style={style.shiftTxt}
+                      />
+                    </LinearGradient>
+                  </View>
                 </View>
-              </View>
-              {isAdmin && (
-                <AppCrudActionButton
-                  item={item}
-                  index={index}
-                  loaderIndex={deleteLoader}
-                  doActions={doActions}
-                />
-              )}
-            </>
-          )}
+                {isAdmin && (
+                  <AppCrudActionButton
+                    item={item}
+                    index={index}
+                    loaderIndex={deleteLoader}
+                    doActions={doActions}
+                  />
+                )}
+              </>
+            );
+          }}
           extraData={item => item._id}
         />
         {isAdmin && (

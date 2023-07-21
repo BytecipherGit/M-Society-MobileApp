@@ -601,6 +601,7 @@ export const AddGuardJson = [
     title: 'Phone Number',
     placeHolder: '0000000000',
     param: 'phoneNumber',
+    keyboardType: 'phone-pad',
   },
   {
     id: 4,

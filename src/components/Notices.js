@@ -116,9 +116,13 @@ const Notices = ({navigation}) => {
                       <Text style={{color: 'red'}}>-{item.status}</Text>
                     )}
                   </Text>
-                  <Text numberOfLines={2} style={style.cardDesc}>
-                    {item.description}
-                  </Text>
+                  <View style={{width: '17%'}}>
+                    <Text
+                      numberOfLines={2}
+                      style={[style.cardDesc, {width: '100%'}]}>
+                      {item.description}
+                    </Text>
+                  </View>
                   <Text style={style.cardDate}>
                     {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
                   </Text>
@@ -176,7 +180,7 @@ const style = StyleSheet.create({
     fontFamily: 'Axiforma-Medium',
     fontSize: 18,
     color: COLORS.blackFont,
-    marginBottom: '3%',
+    marginBottom: '.5%',
   },
   cardDesc: {
     fontFamily: 'Inter-Regular',

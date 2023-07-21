@@ -20,6 +20,16 @@ const AppTextInput = ({
   onSelectCountry = () => null,
 }) => {
   const [countryPickerVisible, setCountryPickerVisible] = useState(false);
+  const extractCountryCode = inputString => {
+    const countryCode = inputString.replace(/[^0-9]/g, '');
+
+    // Check if the countryCode starts with multiple '+' symbols and remove them
+    if (countryCode.startsWith('++')) {
+      return countryCode.replace(/^[\+]+/, '');
+    }
+
+    return countryCode;
+  };
   return (
     <View
       style={[
@@ -48,7 +58,7 @@ const AppTextInput = ({
             },
             countryCodeStyles && countryCodeStyles,
           ]}>
-          +{countryCode}{' '}
+          +{extractCountryCode(countryCode)}{' '}
         </Text>
       )}
       {countryCode && (

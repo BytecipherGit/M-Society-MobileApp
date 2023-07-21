@@ -137,7 +137,11 @@ const CreateGuard = ({navigation, route}) => {
     try {
       const Result = await CreateGuardAPI({
         url: API_URL + 'guard/',
-        body: data,
+        body: {
+          ...data,
+          idProof: data.profileImage,
+          countryCode: '+' + data.countryCode,
+        },
       });
 
       if (Result.response) {
@@ -174,7 +178,11 @@ const CreateGuard = ({navigation, route}) => {
     try {
       const Result = await CreateGuardAPI({
         url: API_URL + 'guard/profileUpdate',
-        body: data,
+        body: {
+          ...data,
+          idProof: data.profileImage,
+          countryCode: '+' + data.countryCode,
+        },
         update: true,
       });
 
@@ -190,25 +198,48 @@ const CreateGuard = ({navigation, route}) => {
     setLoader(false);
   };
 
+  const eighteenYearsAgo = new Date();
+  eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+
   return (
     <View style={globalStyle.cnt}>
       <AppHeader
         navigation={navigation}
         title={isEditable ? 'Update Guard' : 'Add Guard'}
       />
-      <DatePicker
-        modal
-        open={datePicker.visible}
-        mode="date"
-        date={new Date()}
-        onConfirm={date => {
-          setDatePicker({...datePicker, visible: false});
-          setData({...data, [datePicker.param]: `${date}`});
-        }}
-        onCancel={() => {
-          setDatePicker({...datePicker, visible: false, param: ''});
-        }}
-      />
+      {console.log(datePicker.param)}
+      {datePicker.param === 'dob' ? (
+        <DatePicker
+          modal
+          open={datePicker.visible}
+          mode="date"
+          date={new Date()}
+          maximumDate={eighteenYearsAgo}
+          onConfirm={date => {
+            setDatePicker({...datePicker, visible: false});
+            setData({...data, [datePicker.param]: `${date}`});
+          }}
+          onCancel={() => {
+            setDatePicker({...datePicker, visible: false, param: ''});
+          }}
+        />
+      ) : (
+        <DatePicker
+          modal
+          open={datePicker.visible}
+          mode="date"
+          date={new Date()}
+          minimumDate={new Date()}
+          onConfirm={date => {
+            setDatePicker({...datePicker, visible: false});
+            setData({...data, [datePicker.param]: `${date}`});
+          }}
+          onCancel={() => {
+            setDatePicker({...datePicker, visible: false, param: ''});
+          }}
+        />
+      )}
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={true}
@@ -222,8 +253,9 @@ const CreateGuard = ({navigation, route}) => {
               <DescriptionText text={item.title} style={style.detailTitle} />
               {item.param === 'phoneNumber' ? (
                 <AppTextInput
-                  item={{title: item.placeHolder}}
+                  item={{title: item.placeHolder, ...item}}
                   value={data[item.param]}
+                  stopEditable={isEditable}
                   countryCode={data.countryCode}
                   onSelectCountry={e => {
                     setData({...data, countryCode: e.callingCode});
@@ -235,7 +267,8 @@ const CreateGuard = ({navigation, route}) => {
                   <ImageBackground
                     source={{uri: cloneProfileImg}}
                     style={{height: 135, width: '100%', borderRadius: 10}}
-                    imageStyle={{borderRadius: 10}}>
+                    imageStyle={{borderRadius: 10}}
+                    resizeMode="contain">
                     <TouchableOpacity
                       style={style.logoImg}
                       onPress={() => setCloneProfileImg('')}>
