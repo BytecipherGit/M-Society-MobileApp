@@ -116,7 +116,7 @@ const Notices = ({navigation}) => {
                       <Text style={{color: 'red'}}>-{item.status}</Text>
                     )}
                   </Text>
-                  <View style={{width: '17%'}}>
+                  <View style={{width: '16%'}}>
                     <Text
                       numberOfLines={2}
                       style={[style.cardDesc, {width: '100%'}]}>

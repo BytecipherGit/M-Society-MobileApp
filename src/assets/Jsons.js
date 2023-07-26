@@ -610,6 +610,12 @@ export const AddGuardJson = [
     param: 'profileImage',
   },
   {
+    id: 8,
+    title: 'Id Proof',
+    placeHolder: 'Click to add Guard Id profile.',
+    param: 'idProof',
+  },
+  {
     id: 5,
     title: 'Date Of Birth',
     placeHolder: 'Click to select.',

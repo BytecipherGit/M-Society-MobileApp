@@ -2,8 +2,6 @@ import {
   View,
   Text,
   FlatList,
-  Dimensions,
-  ScrollView,
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
@@ -40,6 +38,7 @@ const CreateGuard = ({navigation, route}) => {
     shift: '',
     countryCode: '91',
     joiningDate: '',
+    idProof: {},
   });
   const [datePicker, setDatePicker] = useState({
     visible: false,
@@ -47,6 +46,7 @@ const CreateGuard = ({navigation, route}) => {
   });
   const [loader, setLoader] = useState(false);
   const [cloneProfileImg, setCloneProfileImg] = useState('');
+  const [cloneIdProof, setCloneIdProof] = useState('');
 
   useEffect(() => {
     if (isEditable) {
@@ -61,6 +61,7 @@ const CreateGuard = ({navigation, route}) => {
         joiningDate: route.params.data.joiningDate,
       });
       setCloneProfileImg(route.params.data.profileImage);
+      setCloneIdProof(route.params.data.idProof);
     }
   }, [isEditable]);
 
@@ -74,7 +75,7 @@ const CreateGuard = ({navigation, route}) => {
     return `${day}-${month}-${year}`;
   };
 
-  const pickImage = (type, setType) => {
+  const pickImage = (type, setType, param) => {
     // Image, Logo
     if (type === 'camera') {
       launchCamera(
@@ -98,21 +99,21 @@ const CreateGuard = ({navigation, route}) => {
         },
         response => {
           if (response.didCancel) {
-            console.log('Permission cancelled', response);
+            console.log('Permission cancelled', response, param);
           } else if (response.error) {
             console.log('error =>', response);
           } else {
-            setImage(response.assets[0], setType);
+            setImage(response.assets[0], setType, param);
           }
         },
       );
     }
   };
 
-  const setImage = d => {
+  const setImage = (d, type, param) => {
     setData({
       ...data,
-      profileImage: {
+      [param]: {
         uri: d.uri,
         type: d.type,
         name: d.fileName,
@@ -129,7 +130,8 @@ const CreateGuard = ({navigation, route}) => {
       !data.name ||
       !data.phoneNumber ||
       !data.shift ||
-      !data.profileImage.uri
+      !data.profileImage.uri ||
+      !data.idProof.uri
     ) {
       return SnackError("Please fill all the data's");
     }
@@ -139,7 +141,6 @@ const CreateGuard = ({navigation, route}) => {
         url: API_URL + 'guard/',
         body: {
           ...data,
-          idProof: data.profileImage,
           countryCode: '+' + data.countryCode,
         },
       });
@@ -169,8 +170,12 @@ const CreateGuard = ({navigation, route}) => {
       return SnackError("Please fill all the data's");
     }
 
-    if (!cloneProfileImg && !data.profileImage.uri) {
+    if (!cloneProfileImg && !data?.profileImage?.uri) {
       return SnackError('Please select profile image');
+    }
+
+    if (!cloneIdProof && !data?.idProof?.uri) {
+      return SnackError('Please Upload Id proof first');
     }
 
     setLoader(true);
@@ -180,7 +185,6 @@ const CreateGuard = ({navigation, route}) => {
         url: API_URL + 'guard/profileUpdate',
         body: {
           ...data,
-          idProof: data.profileImage,
           countryCode: '+' + data.countryCode,
         },
         update: true,
@@ -198,16 +202,21 @@ const CreateGuard = ({navigation, route}) => {
     setLoader(false);
   };
 
+  const renderImage = item => {
+    if (data?.profileImage?.uri && item.param === 'profileImage') {
+      return true;
+    }
+
+    if (data?.idProof?.uri && item.param === 'idProof') {
+      return true;
+    }
+  };
+
   const eighteenYearsAgo = new Date();
   eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
 
   return (
     <View style={globalStyle.cnt}>
-      <AppHeader
-        navigation={navigation}
-        title={isEditable ? 'Update Guard' : 'Add Guard'}
-      />
-      {console.log(datePicker.param)}
       {datePicker.param === 'dob' ? (
         <DatePicker
           modal
@@ -239,15 +248,21 @@ const CreateGuard = ({navigation, route}) => {
           }}
         />
       )}
+      <AppHeader
+        navigation={navigation}
+        title={isEditable ? 'Update Guard' : 'Add Guard'}
+      />
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        automaticallyAdjustKeyboardInsets={true}
-        contentContainerStyle={{
-          height: Dimensions.get('window').height,
-          flexGrow: 0.5,
-        }}>
-        {AddGuardJson.map((item, index) => {
+      <FlatList
+        data={AddGuardJson}
+        ListFooterComponent={() => (
+          <View
+            style={{
+              height: 20,
+            }}
+          />
+        )}
+        renderItem={({item, idex}) => {
           return (
             <View style={{width: '90%', alignSelf: 'center'}} key={item.id}>
               <DescriptionText text={item.title} style={style.detailTitle} />
@@ -262,16 +277,26 @@ const CreateGuard = ({navigation, route}) => {
                   }}
                   setValue={txt => setData({...data, [item.param]: txt})}
                 />
-              ) : item.param === 'profileImage' ? (
-                cloneProfileImg ? (
+              ) : item.param === 'profileImage' || item.param === 'idProof' ? (
+                (cloneProfileImg && item.param === 'profileImage') ||
+                (cloneIdProof && item.param === 'idProof') ? (
                   <ImageBackground
-                    source={{uri: cloneProfileImg}}
+                    source={{
+                      uri:
+                        item.param === 'profileImage'
+                          ? cloneProfileImg
+                          : cloneIdProof,
+                    }}
                     style={{height: 135, width: '100%', borderRadius: 10}}
                     imageStyle={{borderRadius: 10}}
                     resizeMode="contain">
                     <TouchableOpacity
                       style={style.logoImg}
-                      onPress={() => setCloneProfileImg('')}>
+                      onPress={() => {
+                        item.param === 'profileImage'
+                          ? setCloneProfileImg('')
+                          : setCloneIdProof('');
+                      }}>
                       <AntDesign
                         name="closecircle"
                         size={30}
@@ -279,14 +304,23 @@ const CreateGuard = ({navigation, route}) => {
                       />
                     </TouchableOpacity>
                   </ImageBackground>
-                ) : data.profileImage && data.profileImage.uri ? (
+                ) : renderImage(item) ? (
                   <ImageBackground
-                    source={{uri: data.profileImage.uri}}
+                    source={{
+                      uri:
+                        item.param === 'profileImage'
+                          ? data.profileImage.uri
+                          : data.idProof.uri,
+                    }}
                     style={{height: 135, width: '100%', borderRadius: 10}}
                     imageStyle={{borderRadius: 10}}>
                     <TouchableOpacity
                       style={style.logoImg}
-                      onPress={() => setData({...data, profileImage: {}})}>
+                      onPress={() => {
+                        item.param === 'profileImage'
+                          ? setData({...data, profileImage: {}})
+                          : setData({...data, idProof: {}});
+                      }}>
                       <AntDesign
                         name="closecircle"
                         size={30}
@@ -297,7 +331,7 @@ const CreateGuard = ({navigation, route}) => {
                 ) : (
                   <AppFilePicker
                     titleText={item.placeHolder}
-                    onPress={op => pickImage(op, 'Image')}
+                    onPress={op => pickImage(op, 'Image', item.param)}
                   />
                 )
               ) : item.param === 'dob' || item.param === 'joiningDate' ? (
@@ -350,8 +384,20 @@ const CreateGuard = ({navigation, route}) => {
               )}
             </View>
           );
+        }}
+      />
+
+      {/* <ScrollView
+        showsVerticalScrollIndicator={false}
+        // automaticallyAdjustKeyboardInsets={true}
+        contentContainerStyle={{
+          height: Dimensions.get('window').height,
+          flexGrow: 0.5,
+        }}>
+        {AddGuardJson.map((item, index) => {
+          
         })}
-      </ScrollView>
+      </ScrollView> */}
       <AppButton
         buttonTitle={isEditable ? 'UPDATE' : 'ADD NEW GUARD'}
         buttonStyle={style.addGuardButton}

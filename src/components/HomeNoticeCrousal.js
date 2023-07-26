@@ -109,7 +109,7 @@ const style = StyleSheet.create({
   },
   cardCnt: {
     width: Dimensions.get('window').width / 1.07,
-    // height: 220,
+    // height: 230,
     backgroundColor: 'white',
     marginTop: 15,
     borderRadius: 20,

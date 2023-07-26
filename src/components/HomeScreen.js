@@ -212,15 +212,15 @@ const HomeScreen = ({navigation}) => {
         <View
           style={{
             height:
-              Notice.data.length > 0
-                ? Notice.data.length === 1
-                  ? Dimensions.get('window').height / 3
-                  : Dimensions.get('window').height / 2.9
+              Notice?.data?.length > 0
+                ? Notice?.data?.length === 1
+                  ? 250
+                  : 300
                 : '5%',
           }}>
           <ImageBackground
             source={require('../assets/images/gridBackground.png')}
-            style={{flex: 0.8, marginHorizontal: 15, marginTop: '2%'}}
+            style={{flex: 1, marginHorizontal: 15, marginTop: '2%'}}
             tintColor="rgba(255,255,255,.2)" // Set the desired tint color here
           >
             {/* Header */}
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
   },
   card: {
     height: 110,
-    width: 170,
+    width: '90%',
     backgroundColor: 'white',
     borderRadius: 10,
     shadowOffset: {width: 0, height: 0},

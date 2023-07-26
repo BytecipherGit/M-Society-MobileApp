@@ -36,7 +36,7 @@ const slides = [
     key: '3',
     title: 'Playing and walking',
     text: 'On the other hand, we denounce with righteous indignation and dislike men who are so beguiled ',
-    Icon: <WalkSvg width={330} />,
+    Icon: <WalkSvg width={250} />,
   },
 ];
 
@@ -58,7 +58,7 @@ const OnboardingScreen = ({navigation, route}) => {
         <View
           style={{
             width: '100%',
-            height: 450,
+            height: '60%',
             alignSelf: 'center',
             justifyContent: 'center',
             alignItems: 'center',
@@ -97,6 +97,7 @@ const OnboardingScreen = ({navigation, route}) => {
           </View>
           <TouchableOpacity
             activeOpacity={0.8}
+            style={{}}
             onPress={() => {
               const currentSlide = sliderRef.current.state.activeIndex;
 
@@ -122,11 +123,13 @@ const OnboardingScreen = ({navigation, route}) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Image
-                source={require('../assets/images/NextAerrow.png')}
-                style={{width: 22.09, height: 24}}
-                resizeMode="contain"
-              />
+              <TouchableOpacity>
+                <Image
+                  source={require('../assets/images/NextAerrow.png')}
+                  style={{width: 22.09, height: 24}}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
             </LinearGradient>
           </TouchableOpacity>
         </View>
@@ -158,6 +161,7 @@ const OnboardingScreen = ({navigation, route}) => {
             SKIP
           </Text>
         </TouchableOpacity>
+        {/* {_renderItem({item: slides[0]})} */}
         <AppIntroSlider
           ref={sliderRef}
           renderItem={_renderItem}
@@ -166,8 +170,9 @@ const OnboardingScreen = ({navigation, route}) => {
           doneLabel={''}
           renderDoneButton={() => null}
           renderNextButton={() => null}
+          style={{flex: 1}}
           activeDotStyle={styles.acriveDot}
-          dotStyle={styles.inActiveDot}
+          dotStyle={[styles.inActiveDot]}
         />
       </ImageBackground>
     </SafeAreaView>
@@ -180,14 +185,16 @@ const styles = StyleSheet.create({
     width: 25,
     height: 6,
     marginBottom:
-      Dimensions.get('window').height / (Platform.OS === 'android' ? 1.4 : 1.8),
+      Dimensions.get('window').height /
+      (Platform.OS === 'android' ? 1.4 : 1.55),
   },
   inActiveDot: {
     width: 16,
     height: 6,
     backgroundColor: '#D1D1D1',
     marginBottom:
-      Dimensions.get('window').height / (Platform.OS === 'android' ? 1.4 : 1.8),
+      Dimensions.get('window').height /
+      (Platform.OS === 'android' ? 1.4 : 1.55),
   },
   cnt: {flex: 1, backgroundColor: COLORS.themeColor},
   topImageCnt: {width: '100%', height: '17%'},

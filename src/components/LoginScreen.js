@@ -134,7 +134,7 @@ const LoginScreen = ({navigation}) => {
         source={require('..//assets/images/gridBackground.png')}>
         <Image
           source={require('../assets/images/LoginPng.png')}
-          style={styles.mainImage}
+          style={[styles.mainImage, {height: '40%'}]}
           resizeMode="contain"
         />
         <View style={styles.card}>

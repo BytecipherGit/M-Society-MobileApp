@@ -205,6 +205,14 @@ const AddComplaints = ({route}) => {
         <View style={styles.card}>
           <FlatList
             data={[1]}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={() => (
+              <View
+                style={{
+                  height: 100,
+                }}
+              />
+            )}
             renderItem={() => {
               return (
                 <View>
