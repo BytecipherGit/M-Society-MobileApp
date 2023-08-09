@@ -14,20 +14,26 @@ const AppButton = ({
   buttonStyle,
   TextStyle,
   renderIcon = () => null,
+  TouchableStyle = {},
+  colorArray = [],
 }) => {
   const state = useSelector(state => state.AuthReducer.userDetail);
 
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} style={TouchableStyle}>
       <LinearGradient
-        colors={[
-          state && state.data && state.data.societyId
-            ? state.data.societyId.buttonHoverBgColour
-            : '#FF7334',
-          state && state.data && state.data.societyId
-            ? state.data.societyId.buttonHoverBgColour
-            : '#FFA13C',
-        ]}
+        colors={
+          colorArray.length > 0
+            ? colorArray
+            : [
+                state && state.data && state.data.societyId
+                  ? state.data.societyId.buttonHoverBgColour
+                  : '#FF7334',
+                state && state.data && state.data.societyId
+                  ? state.data.societyId.buttonHoverBgColour
+                  : '#FFA13C',
+              ]
+        }
         start={{x: 0.0, y: 0.0}}
         end={{x: 1.0, y: 1.0}}
         locations={[0.0, 1.0]}

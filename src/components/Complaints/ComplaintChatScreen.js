@@ -120,7 +120,6 @@ const ComplaintChatScreen = ({navigation, route}) => {
       cancel: {Title: 'Cancel', value: 'cancel'},
       reopen: {Title: 'Re-open', value: 'reopen'},
     };
-    console.log(item.status);
     if (UserDetail.isAdmin) {
       item.status === 'new' &&
         statusArray.push(obj.inprogress, obj.resolved, obj.cancel);
@@ -128,7 +127,6 @@ const ComplaintChatScreen = ({navigation, route}) => {
       item.status === 'inprogress' &&
         statusArray.push(obj.resolved, obj.cancel);
     } else {
-      console.log('is normal user');
       item.status === 'new' && statusArray.push({Title: 'New', value: 'new'});
       item.status === 'resolved' && statusArray.push(obj.reopen);
     }

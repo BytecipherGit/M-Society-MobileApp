@@ -31,6 +31,9 @@ import {useIsFocused} from '@react-navigation/native';
 import axios from 'axios';
 import ReactNativeModal from 'react-native-modal';
 import AppButton from '../ReUsableComponents/AppButton';
+import VisitorsModal from '../ReUsableComponents/VisitorsModal';
+import {useRecoilState} from 'recoil';
+import {CheckVisitors} from '../assets/GlobalStates/RecoilGloabalState';
 
 const HomeScreen = ({navigation}) => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -40,6 +43,7 @@ const HomeScreen = ({navigation}) => {
     title: '',
     type: '',
   });
+  const [visitorsCheck, setVisitorsCheck] = useRecoilState(CheckVisitors);
   const state = useSelector(state => state.AuthReducer);
   const Notice = useSelector(state => state.NoticeReducer);
   const stateForTheme = useSelector(state => state.AuthReducer.userDetail);
@@ -55,6 +59,9 @@ const HomeScreen = ({navigation}) => {
       getNoticeList();
       getUserType();
       getSocietyInfo();
+      setVisitorsCheck({
+        visitors: visitorsCheck.visitors + 1,
+      });
     }
   }, [isFocus]);
 

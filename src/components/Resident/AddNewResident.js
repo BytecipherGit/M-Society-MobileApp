@@ -33,7 +33,6 @@ const AddNewResident = ({navigation, route}) => {
           countryCode: '+91',
         },
   );
-  console.log(route.params);
   const [ownerDetail, setOwnerDetail] = useState(
     route && route.params
       ? {
@@ -150,8 +149,6 @@ const AddNewResident = ({navigation, route}) => {
           : {...data};
 
       delete bodyforapi.role;
-
-      console.log(bodyforapi);
 
       const Result = await PostData({
         url: API_URL + 'admin/residentialUser/add',

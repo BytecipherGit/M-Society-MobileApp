@@ -14,6 +14,7 @@ import NetInfo from '@react-native-community/netinfo';
 import ReactNativeModal from 'react-native-modal';
 import TitleText from "./src/ReUsableComponents/Text's/TitleText";
 import Notificatrion from './src/ReUsableComponents/Notificatrion';
+import VisitorsModal from './src/ReUsableComponents/VisitorsModal';
 
 const App = () => {
   // Uncomment when you want to use Redux in project
@@ -34,10 +35,10 @@ const App = () => {
   return (
     <RecoilRoot>
       <Provider store={store}>
-        {/* <StatusBar animated={true} backgroundColor={'#CAE7FF'} hidden={true} /> */}
         <NavigationContainer>
           <AppAlert />
           <Notificatrion />
+          <VisitorsModal />
           <ReactNativeModal isVisible={isInternet ? false : true}>
             <Image
               source={{

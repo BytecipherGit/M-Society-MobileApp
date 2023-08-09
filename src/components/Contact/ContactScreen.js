@@ -40,7 +40,6 @@ const ContactScreen = ({navigation, route}) => {
   useEffect(() => {
     const getContactDetails = async () => {
       setLoader(true);
-      console.log(route);
       const payload = {
         url:
           API_URL +

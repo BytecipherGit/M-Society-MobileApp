@@ -7,7 +7,16 @@ import {USER_DATA} from '../redux/Actions';
 const SplashScreen = ({navigation}) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    getUser();
+    if (__DEV__) {
+      // Code to execute only in development mode
+      console.log('Running in development mode');
+      // navigation.replace('DeveloperModeScreen');
+      getUser();
+    } else {
+      // Code to execute only in production mode
+      console.log('Running in production mode');
+      getUser();
+    }
   }, []);
 
   const getUser = async () => {

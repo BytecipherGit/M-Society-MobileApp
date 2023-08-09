@@ -28,6 +28,7 @@ import DescriptionText from "../ReUsableComponents/Text's/DescriptionText";
 import {CommonActions} from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
+import AppButton from '../ReUsableComponents/AppButton';
 
 const LoginScreen = ({navigation}) => {
   const [data, setData] = useState({
@@ -77,7 +78,6 @@ const LoginScreen = ({navigation}) => {
 
       try {
         const Result = await PostData(payload);
-        console.log(Result);
         if (Result && Result.data.success) {
           StoreData('user', JSON.stringify(Result.data));
           dispatch({type: USER_DATA, payload: Result.data});

@@ -23,7 +23,6 @@ const NoticeDetailScreen = ({navigation, route}) => {
   if (path.length > 0) {
     path = path[path.length - 1];
   }
-  console.log(path);
   return (
     <View style={[globalStyle.cnt]}>
       <AppHeader title={'Notice'} navigation={navigation} />

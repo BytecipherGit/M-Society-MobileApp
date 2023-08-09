@@ -49,6 +49,7 @@ import NotificationList from '../components/NotificationList';
 import ServiceDetail from '../components/Service/ServiceDetail';
 import SupportScreen from '../components/Service/SupportScreen';
 import ServiceCategories from '../components/Society/ServiceCategories';
+import DeveloperMode from '../components/Profile/DeveloperMode';
 
 const Stack = createNativeStackNavigator();
 
@@ -162,6 +163,7 @@ const mainNavigation = () => {
       {stackScreenWithNoHeader('Webview', AppWebview)}
       {stackScreenWithNoHeader('NotificationList', NotificationList)}
       {stackScreenWithNoHeader('SupportScreen', SupportScreen)}
+      {stackScreenWithNoHeader('DeveloperModeScreen', DeveloperMode)}
     </Stack.Navigator>
   );
 };

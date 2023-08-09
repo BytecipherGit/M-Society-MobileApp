@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   ImageBackground,
+  BackHandler,
 } from 'react-native';
 import React, {Fragment, useState} from 'react';
 import AuthHeader from '../../ReUsableComponents/AuthHeader';

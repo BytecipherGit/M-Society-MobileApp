@@ -15,3 +15,10 @@ export const DeviceFcmToken = atom({
     token: '',
   }, // default value (aka initial value)
 });
+
+export const CheckVisitors = atom({
+  key: 'checkVisitors', // unique ID (with respect to other atoms/selectors)
+  default: {
+    visitors: null,
+  }, // default value (aka initial value)
+});

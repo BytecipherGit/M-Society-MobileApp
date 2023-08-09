@@ -172,9 +172,7 @@ const EditProfileScreen = ({navigation, route}) => {
         SnackError(Result.response.data.message);
       } else {
         let obj = User;
-        console.log(Result.data);
         obj.data = {...Result.data, societyId: User.data.societyId};
-        console.log(obj);
 
         dispatch({type: USER_DATA, payload: obj});
         StoreData('user', JSON.stringify(obj));

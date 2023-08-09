@@ -23,7 +23,6 @@ const Notificatrion = () => {
       messaging()
         .getToken()
         .then(async token => {
-          console.log(token);
           // setToken(token);
           setFcmTooken({token: token});
         });

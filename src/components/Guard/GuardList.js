@@ -5,6 +5,8 @@ import {
   FlatList,
   Image,
   StyleSheet,
+  TouchableOpacity,
+  Linking,
 } from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
@@ -47,9 +49,6 @@ const GuardList = ({navigation}) => {
     });
     try {
       const Result = await GetData({url: API_URL + 'guard/app/all'});
-      console.log('====================================');
-      console.log(Result.data.data);
-      console.log('====================================');
       if (Result.data.success) {
         if (Result.data.data.length > 0) {
           setData({
@@ -128,9 +127,6 @@ const GuardList = ({navigation}) => {
           )}
           renderItem={({item, index}) => {
             let test = item.countryCode;
-            console.log('====================================');
-            console.log(extractCountryCode(item.countryCode));
-            console.log('====================================');
             return (
               <>
                 <View style={style.card}>
@@ -144,23 +140,28 @@ const GuardList = ({navigation}) => {
                       text={item?.name}
                       style={{marginBottom: '1%', marginLeft: '1%'}}
                     />
-                    <LinearGradient
-                      colors={['#FF7334', '#FFA13C']}
-                      start={{x: 0.0, y: 0.0}}
-                      end={{x: 1.0, y: 1.0}}
-                      locations={[0.0, 1.0]}
-                      style={style.linearGradient}>
-                      {item.shift === 'day' ? <Sun /> : <Moon />}
-                      <DescriptionText
-                        text={
-                          '+' +
-                          extractCountryCode(item.countryCode) +
-                          ' ' +
-                          item.phoneNumber
-                        }
-                        style={style.shiftTxt}
-                      />
-                    </LinearGradient>
+                    <TouchableOpacity
+                      onPress={() =>
+                        Linking.openURL(`tel:${item.phoneNumber}`)
+                      }>
+                      <LinearGradient
+                        colors={['#FF7334', '#FFA13C']}
+                        start={{x: 0.0, y: 0.0}}
+                        end={{x: 1.0, y: 1.0}}
+                        locations={[0.0, 1.0]}
+                        style={style.linearGradient}>
+                        {item.shift === 'day' ? <Sun /> : <Moon />}
+                        <DescriptionText
+                          text={
+                            '+' +
+                            extractCountryCode(item.countryCode) +
+                            ' ' +
+                            item.phoneNumber
+                          }
+                          style={style.shiftTxt}
+                        />
+                      </LinearGradient>
+                    </TouchableOpacity>
                   </View>
                 </View>
                 {isAdmin && (

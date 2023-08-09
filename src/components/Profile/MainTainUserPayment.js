@@ -34,6 +34,7 @@ const MainTainUserPayment = ({navigation, route}) => {
   const [lastSelectedIndex, setLastSelectedIndex] = useState(null);
   const payment = useSelector(state => state.PaymentReducer);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
+  const [countPrev,setCountPrev] = useState(10);
 
   const dispatch = useDispatch();
 
@@ -138,7 +139,7 @@ const MainTainUserPayment = ({navigation, route}) => {
           ListFooterComponent={() => {
             return (
               <>
-                {paymentData.length > 0 && paymentData[0].fistTimePayment && (
+                {paymentData.length > 0 && paymentData[0].fistTimePayment && countPrev > 0 && (
                   <TouchableOpacity
                     style={{marginVertical: '5%'}}
                     onPress={() => {
@@ -150,6 +151,7 @@ const MainTainUserPayment = ({navigation, route}) => {
                             month: paymentData[0].month,
                           },
                         });
+                        setCountPrev(countPrev-1)
                       }
                     }}>
                     <DescriptionText
@@ -161,6 +163,9 @@ const MainTainUserPayment = ({navigation, route}) => {
                     />
                   </TouchableOpacity>
                 )}
+                <View style={{
+                  height:50
+                }} />
               </>
             );
           }}

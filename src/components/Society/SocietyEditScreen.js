@@ -100,7 +100,6 @@ const SocietyEditScreen = ({navigation, route}) => {
   const updateSociety = async () => {
     setLoader(true);
     try {
-      console.log(route?.params?.data?._id);
       let Result = '';
       if ((data?.logo && data?.logo?.uri) || societyImages.length > 0) {
         Result = await putSocietyImages({

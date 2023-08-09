@@ -39,7 +39,6 @@ const CreateContact = ({navigation, route}) => {
 
       if (Result.response) {
       } else {
-        console.log('Professions =>', Result.data.data);
         let arr = [];
 
         Result?.data?.data.map(item => {

@@ -22,11 +22,12 @@ import {
   GET_RESIDENTSLIST_REQUEST,
 } from '../../redux/Actions';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
-import {API_URL, DeleteData, PutData} from '../../assets/services';
+import {API_URL, DeleteData, PostData, PutData} from '../../assets/services';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 import LinearGradient from 'react-native-linear-gradient';
 import {useIsFocused} from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const ResidentList = ({navigation}) => {
   const dispatch = useDispatch();
@@ -103,6 +104,26 @@ const ResidentList = ({navigation}) => {
     }
   };
 
+  const exitUser = async (item, index) => {
+    try {
+      const Result = await PutData({
+        url: API_URL + `user`,
+        body: {id: item._id, stayOut: true},
+      });
+
+      if (Result && Result.data.success) {
+        let arr = [];
+        arr = data;
+        arr.splice(index, 1);
+        setData([...arr]);
+      } else {
+        ErrorAlert(Result.message);
+      }
+    } catch (e) {
+      ErrorAlert('Something Went Wrong, Please Try Again Later.');
+    }
+  };
+
   const renderUI = (item, index) => {
     const {name, userType, houseNumber, countryCode, phoneNumber, status} =
       item;
@@ -110,32 +131,57 @@ const ResidentList = ({navigation}) => {
       <TouchableOpacity style={style.card} activeOpacity={1}>
         <View style={style.userNameCnt}>
           <TitleText text={`${name} (${userType})`} />
-          <ToggleSwitch
-            isOn={status === 'active' ? true : false}
-            onColor={
-              stateForTheme &&
-              stateForTheme.data &&
-              stateForTheme.data.societyId
-                ? stateForTheme.data.societyId.buttonHoverBgColour
-                : '#FF7334'
-            }
-            offColor={COLORS.inputBorder}
-            size="medium"
-            onToggle={isOn =>
-              isAdmin &&
-              Alert.alert('', 'Are you sure you want to update the Status?', [
-                {
-                  text: 'Cancel',
-                  onPress: () => console.log('Cancel Pressed'),
-                  style: 'cancel',
-                },
-                {
-                  text: 'Yes',
-                  onPress: () => changeUserStatus(item, index),
-                },
-              ])
-            }
-          />
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '26%',
+              justifyContent: 'space-between',
+            }}>
+            <ToggleSwitch
+              isOn={status === 'active' ? true : false}
+              onColor={
+                stateForTheme &&
+                stateForTheme.data &&
+                stateForTheme.data.societyId
+                  ? stateForTheme.data.societyId.buttonHoverBgColour
+                  : '#FF7334'
+              }
+              offColor={COLORS.inputBorder}
+              size="medium"
+              onToggle={isOn =>
+                isAdmin &&
+                Alert.alert('', 'Are you sure you want to update the Status?', [
+                  {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Yes',
+                    onPress: () => changeUserStatus(item, index),
+                  },
+                ])
+              }
+            />
+            {isAdmin && (
+              <TouchableOpacity
+                onPress={() =>
+                  Alert.alert('', 'Are you sure you want to Exit this user?', [
+                    {
+                      text: 'Cancel',
+                      onPress: () => console.log('Cancel Pressed'),
+                      style: 'cancel',
+                    },
+                    {
+                      text: 'Yes',
+                      onPress: () => exitUser(item, index),
+                    },
+                  ])
+                }>
+                <Ionicons name="exit-outline" size={30} />
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
         <DescriptionText
           text={`House: ${houseNumber}`}

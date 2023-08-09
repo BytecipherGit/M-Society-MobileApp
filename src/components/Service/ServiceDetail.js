@@ -26,7 +26,6 @@ const ServiceDetail = ({navigation, route}) => {
   const [reviewModal, setReviewModal] = useState(false);
 
   useEffect(() => {
-    console.log(route.params.detail._id); // eslint-disable-line no-console
     getDetail();
     postCount();
   }, []);

@@ -50,8 +50,6 @@ const GuardHomeScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const visitors = useSelector(state => state.GuardReducer);
 
-  console.log(state);
-
   useEffect(() => {
     getVisitorsList();
   }, []);
@@ -123,7 +121,6 @@ const GuardHomeScreen = ({navigation}) => {
     setFilter({...filter, loader: true});
     try {
       const Result = await GetData(payload);
-      console.log(Result.data);
       if (Result.data.success) {
         if (Result.data.data.length > 0) {
           setFilter({loader: false, data: Result.data.data});
