@@ -135,6 +135,8 @@ const AddComplaints = ({route}) => {
           url: API_URL + 'complaint/',
           body: payloadData,
         };
+
+        console.log(payload);
         setLoader(true);
         const Result = await postFormData(payload, 'PUT');
         if (Result.success) {
@@ -156,6 +158,7 @@ const AddComplaints = ({route}) => {
           url: API_URL + 'complaint/',
           body: data,
         };
+        console.log(payload);
         setLoader(true);
         const Result = await postFormData(payload);
 

@@ -1,12 +1,16 @@
-import {View, Text} from 'react-native';
+import {View, Text, Alert} from 'react-native';
 import React, {useEffect} from 'react';
 import messaging from '@react-native-firebase/messaging';
 import notifee from '@notifee/react-native';
 import {useRecoilState} from 'recoil';
-import {DeviceFcmToken} from '../assets/GlobalStates/RecoilGloabalState';
+import {
+  CheckVisitors,
+  DeviceFcmToken,
+} from '../assets/GlobalStates/RecoilGloabalState';
 
 const Notificatrion = () => {
   const [fcmToken, setFcmTooken] = useRecoilState(DeviceFcmToken);
+  const [visitorsCheck, setVisitorsCheck] = useRecoilState(CheckVisitors);
   const requestUserPermission = async () => {
     const authStatus = await messaging().requestPermission();
     const enabled =
@@ -33,11 +37,14 @@ const Notificatrion = () => {
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert(
-        'A new FCM token arrived in foreground',
-        JSON.stringify(remoteMessage),
-      );
+      // Alert.alert(
+      //   'A new FCM token arrived in foreground',
+      //   JSON.stringify(remoteMessage),
+      // );
       onDisplayNotification(remoteMessage);
+      setVisitorsCheck({
+        visitors: visitorsCheck.visitors + 1,
+      });
     });
 
     return unsubscribe;

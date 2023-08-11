@@ -8,6 +8,7 @@ import {
   FlatList,
   ImageBackground,
   Alert,
+  RefreshControl,
 } from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
@@ -30,9 +31,15 @@ import {
 } from '../../redux/Actions';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import {useRecoilState} from 'recoil';
-import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
+import {
+  CheckVisitors,
+  GlobalAppAlert,
+} from '../../assets/GlobalStates/RecoilGloabalState';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import AppButton from '../../ReUsableComponents/AppButton';
+import {useIsFocused} from '@react-navigation/native';
 
 const GuardHomeScreen = ({navigation}) => {
   const state = useSelector(state => state.AuthReducer);
@@ -46,16 +53,40 @@ const GuardHomeScreen = ({navigation}) => {
   });
   const [outIndex, setOutIndex] = useState(null);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
+  const [permission, setPermission] = useState(false);
+  const [actionId, setActionId] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
+  const [visitorsCheck, setVisitorsCheck] = useRecoilState(CheckVisitors);
 
   const dispatch = useDispatch();
   const visitors = useSelector(state => state.GuardReducer);
+  const isFocus = useIsFocused();
+
+  useEffect(() => {
+    getPermission();
+  }, []);
 
   useEffect(() => {
     getVisitorsList();
-  }, []);
+  }, [visitorsCheck || isFocus]);
 
   const getVisitorsList = async () => {
     dispatch({type: GET_VISITORS_LIST_REQUEST});
+  };
+
+  const getPermission = async () => {
+    try {
+      const Result = await GetData({
+        url: API_URL + 'guard/setting',
+      });
+      if (Result.response) {
+        SnackError('something went wrong to get permission data from server');
+      } else {
+        Result.data.data.guardApproveSetting === true && setPermission(true);
+      }
+    } catch (e) {
+      SnackError('Something went wrong please try again later.');
+    }
   };
 
   const errorAlert = msg => {
@@ -139,9 +170,46 @@ const GuardHomeScreen = ({navigation}) => {
     }
   };
 
+  const actionOnVisitor = async (action, id) => {
+    try {
+      const Result = await PostData({
+        url: API_URL + 'visitor/approve',
+        body: {
+          visitorId: id,
+          isApprove: action,
+          userType: 'guard',
+        },
+      });
+      if (Result.response) {
+        SnackError(Result.reasone.data.message);
+      } else {
+        getVisitorsList();
+      }
+    } catch (e) {
+      SnackError(
+        'Something went wrong, please try again later for get visitors.',
+      );
+    }
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    getVisitorsList();
+  };
+
+  useEffect(() => {
+    setRefreshing(visitors.loader || filter.loader);
+  }, [visitors.loader || filter.loader]);
+
   const visitorsListUI = ({item, index}) => {
     const {image, houseNumber, phoneNumber, createdDate, name, countryCode} =
       item;
+    let approveColor =
+      item?.isApprove === 'approved'
+        ? '#518524'
+        : item?.isApprove === 'decline'
+        ? '#EB2D20'
+        : '#E78011';
     return (
       <View style={[styles.cardCnt]}>
         <View style={{flexDirection: 'row'}}>
@@ -188,6 +256,61 @@ const GuardHomeScreen = ({navigation}) => {
             </View>
           ))}
         </View>
+
+        <View key={index} style={{marginVertical: '3%'}}>
+          <Text
+            style={{
+              color: approveColor,
+              fontFamily: 'Axiforma-Regular',
+              fontSize: 14,
+            }}>
+            <AntDesign name="clockcircleo" />{' '}
+            {item?.isApprove
+              ? item.isApprove.charAt(0).toUpperCase() +
+                item.isApprove.slice(1).toLowerCase()
+              : 'Pending'}
+          </Text>
+        </View>
+        {permission &&
+          item.isApprove === null &&
+          !item.outTime &&
+          (actionId === item?._id ? (
+            <Text
+              style={{
+                fontFamily: 'Axiforma-SemiBold',
+                alignSelf: 'center',
+                marginBottom: '2%',
+                color: 'red',
+              }}>
+              Please Wait...
+            </Text>
+          ) : (
+            <View style={styles.actionButtonCnt}>
+              <AppButton
+                TouchableStyle={styles.declineButton}
+                colorArray={['#fafafa', '#fafafa']}
+                TextStyle={{
+                  color: 'red',
+                }}
+                buttonTitle={'Disallowed'}
+                onPress={() => {
+                  setActionId(item._id);
+                  actionOnVisitor('decline', item._id);
+                }}
+              />
+              <AppButton
+                TouchableStyle={{
+                  flex: 0.48,
+                }}
+                buttonTitle={'Allowed'}
+                onPress={() => {
+                  setActionId(item._id);
+                  actionOnVisitor('approved', item._id);
+                }}
+              />
+            </View>
+          ))}
+
         <View style={styles.devider} />
         <TouchableOpacity
           onPress={() => !item.outTime && checkOutUser(item, index)}>
@@ -278,6 +401,9 @@ const GuardHomeScreen = ({navigation}) => {
               : filter.data.length > 0
               ? filter.data
               : visitors.data
+          }
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
           ListEmptyComponent={() => (
             <AppLoaderSrceen
@@ -390,5 +516,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#FF7334',
     letterSpacing: 1,
+  },
+  actionButtonCnt: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  declineButton: {
+    flex: 0.48,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: 'red',
+    ...shadow,
   },
 });

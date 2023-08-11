@@ -36,7 +36,7 @@ const NotificationList = ({navigation}) => {
       } else {
         setData({
           loader: false,
-          error: '',
+          error: Result.data.data.length > 0 ? '' : 'No notification found.',
           data: Result.data.data,
         });
       }

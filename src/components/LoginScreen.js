@@ -71,7 +71,7 @@ const LoginScreen = ({navigation}) => {
               url: API_URL + 'guard/login',
               body: {
                 ...obj,
-                deviceToken: '',
+                deviceToken: obj.deviceToken,
                 deviceType: Platform.OS === 'android' ? 'android' : 'ios',
               },
             };

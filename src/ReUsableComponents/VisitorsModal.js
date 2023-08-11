@@ -1,4 +1,12 @@
-import {View, Text, Image, StyleSheet, FlatList, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  FlatList,
+  Alert,
+  SafeAreaView,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ReactNativeModal from 'react-native-modal';
 import {COLORS, shadow} from '../assets/theme';
@@ -28,21 +36,24 @@ const VisitorsModal = () => {
     if (OnBoard) {
       const User = await getAsyncValue('user');
       if (User) {
-        try {
-          const Result = await GetData({
-            url: API_URL + 'visitor/list',
-          });
+        if (JSON.parse(User).data.userType !== 'guard') {
+          try {
+            const Result = await GetData({
+              url: API_URL + 'visitor/list',
+            });
 
-          if (Result.response) {
-            SnackError('There is an some problem to get visitors list');
-          } else {
-            setVisitorsList(Result.data.data);
+            if (Result.response) {
+              SnackError('There is an some problem to get visitors list');
+            } else {
+              setVisitorsList(Result.data.data);
+            }
+          } catch (e) {
+            SnackError('Something went wrong please try again later.');
           }
-        } catch (e) {
-          SnackError('Something went wrong please try again later.');
         }
       }
     }
+    setActionId('');
   };
 
   const DoAction = async (action, id) => {
@@ -52,6 +63,7 @@ const VisitorsModal = () => {
         body: {
           visitorId: id,
           isApprove: action,
+          userType: 'user',
         },
       });
       if (Result.response) {
@@ -64,22 +76,25 @@ const VisitorsModal = () => {
         'Something went wrong, please try again later for get visitors.',
       );
     }
-    setActionId('');
   };
 
   return (
     <ReactNativeModal isVisible={visitorsList.length > 0 ? true : false}>
-      <View style={style.mainContainer}>
+      <SafeAreaView style={style.mainContainer}>
         <FlatList
           data={visitorsList}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={() => (
-            <View
-              style={{
-                height: '40%',
-              }}
-            />
-          )}
+          style={{
+            flex: 1,
+          }}
+          ListHeaderComponent={
+            () => visitorsList.length === 1 && null
+            // <View
+            //   style={{
+            //     height: '40%',
+            //   }}
+            // />
+          }
           renderItem={({item, index}) => (
             <View style={style.card}>
               <View style={style.subCard}>
@@ -129,7 +144,7 @@ const VisitorsModal = () => {
               ) : (
                 <View style={style.buttonCnt}>
                   <AppButton
-                    buttonTitle={'Decline'}
+                    buttonTitle={'Disallowed'}
                     TouchableStyle={{
                       flex: 0.48,
                       ...shadow,
@@ -146,7 +161,7 @@ const VisitorsModal = () => {
                     colorArray={['#f7f7f7', '#f7f7f7']}
                   />
                   <AppButton
-                    buttonTitle={'Approve'}
+                    buttonTitle={'Allowed'}
                     renderIcon={() => (
                       <AntDesign
                         name="checkcircleo"
@@ -172,7 +187,7 @@ const VisitorsModal = () => {
             </View>
           )}
         />
-      </View>
+      </SafeAreaView>
     </ReactNativeModal>
   );
 };

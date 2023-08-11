@@ -7,8 +7,9 @@ import {
   Image,
   StyleSheet,
   Platform,
+  Appearance,
 } from 'react-native';
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
 import {AddVisitorFields} from '../../assets/Jsons';
@@ -16,10 +17,17 @@ import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
 import CameraIcon from '../../assets/images/CameraIcon.svg';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import AppButton from '../../ReUsableComponents/AppButton';
-import {addVisitorFormData} from '../../assets/services';
+import {
+  API_URL,
+  GetData,
+  SnackError,
+  addVisitorFormData,
+} from '../../assets/services';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 import AppTextInput from '../../ReUsableComponents/AppTextInput';
+import {useSelector} from 'react-redux';
+import {Dropdown} from 'react-native-element-dropdown';
 
 const AddVisitor = ({navigation, route}) => {
   const [visible, setVisible] = useState(false);
@@ -32,7 +40,44 @@ const AddVisitor = ({navigation, route}) => {
     countryCode: '91',
   });
   const [loader, setLoader] = useState(false);
+  const [societyRooms, setSocietyRooms] = useState([]);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
+  const colorScheme = Appearance.getColorScheme();
+  const [isFocus, setIsFocus] = useState(false);
+  const state = useSelector(state => state);
+
+  console.log('====================================');
+  console.log(data);
+  console.log('====================================');
+
+  useEffect(() => {
+    getSocietyRooms();
+  }, []);
+
+  const getSocietyRooms = async () => {
+    try {
+      const Result = await GetData({
+        url:
+          API_URL +
+          `admin/houseNumberList/${state?.AuthReducer?.userDetail?.data?.societyId?._id}`,
+      });
+
+      if (Result.response) {
+        SnackError(Result.reasone.data.message);
+      } else {
+        console.log('====================================');
+        console.log('rooms =>', Result.data.data);
+        let arr = [];
+        Result.data.data.map(item => {
+          arr.push({label: item, value: item});
+        });
+        setSocietyRooms([...arr]);
+        console.log('====================================');
+      }
+    } catch (e) {
+      SnackError('Something went wrong please try again later.');
+    }
+  };
 
   const hideMenu = () => setVisible(false);
   const showMenu = () => setVisible(true);
@@ -109,8 +154,6 @@ const AddVisitor = ({navigation, route}) => {
   };
 
   let countryOptionCode = data.countryCode;
-  console.log(countryOptionCode);
-
   return (
     <View style={[globalStyle.cnt, {backgroundColor: 'white'}]}>
       <View style={style.cnt}>
@@ -189,6 +232,35 @@ const AddVisitor = ({navigation, route}) => {
                       />
                     </Menu>
                   </View>
+                ) : item.param === 'houseNumber' ? (
+                  <Dropdown
+                    style={[style.dropdown, isFocus && {borderColor: 'blue'}]}
+                    containerStyle={[
+                      colorScheme === 'dark'
+                        ? {backgroundColor: COLORS.titleFont}
+                        : {},
+                    ]}
+                    activeColor={colorScheme === 'dark' ? 'black' : 'white'}
+                    placeholderStyle={style.placeholderStyle}
+                    selectedTextStyle={style.selectedTextStyle}
+                    inputSearchStyle={style.inputSearchStyle}
+                    iconStyle={style.iconStyle}
+                    data={societyRooms}
+                    search
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    placeholder={!isFocus ? 'Select item' : '...'}
+                    searchPlaceholder="Search..."
+                    value={data[item.param]}
+                    onFocus={() => setIsFocus(true)}
+                    onBlur={() => setIsFocus(false)}
+                    onChange={label => {
+                      // setStatusOption(item.value);
+                      setData({...data, [item.param]: label.value});
+                      setIsFocus(false);
+                    }}
+                  />
                 ) : (
                   <AppTextInput
                     item={item}
@@ -203,6 +275,12 @@ const AddVisitor = ({navigation, route}) => {
               </View>
             );
           })}
+
+          <View
+            style={{
+              height: 50,
+            }}
+          />
         </ScrollView>
 
         <AppButton
@@ -277,5 +355,32 @@ const style = StyleSheet.create({
     width: '49%',
     borderWidth: 1,
     borderColor: COLORS.buttonColor,
+  },
+  dropdown: {
+    height: 50,
+    borderColor: COLORS.inputBackground,
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    width: '100%',
+    alignSelf: 'center',
+    backgroundColor: COLORS.inputBackground,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+    color: COLORS.inputPlaceholder,
+  },
+  selectedTextStyle: {
+    fontSize: 14,
+    color: COLORS.titleFont,
+    fontFamily: 'Axiforma-Regular',
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
   },
 });
