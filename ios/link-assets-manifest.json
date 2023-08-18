@@ -1,0 +1,41 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Axiforma-Bold.ttf",
+      "sha1": "5e1b228414e2eea9b3760e42e41a1e5093dbcee0"
+    },
+    {
+      "path": "src/assets/fonts/Axiforma-Light.ttf",
+      "sha1": "56fabab987cd9369a99e438c4dd51129baf2ad43"
+    },
+    {
+      "path": "src/assets/fonts/Axiforma-Medium.ttf",
+      "sha1": "99f123acaa76e20aaba5c97973533f79e3627366"
+    },
+    {
+      "path": "src/assets/fonts/Axiforma-Regular.ttf",
+      "sha1": "ef9e9d1826b0c9b4f21a4ce7db8fff01b78d5bdc"
+    },
+    {
+      "path": "src/assets/fonts/Axiforma-SemiBold.ttf",
+      "sha1": "c7acdf6d925efeca4c64bf0e6d00e539a2554d63"
+    },
+    {
+      "path": "src/assets/fonts/Inter-Bold.ttf",
+      "sha1": "48747b7a60086f97af0d373febcbd1f1bee87f17"
+    },
+    {
+      "path": "src/assets/fonts/Inter-Medium.ttf",
+      "sha1": "a418a8ba73bbcfa8c131c426ab836d78457afa9b"
+    },
+    {
+      "path": "src/assets/fonts/Inter-Regular.ttf",
+      "sha1": "7237d9cf55f177702066a28a4dde1e4c7e8ab576"
+    },
+    {
+      "path": "src/assets/fonts/Inter-SemiBold.ttf",
+      "sha1": "431007da316de60d85174aeec9b8389b5c73e7d6"
+    }
+  ]
+}
