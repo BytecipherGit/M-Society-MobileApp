@@ -40,7 +40,13 @@ const PaymentHistory = ({navigation}) => {
         setData({
           data: state.isAdmin ? Result.data.allHistory : Result.data.data,
           loader: false,
-          error: '',
+          error: state.isAdmin
+            ? Result.data.allHistory.length > 0
+              ? ''
+              : 'No history found'
+            : Result.data.data.length > 0
+            ? ''
+            : 'No history found',
         });
       } else {
         setData({

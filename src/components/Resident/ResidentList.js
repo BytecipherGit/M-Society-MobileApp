@@ -130,13 +130,22 @@ const ResidentList = ({navigation}) => {
     return (
       <TouchableOpacity style={style.card} activeOpacity={1}>
         <View style={style.userNameCnt}>
-          <TitleText text={`${name} (${userType})`} />
           <View
             style={{
-              flexDirection: 'row',
-              width: '26%',
-              justifyContent: 'space-between',
+              width: '67%',
             }}>
+            <TitleText text={`${name} (${userType})`} />
+          </View>
+          <View
+            style={
+              isAdmin
+                ? {
+                    flexDirection: 'row',
+                    width: '26%',
+                    justifyContent: 'space-between',
+                  }
+                : {}
+            }>
             <ToggleSwitch
               isOn={status === 'active' ? true : false}
               onColor={
@@ -178,7 +187,17 @@ const ResidentList = ({navigation}) => {
                     },
                   ])
                 }>
-                <Ionicons name="exit-outline" size={30} />
+                <Ionicons
+                  name="exit-outline"
+                  size={30}
+                  color={
+                    stateForTheme &&
+                    stateForTheme.data &&
+                    stateForTheme.data.societyId
+                      ? stateForTheme.data.societyId.buttonHoverBgColour
+                      : '#FF7334'
+                  }
+                />
               </TouchableOpacity>
             )}
           </View>

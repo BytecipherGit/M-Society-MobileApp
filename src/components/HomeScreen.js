@@ -274,9 +274,9 @@ const HomeScreen = ({navigation}) => {
                     color: isSocietyDetail.fontColour,
                   }}
                 />
-                <View style={styles.notificationNumberCnt}>
+                {/* <View style={styles.notificationNumberCnt}>
                   <Text style={styles.notificationNumber}>1</Text>
-                </View>
+                </View> */}
               </TouchableOpacity>
             </View>
             {/* Notice lists in card */}

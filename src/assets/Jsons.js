@@ -558,6 +558,13 @@ export let AddResidenceUserJson = [
       {label: 'Owner', value: 'owner'},
     ],
   },
+  {
+    id: 8,
+    title: 'Maintenance Pending From',
+    keyboardType: 'number-pad',
+    param: 'maintenancePendingFrom',
+    type: 'YearAndMonth',
+  },
 ];
 
 export const ColorsArray = [

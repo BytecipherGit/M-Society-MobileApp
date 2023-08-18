@@ -1,5 +1,5 @@
-export const API_URL = 'https://dc7e-122-175-237-30.ngrok-free.app/api/';
-// export const API_URL = 'http://msociety.in:9001/api/';
+// export const API_URL = 'https://01f3-122-175-237-30.ngrok-free.app/api/';
+export const API_URL = 'http://msociety.in:9001/api/';
 
 // swagger http://msociety.in:9001/api-docs/#/
 
@@ -10,7 +10,7 @@ import Snackbar from 'react-native-snackbar';
 export const GetData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
-  // console.log(Token);
+
   return axios
     .get(
       payload.url,

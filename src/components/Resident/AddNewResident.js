@@ -6,6 +6,8 @@ import {
   ScrollView,
   StyleSheet,
   Appearance,
+  TouchableOpacity,
+  Alert,
 } from 'react-native';
 import React, {Fragment, useEffect, useRef, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
@@ -23,6 +25,8 @@ import {
   SuccessAlert,
 } from '../../assets/services';
 import AppButton from '../../ReUsableComponents/AppButton';
+import DatePicker from 'react-native-date-picker';
+import moment from 'moment';
 
 const AddNewResident = ({navigation, route}) => {
   const [showData, setShowData] = useState(AddResidenceUserJson);
@@ -51,6 +55,7 @@ const AddNewResident = ({navigation, route}) => {
         },
   );
   const [loader, setLoader] = useState(false);
+  const [dateModal, setDateModal] = useState(false);
   const phoneInput = useRef(null);
   const colorScheme = Appearance.getColorScheme();
 
@@ -176,6 +181,7 @@ const AddNewResident = ({navigation, route}) => {
         {item.type === 'Input' && (
           <TextInput
             placeholder={item.title}
+            placeholderTextColor={COLORS.inputPlaceholder}
             style={styles.textInput}
             editable={!route?.params?.item}
             value={data[item.param]}
@@ -234,6 +240,20 @@ const AddNewResident = ({navigation, route}) => {
             }}
           />
         )}
+        {item.type === 'YearAndMonth' && (
+          <TouchableOpacity
+            onPress={() => !route?.params?.item && setDateModal(true)}>
+            <TextInput
+              placeholder={'YYYY-MM'}
+              placeholderTextColor={COLORS.inputPlaceholder}
+              style={styles.textInput}
+              editable={false}
+              onPressIn={() => !route?.params?.item && setDateModal(true)}
+              value={data[item.param]}
+              onChangeText={text => setData({...data, [item.param]: text})}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     );
   };
@@ -243,6 +263,26 @@ const AddNewResident = ({navigation, route}) => {
       <AppHeader
         navigation={navigation}
         title={route && route.params ? 'View Residence' : 'Add Residence'}
+      />
+      <DatePicker
+        modal
+        open={dateModal}
+        mode="date"
+        date={new Date()}
+        onConfirm={date => {
+          setDateModal(false);
+
+          setData({
+            ...data,
+            maintenancePendingFrom:
+              new Date(`${date}`).getFullYear() +
+              '-' +
+              new Date(`${date}`).getMonth(),
+          });
+        }}
+        onCancel={() => {
+          setDateModal(false);
+        }}
       />
       <FullCardBackground
         styles={styles.cnt}

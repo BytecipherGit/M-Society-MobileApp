@@ -56,8 +56,9 @@ const Notificatrion = () => {
 
     // Create a channel (required for Android)
     const channelId = await notifee.createChannel({
-      id: 'default',
+      id: 'sound',
       name: 'Default Channel',
+      sound: 'doorbell',
     });
 
     // Display a notification

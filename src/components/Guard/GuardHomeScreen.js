@@ -82,10 +82,13 @@ const GuardHomeScreen = ({navigation}) => {
       if (Result.response) {
         SnackError('something went wrong to get permission data from server');
       } else {
-        Result.data.data.guardApproveSetting === true && setPermission(true);
+        console.log(Result.data.data);
+        Result.data.data &&
+          Result.data.data.guardApproveSetting === true &&
+          setPermission(true);
       }
     } catch (e) {
-      SnackError('Something went wrong please try again later.');
+      SnackError('Something went wrong to fetch permission Data.');
     }
   };
 
@@ -205,9 +208,9 @@ const GuardHomeScreen = ({navigation}) => {
     const {image, houseNumber, phoneNumber, createdDate, name, countryCode} =
       item;
     let approveColor =
-      item?.isApprove === 'approved'
+      item?.isApprove === 'approved' || item?.isApprove === 'allow'
         ? '#518524'
-        : item?.isApprove === 'decline'
+        : item?.isApprove === 'decline' || item?.isApprove === 'disallow'
         ? '#EB2D20'
         : '#E78011';
     return (
@@ -295,7 +298,7 @@ const GuardHomeScreen = ({navigation}) => {
                 buttonTitle={'Disallowed'}
                 onPress={() => {
                   setActionId(item._id);
-                  actionOnVisitor('decline', item._id);
+                  actionOnVisitor('disallow', item._id);
                 }}
               />
               <AppButton
@@ -305,7 +308,7 @@ const GuardHomeScreen = ({navigation}) => {
                 buttonTitle={'Allowed'}
                 onPress={() => {
                   setActionId(item._id);
-                  actionOnVisitor('approved', item._id);
+                  actionOnVisitor('allow', item._id);
                 }}
               />
             </View>
@@ -403,7 +406,9 @@ const GuardHomeScreen = ({navigation}) => {
               : visitors.data
           }
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            refreshing ? null : (
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            )
           }
           ListEmptyComponent={() => (
             <AppLoaderSrceen

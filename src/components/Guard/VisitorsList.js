@@ -48,7 +48,10 @@ const VisitorsList = ({navigation}) => {
     try {
       if (Result.data.success) {
         setData({
-          error: '',
+          error:
+            Result.data && Result.data.data.length > 0
+              ? ''
+              : 'No visitors are Found.',
           loader: false,
           data: Result.data.data,
         });
@@ -103,9 +106,19 @@ const VisitorsList = ({navigation}) => {
               marginTop: '4%',
             }}>
             <Text style={style.approvedBy}>
-              Approved By : {item?.byApprove}
+              Allow By :{' '}
+              {item?.byApprove
+                ? item.byApprove.charAt(0).toUpperCase() +
+                  item.byApprove.slice(1).toLowerCase()
+                : '-'}
             </Text>
-            <Text style={style.status}>Status : {item?.isApprove}</Text>
+            <Text style={style.status}>
+              Status :{' '}
+              {item?.isApprove
+                ? item.isApprove.charAt(0).toUpperCase() +
+                  item.isApprove.slice(1).toLowerCase()
+                : 'Pending'}
+            </Text>
           </View>
         </View>
       </View>
@@ -124,11 +137,7 @@ const VisitorsList = ({navigation}) => {
             <AppLoaderSrceen loader={data.loader} erro={data.error} />
           )}
           renderItem={({item, index}) => {
-            if (isAdmin) {
-              return rendetUI(item, index);
-            } else if (houseNumber === item.houseNumber) {
-              return rendetUI(item, index);
-            }
+            return rendetUI(item, index);
           }}
           extraData={item => item._id}
         />

@@ -26,6 +26,7 @@ const VisitorsModal = () => {
   const [visitorsList, setVisitorsList] = useState([]);
   const [visitorsCheck, setVisitorsCheck] = useRecoilState(CheckVisitors);
   const [actionId, setActionId] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     getVisitorsListForPermission();
@@ -46,6 +47,9 @@ const VisitorsModal = () => {
               SnackError('There is an some problem to get visitors list');
             } else {
               setVisitorsList(Result.data.data);
+              Result.data.data.length > 0
+                ? setShowModal(true)
+                : setShowModal(false);
             }
           } catch (e) {
             SnackError('Something went wrong please try again later.');
@@ -79,8 +83,14 @@ const VisitorsModal = () => {
   };
 
   return (
-    <ReactNativeModal isVisible={visitorsList.length > 0 ? true : false}>
+    <ReactNativeModal isVisible={showModal}>
       <SafeAreaView style={style.mainContainer}>
+        <AntDesign
+          name="close"
+          size={40}
+          color={COLORS.white}
+          onPress={() => setShowModal(false)}
+        />
         <FlatList
           data={visitorsList}
           showsVerticalScrollIndicator={false}
@@ -155,7 +165,7 @@ const VisitorsModal = () => {
                     onPress={() => {
                       if (!actionId) {
                         setActionId(item._id);
-                        DoAction('decline', item._id);
+                        DoAction('disallow', item._id);
                       }
                     }}
                     colorArray={['#f7f7f7', '#f7f7f7']}
@@ -175,7 +185,7 @@ const VisitorsModal = () => {
                     onPress={() => {
                       if (!actionId) {
                         setActionId(item._id);
-                        DoAction('approved', item._id);
+                        DoAction('allow', item._id);
                       }
                     }}
                     TouchableStyle={{

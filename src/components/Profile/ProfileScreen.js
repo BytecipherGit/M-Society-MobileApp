@@ -108,6 +108,7 @@ const ProfileScreen = ({navigation, route}) => {
       <AppHeader title={'Profile'} navigation={navigation} />
       <FlatList
         data={[1]}
+        showsVerticalScrollIndicator={false}
         renderItem={() => {
           return (
             <>
