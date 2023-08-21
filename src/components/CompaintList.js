@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {COMPLAINT_LIST_REQUEST} from '../redux/Actions';
 import AppLoaderSrceen from '../ReUsableComponents/AppLoaderSrceen';
 import moment from 'moment';
+import * as Animatable from 'react-native-animatable';
 
 const CompaintList = ({navigation}) => {
   const [defaultComplaint, setDefaultComplaint] = useState('My');
@@ -60,17 +61,31 @@ const CompaintList = ({navigation}) => {
               />
             )}
             renderItem={({item, index}) => (
-              <>
+              <Animatable.View
+                animation={{
+                  from: {
+                    opacity: 0,
+                  },
+                  to: {
+                    opacity: 1,
+                  },
+                }}
+                duration={1000}
+                direction="normal">
                 <TouchableOpacity
                   onPress={() => toChat(item)}
                   style={style.card}>
-                  <Text style={style.cardTitle}>{item.complainTitle}</Text>
-                  <Text style={style.description}>{item.description}</Text>
+                  <Text style={style.cardTitle} numberOfLines={1}>
+                    {item.complainTitle}
+                  </Text>
+                  <Text style={style.description} numberOfLines={1}>
+                    {item.description}
+                  </Text>
                   <Text style={style.cardDate}>
                     {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
                   </Text>
                 </TouchableOpacity>
-              </>
+              </Animatable.View>
             )}
           />
         </View>

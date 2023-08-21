@@ -34,6 +34,12 @@ import AppButton from '../ReUsableComponents/AppButton';
 import VisitorsModal from '../ReUsableComponents/VisitorsModal';
 import {useRecoilState} from 'recoil';
 import {CheckVisitors} from '../assets/GlobalStates/RecoilGloabalState';
+import * as Animatable from 'react-native-animatable';
+import {
+  HomeOptionCards,
+  HomeOptionCardsAnimation,
+  HomeScreenOptionCard_ImageAnimation,
+} from '../assets/Animations';
 
 const HomeScreen = ({navigation}) => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -44,6 +50,7 @@ const HomeScreen = ({navigation}) => {
     type: '',
   });
   const [visitorsCheck, setVisitorsCheck] = useRecoilState(CheckVisitors);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const state = useSelector(state => state.AuthReducer);
   const Notice = useSelector(state => state.NoticeReducer);
   const stateForTheme = useSelector(state => state.AuthReducer.userDetail);
@@ -53,6 +60,14 @@ const HomeScreen = ({navigation}) => {
   );
   const isFocus = useIsFocused();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (currentIndex <= SocietyOptions.length) {
+      setTimeout(() => {
+        setCurrentIndex(currentIndex + 1);
+      }, 150);
+    }
+  }, [currentIndex]);
 
   useEffect(() => {
     if (isFocus) {
@@ -296,21 +311,35 @@ const HomeScreen = ({navigation}) => {
             showsVerticalScrollIndicator={false}
             style={{flex: 1}}
             numColumns={2}
-            renderItem={({item, index}) => (
-              <View style={styles.cardCnt}>
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  onPress={() => {
-                    item.param
-                      ? navigation.navigate(item.navigationScreen, item.param)
-                      : navigation.navigate(item.navigationScreen);
-                  }}
-                  style={styles.card}>
-                  <View style={styles.cardIcon}>{item.image}</View>
-                  <Text style={styles.cardTitle}>{item.title}</Text>
-                </TouchableOpacity>
-              </View>
-            )}
+            renderItem={({item, index}) => {
+              if (index <= currentIndex) {
+                return (
+                  <Animatable.View
+                    style={styles.cardCnt}
+                    duration={1000}
+                    animation={HomeOptionCardsAnimation}>
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      onPress={() => {
+                        item.param
+                          ? navigation.navigate(
+                              item.navigationScreen,
+                              item.param,
+                            )
+                          : navigation.navigate(item.navigationScreen);
+                      }}
+                      style={styles.card}>
+                      <Animatable.View
+                        style={styles.cardIcon}
+                        animation={HomeScreenOptionCard_ImageAnimation}>
+                        {item.image}
+                      </Animatable.View>
+                      <Text style={styles.cardTitle}>{item.title}</Text>
+                    </TouchableOpacity>
+                  </Animatable.View>
+                );
+              }
+            }}
           />
         </View>
       </Label>

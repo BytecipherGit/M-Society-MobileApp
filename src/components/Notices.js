@@ -27,6 +27,8 @@ import AppRoundAddActionButton from '../ReUsableComponents/AppRoundAddActionButt
 import {useIsFocused} from '@react-navigation/native';
 import {API_URL, DeleteData, SnackError} from '../assets/services';
 import AppCrudActionButton from '../ReUsableComponents/AppCrudActionButton';
+import * as Animatable from 'react-native-animatable';
+import {noticeListAnimation} from '../assets/Animations';
 
 const Notices = ({navigation}) => {
   const isFocus = useIsFocused();
@@ -35,6 +37,7 @@ const Notices = ({navigation}) => {
   const {isAdmin} = useSelector(state => state.AuthReducer);
   const [deleteLoader, setDeleteLoader] = useState('');
   const [data, setData] = useState([]);
+  const [currentAnimationIndex, setCurrentAnimationIndex] = useState(0);
 
   useEffect(() => {
     if (isFocus) {
@@ -87,6 +90,14 @@ const Notices = ({navigation}) => {
     setDeleteLoader('');
   };
 
+  useEffect(() => {
+    if (currentAnimationIndex <= data.length) {
+      setTimeout(() => {
+        setCurrentAnimationIndex(currentAnimationIndex + 1);
+      }, 200);
+    }
+  }, [currentAnimationIndex]);
+
   return (
     <View style={globalStyle.cnt}>
       <AppHeader navigation={navigation} title={'Notice'} />
@@ -97,48 +108,53 @@ const Notices = ({navigation}) => {
           <AppLoaderSrceen loader={Notice.loader} error={Notice.error} />
         )}
         renderItem={({item, index}) => {
-          return (
-            <View>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() =>
-                  navigation.navigate('NoticeScreen', {
-                    screen: 'NoticeDetailScreen',
-                    params: {item: item},
-                  })
-                }
-                style={style.card}>
-                <Calendor />
-                <View style={{marginHorizontal: '5%'}}>
-                  <Text style={style.cardTitle}>
-                    {item.title}{' '}
-                    {isAdmin && (
-                      <Text style={{color: 'red'}}>-{item.status}</Text>
-                    )}
-                  </Text>
-                  <View style={{width: '16%'}}>
-                    <Text
-                      numberOfLines={2}
-                      style={[style.cardDesc, {width: '100%'}]}>
-                      {item.description}
+          if (index <= currentAnimationIndex) {
+            return (
+              <Animatable.View
+                style={{width: '100%'}}
+                animation={noticeListAnimation}
+                duration={1000}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={() =>
+                    navigation.navigate('NoticeScreen', {
+                      screen: 'NoticeDetailScreen',
+                      params: {item: item},
+                    })
+                  }
+                  style={style.card}>
+                  <Calendor />
+                  <View style={{marginHorizontal: '5%'}}>
+                    <Text style={style.cardTitle}>
+                      {item.title}{' '}
+                      {isAdmin && (
+                        <Text style={{color: 'red'}}>-{item.status}</Text>
+                      )}
+                    </Text>
+                    <View style={{width: '16%'}}>
+                      <Text
+                        numberOfLines={2}
+                        style={[style.cardDesc, {width: '100%'}]}>
+                        {item.description}
+                      </Text>
+                    </View>
+                    <Text style={style.cardDate}>
+                      {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
                     </Text>
                   </View>
-                  <Text style={style.cardDate}>
-                    {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              {isAdmin && (
-                <AppCrudActionButton
-                  item={item}
-                  index={index}
-                  hideEdit={item.status !== 'draft'}
-                  loaderIndex={deleteLoader}
-                  doActions={doActions}
-                />
-              )}
-            </View>
-          );
+                </TouchableOpacity>
+                {isAdmin && (
+                  <AppCrudActionButton
+                    item={item}
+                    index={index}
+                    hideEdit={item.status !== 'draft'}
+                    loaderIndex={deleteLoader}
+                    doActions={doActions}
+                  />
+                )}
+              </Animatable.View>
+            );
+          }
         }}
         extraData={({item, index}) => index}
       />

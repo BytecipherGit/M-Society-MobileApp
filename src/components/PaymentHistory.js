@@ -9,6 +9,8 @@ import {GetData} from '../assets/services';
 import {API_URL} from '../assets/services';
 import {useSelector} from 'react-redux';
 import AppLoaderSrceen from '../ReUsableComponents/AppLoaderSrceen';
+import * as Animatable from 'react-native-animatable';
+import {noticeListAnimation} from '../assets/Animations';
 
 const PaymentHistory = ({navigation}) => {
   const state = useSelector(state => state.AuthReducer);
@@ -17,6 +19,15 @@ const PaymentHistory = ({navigation}) => {
     loader: false,
     error: '',
   });
+  const [currentAnimationIndex, setCurrentAnimationIndex] = useState(0);
+
+  useEffect(() => {
+    if (currentAnimationIndex <= data.data.length) {
+      setTimeout(() => {
+        setCurrentAnimationIndex(currentAnimationIndex + 1);
+      }, 200);
+    }
+  }, [currentAnimationIndex]);
 
   useEffect(() => {
     getPaymentHistory();
@@ -37,6 +48,7 @@ const PaymentHistory = ({navigation}) => {
       const Result = await GetData(payload);
 
       if (Result.data.success) {
+        setCurrentAnimationIndex(0);
         setData({
           data: state.isAdmin ? Result.data.allHistory : Result.data.data,
           loader: false,
@@ -125,42 +137,51 @@ const PaymentHistory = ({navigation}) => {
         ListEmptyComponent={() => (
           <AppLoaderSrceen loader={data.loader} error={data.error} />
         )}
-        renderItem={({item, index}) => (
-          <View style={style.card}>
-            <View style={style.cardHeader}>
-              <HistoryIcon />
-              <View style={style.detailCnt}>
-                <TitleText style={style.cardPrice} text={`₹ ${item.amount}`} />
-                <Text style={style.paidTxt}>
-                  Paid-{' '}
-                  <Text style={style.dateTxt}>
-                    {convertToMonth(item.month)},{item.year}
+        renderItem={({item, index}) => {
+          if (index <= currentAnimationIndex) {
+            return (
+              <Animatable.View
+                style={style.card}
+                animation={noticeListAnimation}>
+                <View style={style.cardHeader}>
+                  <HistoryIcon />
+                  <View style={style.detailCnt}>
+                    <TitleText
+                      style={style.cardPrice}
+                      text={`₹ ${item.amount}`}
+                    />
+                    <Text style={style.paidTxt}>
+                      Paid-{' '}
+                      <Text style={style.dateTxt}>
+                        {convertToMonth(item.month)},{item.year}
+                      </Text>
+                    </Text>
+                    <Text style={style.dateTxt}>{item.status}</Text>
+                  </View>
+                </View>
+                <View style={style.devider} />
+                <View style={style.cardFooter}>
+                  <Text
+                    style={[
+                      {
+                        fontFamily: 'Inter-Medium',
+                      },
+                      style.dateTxt,
+                    ]}>
+                    Transaction ID:{' '}
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: '#202937',
+                      }}>
+                      {item.transactionId}
+                    </Text>
                   </Text>
-                </Text>
-                <Text style={style.dateTxt}>{item.status}</Text>
-              </View>
-            </View>
-            <View style={style.devider} />
-            <View style={style.cardFooter}>
-              <Text
-                style={[
-                  {
-                    fontFamily: 'Inter-Medium',
-                  },
-                  style.dateTxt,
-                ]}>
-                Transaction ID:{' '}
-                <Text
-                  style={{
-                    fontSize: 14,
-                    color: '#202937',
-                  }}>
-                  {item.transactionId}
-                </Text>
-              </Text>
-            </View>
-          </View>
-        )}
+                </View>
+              </Animatable.View>
+            );
+          }
+        }}
         extraData={item => item._id}
       />
     </View>

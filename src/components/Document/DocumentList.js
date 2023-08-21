@@ -20,12 +20,15 @@ import AppRoundAddActionButton from '../../ReUsableComponents/AppRoundAddActionB
 import {useSelector} from 'react-redux';
 import AppCrudActionButton from '../../ReUsableComponents/AppCrudActionButton';
 import {useIsFocused} from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable';
+import {noticeListAnimation} from '../../assets/Animations';
 
 const DocumentList = ({navigation}) => {
   const [documents, setDocuments] = useState([]);
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState('');
   const [deleteLoader, setDeleteLoader] = useState('');
+  const [currentAnimationIndex, setCurrentAnimationIndex] = useState(0);
   const {isAdmin} = useSelector(state => state.AuthReducer);
   const isFocus = useIsFocused();
   useEffect(() => {
@@ -70,6 +73,7 @@ const DocumentList = ({navigation}) => {
 
         arr.splice(index, 1);
         setDocuments([...arr]);
+        setCurrentAnimationIndex(0);
       } else {
         SnackError(Result.message);
       }
@@ -78,6 +82,14 @@ const DocumentList = ({navigation}) => {
     }
     setDeleteLoader('');
   };
+
+  useEffect(() => {
+    if (currentAnimationIndex <= documents.length) {
+      setTimeout(() => {
+        setCurrentAnimationIndex(currentAnimationIndex + 1);
+      }, 250);
+    }
+  }, [currentAnimationIndex]);
 
   return (
     <View style={globalStyle.cnt}>
@@ -88,56 +100,60 @@ const DocumentList = ({navigation}) => {
         ListEmptyComponent={() => (
           <AppLoaderSrceen loader={loader} error={error} />
         )}
-        renderItem={({item, index}) => (
-          <>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('DocumentDetail', {item: item})
-              }
-              style={{
-                ...shadow,
-                margin: 20,
-                padding: 15,
-                borderRadius: 10,
-                backgroundColor: 'white',
-                flexDirection: 'row',
-                // justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: 8,
-              }}>
-              <DocumentSvg height={30} width={30} />
+        renderItem={({item, index}) => {
+          if (index <= currentAnimationIndex) {
+            return (
+              <Animatable.View animation={noticeListAnimation}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('DocumentDetail', {item: item})
+                  }
+                  style={{
+                    ...shadow,
+                    margin: 20,
+                    padding: 15,
+                    borderRadius: 10,
+                    backgroundColor: 'white',
+                    flexDirection: 'row',
+                    // justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: 8,
+                  }}>
+                  <DocumentSvg height={30} width={30} />
 
-              <View style={{marginLeft: '3%'}}>
-                <Text
-                  style={{
-                    fontFamily: 'Axiforma-Medium',
-                    fontSize: 16,
-                    color: '#262626',
-                    lineHeight: 28,
-                    marginBottom: '2%',
-                  }}>
-                  {item.documentName}
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: 'Axiforma-Light',
-                    fontSize: 12,
-                    color: '#ABACB0',
-                  }}>
-                  {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
-                </Text>
-              </View>
-            </TouchableOpacity>
-            {isAdmin && (
-              <AppCrudActionButton
-                item={item}
-                index={index}
-                loaderIndex={deleteLoader}
-                doActions={doActions}
-              />
-            )}
-          </>
-        )}
+                  <View style={{marginLeft: '3%'}}>
+                    <Text
+                      style={{
+                        fontFamily: 'Axiforma-Medium',
+                        fontSize: 16,
+                        color: '#262626',
+                        lineHeight: 28,
+                        marginBottom: '2%',
+                      }}>
+                      {item.documentName}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: 'Axiforma-Light',
+                        fontSize: 12,
+                        color: '#ABACB0',
+                      }}>
+                      {moment(`${item.createdDate}`).format('DD/MMM/YYYY')}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+                {isAdmin && (
+                  <AppCrudActionButton
+                    item={item}
+                    index={index}
+                    loaderIndex={deleteLoader}
+                    doActions={doActions}
+                  />
+                )}
+              </Animatable.View>
+            );
+          }
+        }}
         extraData={item => item._id}
       />
       {isAdmin && (

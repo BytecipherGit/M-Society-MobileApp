@@ -20,6 +20,7 @@ import {COLORS} from './theme';
 import PhoneSvg from '../assets/images/PhoneSvg.svg';
 import FaqIcon from '../assets/images/FaqIcon.svg';
 import TermService from '../assets/images/TermServiceIcon.svg';
+import {useEffect} from 'react';
 
 export const inputFields = [
   {

@@ -1,9 +1,7 @@
 import {
   View,
   Text,
-  SafeAreaView,
   Image,
-  TextInput,
   FlatList,
   TouchableOpacity,
   StyleSheet,
@@ -12,16 +10,12 @@ import {
 import React, {Fragment, useEffect} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
-import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
-import LinkAerrow from '../../assets/images/LinkAerrow.svg';
 import {useDispatch, useSelector} from 'react-redux';
 import {GET_MAINTANCE_USER_REQUEST} from '../../redux/Actions';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import AppTextInput from '../../ReUsableComponents/AppTextInput';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
-const searchIcon = 'https://cdn-icons-png.flaticon.com/512/54/54481.png';
 
 const TakePaymentScreen = ({navigation}) => {
   const dispatch = useDispatch();
