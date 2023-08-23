@@ -34,7 +34,7 @@ const MainTainUserPayment = ({navigation, route}) => {
   const [lastSelectedIndex, setLastSelectedIndex] = useState(null);
   const payment = useSelector(state => state.PaymentReducer);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
-  const [countPrev,setCountPrev] = useState(10);
+  const [countPrev, setCountPrev] = useState(10);
 
   const dispatch = useDispatch();
 
@@ -139,33 +139,37 @@ const MainTainUserPayment = ({navigation, route}) => {
           ListFooterComponent={() => {
             return (
               <>
-                {paymentData.length > 0 && paymentData[0].fistTimePayment && countPrev > 0 && (
-                  <TouchableOpacity
-                    style={{marginVertical: '5%'}}
-                    onPress={() => {
-                      if (!payment.loader) {
-                        dispatch({
-                          type: PRE_PAYMENT_DETAIL_REQUEST,
-                          payload: {
-                            year: paymentData[0].year,
-                            month: paymentData[0].month,
-                          },
-                        });
-                        setCountPrev(countPrev-1)
-                      }
-                    }}>
-                    <DescriptionText
-                      text={'Show Previous'}
-                      style={{
-                        fontWeight: 'bold',
-                        color: COLORS.buttonColor,
-                      }}
-                    />
-                  </TouchableOpacity>
-                )}
-                <View style={{
-                  height:50
-                }} />
+                {paymentData.length > 0 &&
+                  paymentData[0].fistTimePayment &&
+                  countPrev > 0 && (
+                    <TouchableOpacity
+                      style={{marginVertical: '5%'}}
+                      onPress={() => {
+                        if (!payment.loader) {
+                          dispatch({
+                            type: PRE_PAYMENT_DETAIL_REQUEST,
+                            payload: {
+                              year: paymentData[0].year,
+                              month: paymentData[0].month,
+                            },
+                          });
+                          setCountPrev(countPrev - 1);
+                        }
+                      }}>
+                      <DescriptionText
+                        text={'Show Previous'}
+                        style={{
+                          fontWeight: 'bold',
+                          color: COLORS.buttonColor,
+                        }}
+                      />
+                    </TouchableOpacity>
+                  )}
+                <View
+                  style={{
+                    height: 50,
+                  }}
+                />
               </>
             );
           }}

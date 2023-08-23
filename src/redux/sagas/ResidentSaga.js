@@ -17,7 +17,16 @@ function* getResidentList(action) {
     const Data = yield call(GetData, payload);
 
     if (Data.data.success === true) {
-      yield put({type: GET_RESIDENTSLIST_SUCCESS, payload: Data?.data?.data});
+      console.log('Statet data =>', Data?.data?.data);
+      Data?.data?.data.length
+        ? yield put({
+            type: GET_RESIDENTSLIST_SUCCESS,
+            payload: Data?.data?.data,
+          })
+        : yield put({
+            type: GET_RESIDENTSLIST_FAIL,
+            payload: 'No Resident Users found.',
+          });
     } else {
       yield put({type: GET_RESIDENTSLIST_FAIL, payload: Data?.data?.message});
     }

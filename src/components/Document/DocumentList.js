@@ -42,7 +42,9 @@ const DocumentList = ({navigation}) => {
 
       if (Result.data.success) {
         setDocuments(Result.data.data);
-        setError('');
+        Result.data.data.length > 0
+          ? setError('')
+          : setError('No document list was found.');
       } else {
         setError(Result.data.message);
       }
@@ -70,6 +72,7 @@ const DocumentList = ({navigation}) => {
 
         arr.splice(index, 1);
         setDocuments([...arr]);
+        setError('No document list was found.');
       } else {
         SnackError(Result.message);
       }

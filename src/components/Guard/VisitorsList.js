@@ -5,6 +5,7 @@ import {
   FlatList,
   Image,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
@@ -48,10 +49,7 @@ const VisitorsList = ({navigation}) => {
     try {
       if (Result.data.success) {
         setData({
-          error:
-            Result.data && Result.data.data.length > 0
-              ? ''
-              : 'No visitors are Found.',
+          error: Result?.data?.message,
           loader: false,
           data: Result.data.data,
         });
@@ -134,7 +132,7 @@ const VisitorsList = ({navigation}) => {
           showsVerticalScrollIndicator={false}
           style={{margin: 15, flex: 1}}
           ListEmptyComponent={() => (
-            <AppLoaderSrceen loader={data.loader} erro={data.error} />
+            <AppLoaderSrceen loader={data.loader} error={data.error} />
           )}
           renderItem={({item, index}) => {
             return rendetUI(item, index);

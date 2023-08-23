@@ -68,6 +68,7 @@ const ResidentList = ({navigation}) => {
         arr = data;
         arr[index].status = item.status === 'active' ? 'inactive' : 'active';
         setData([...arr]);
+        dispatch({type: GET_RESIDENTSLIST_REQUEST});
       } else {
         ErrorAlert(Result.data.message);
       }

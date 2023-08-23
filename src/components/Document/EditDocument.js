@@ -123,7 +123,7 @@ const EditDocument = ({navigation, route}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <AppHeader navigation={navigation} title={'Edit Notice'} />
+      <AppHeader navigation={navigation} title={'Edit Document'} />
       <FlatList
         data={[
           {id: 1, title: 'Document Name', params: 'documentName'},

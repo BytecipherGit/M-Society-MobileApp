@@ -109,14 +109,14 @@ const Notices = ({navigation}) => {
                 }
                 style={style.card}>
                 <Calendor />
-                <View style={{marginHorizontal: '5%'}}>
+                <View style={{marginHorizontal: '5%', flex: 1}}>
                   <Text style={style.cardTitle}>
                     {item.title}{' '}
                     {isAdmin && (
                       <Text style={{color: 'red'}}>-{item.status}</Text>
                     )}
                   </Text>
-                  <View style={{width: '16%'}}>
+                  <View style={{width: '100%'}}>
                     <Text
                       numberOfLines={2}
                       style={[style.cardDesc, {width: '100%'}]}>

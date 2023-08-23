@@ -202,7 +202,7 @@ const AddComplaints = ({route}) => {
           title={
             route?.name === 'UpdateComplaint'
               ? 'Edit Complaint'
-              : 'Rase Complaint'
+              : 'New Complaint'
           }
         />
         <View style={styles.card}>
