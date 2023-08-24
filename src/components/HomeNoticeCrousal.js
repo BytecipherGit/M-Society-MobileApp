@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {COLORS} from '../assets/theme';
 import Calendor from '../assets/images/Caledor.svg';
@@ -15,7 +15,20 @@ import {useNavigation} from '@react-navigation/native';
 
 const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
   const stateForTheme = useSelector(state => state.AuthReducer.userDetail);
+  const [publishNotices, setPublishNotices] = useState([]);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    let arr = [];
+
+    Notices.map((item, index) => {
+      if (item.status !== 'draft') {
+        arr.push(item);
+      }
+    });
+    setPublishNotices([...arr]);
+  }, [Notices]);
+
   return (
     <View style={{marginVertical: 25}}>
       <Text
@@ -36,7 +49,7 @@ const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
       <Carousel
         layout={'default'}
         ref={ref => null}
-        data={Notices}
+        data={publishNotices}
         sliderWidth={Dimensions.get('window').width / 1.02}
         itemWidth={Dimensions.get('window').width / 1}
         renderItem={({item, index}) => {
@@ -70,7 +83,7 @@ const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
         onSnapToItem={setActiveIndex}
       />
       <Pagination
-        dotsLength={Notices?.length}
+        dotsLength={publishNotices?.length}
         activeDotIndex={activeIndex}
         containerStyle={
           {

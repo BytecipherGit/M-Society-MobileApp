@@ -80,6 +80,7 @@ const LoginScreen = ({navigation}) => {
         const Result = await PostData(payload);
         if (Result && Result.data.success) {
           StoreData('user', JSON.stringify(Result.data));
+          console.log(Result.data);
           dispatch({type: USER_DATA, payload: Result.data});
           navigation.dispatch(
             CommonActions.reset({

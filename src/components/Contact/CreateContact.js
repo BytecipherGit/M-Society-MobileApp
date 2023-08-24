@@ -34,8 +34,10 @@ const CreateContact = ({navigation, route}) => {
   const getProfession = async () => {
     try {
       const Result = await GetData({
-        url: API_URL + 'profession',
+        url: API_URL + 'directory/profession',
       });
+
+      console.log(Result.data);
 
       if (Result.response) {
       } else {
@@ -46,7 +48,7 @@ const CreateContact = ({navigation, route}) => {
             arr.push({label: item.name, value: item.name});
           }
         });
-        setProfessionArray(arr);
+        setProfessionArray([...arr]);
       }
     } catch (e) {
       // SnackError("Something ")

@@ -1,4 +1,4 @@
-// export const API_URL = 'https://01f3-122-175-237-30.ngrok-free.app/api/';
+// export const API_URL = 'https://4d6f-122-175-237-30.ngrok-free.app/api/';
 export const API_URL = 'http://msociety.in:9001/api/';
 
 // swagger http://msociety.in:9001/api-docs/#/
@@ -10,6 +10,8 @@ import Snackbar from 'react-native-snackbar';
 export const GetData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
+
+  console.log(Token.accessToken);
 
   return axios
     .get(
@@ -338,7 +340,9 @@ export const putSocietyImages = async ({url, body}) => {
   }
 
   if (body?.images?.length > 0) {
-    formData.append('images', body.images[0]);
+    body.images.map(item => {
+      formData.append('images', item);
+    });
   }
   formData.append('id', body.id);
   formData.append('description', body.description);
@@ -359,6 +363,8 @@ export const putSocietyImages = async ({url, body}) => {
 export const CreateGuardAPI = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
+
+  console.log(Token.accessToken);
 
   const formData = new FormData();
   [payload.body].map(item => {

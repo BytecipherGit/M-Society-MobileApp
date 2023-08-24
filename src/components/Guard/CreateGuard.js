@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, globalStyle} from '../../assets/theme';
@@ -182,7 +183,7 @@ const CreateGuard = ({navigation, route}) => {
 
     try {
       const Result = await CreateGuardAPI({
-        url: API_URL + 'guard/profileUpdate',
+        url: API_URL + 'guard',
         body: {
           ...data,
           countryCode: '+' + data.countryCode,
@@ -214,6 +215,8 @@ const CreateGuard = ({navigation, route}) => {
 
   const eighteenYearsAgo = new Date();
   eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+
+  console.log(data);
 
   return (
     <View style={globalStyle.cnt}>

@@ -80,7 +80,7 @@ const GuardHomeScreen = ({navigation}) => {
         url: API_URL + 'guard/setting',
       });
       if (Result.response) {
-        SnackError('something went wrong to get permission data from server');
+        // SnackError('something went wrong to get permission data from server');
       } else {
         console.log(Result.data.data);
         Result.data.data &&
@@ -88,7 +88,7 @@ const GuardHomeScreen = ({navigation}) => {
           setPermission(true);
       }
     } catch (e) {
-      SnackError('Something went wrong to fetch permission Data.');
+      // SnackError('Something went wrong to fetch permission Data.');
     }
   };
 

@@ -47,6 +47,16 @@ const OnboardingScreen = ({navigation, route}) => {
     navigation.replace('LoginOptionsScreen');
   };
 
+  const slideView = () => {
+    const currentSlide = sliderRef.current.state.activeIndex;
+
+    if (currentSlide === 2) {
+      return onSkip();
+    }
+
+    sliderRef.current.goToSlide(currentSlide + 1);
+  };
+
   const _renderItem = ({item}) => (
     <View style={[styles.cnt]}>
       <View
@@ -95,18 +105,7 @@ const OnboardingScreen = ({navigation, route}) => {
               {item?.text}
             </Text>
           </View>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={{}}
-            onPress={() => {
-              const currentSlide = sliderRef.current.state.activeIndex;
-
-              if (currentSlide === 2) {
-                return onSkip();
-              }
-
-              sliderRef.current.goToSlide(currentSlide + 1);
-            }}>
+          <TouchableOpacity activeOpacity={0.8} style={{}} onPress={slideView}>
             <LinearGradient
               colors={['#FFA13C', '#FF7334']}
               start={{x: 0, y: 0}}
@@ -123,7 +122,7 @@ const OnboardingScreen = ({navigation, route}) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={slideView}>
                 <Image
                   source={require('../assets/images/NextAerrow.png')}
                   style={{width: 22.09, height: 24}}

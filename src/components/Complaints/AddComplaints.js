@@ -118,9 +118,9 @@ const AddComplaints = ({route}) => {
       return SnackError('Please Enter All Mendatory Fields');
     }
 
-    if (data.attachedImage.length <= 0) {
-      return SnackError('Please Select Complaint Image.');
-    }
+    // if (data.attachedImage.length <= 0) {
+    //   return SnackError('Please Select Complaint Image.');
+    // }
 
     if (route?.name === 'UpdateComplaint') {
       if (statusOption) {

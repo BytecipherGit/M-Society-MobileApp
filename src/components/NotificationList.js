@@ -5,6 +5,8 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  Alert,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../assets/theme';
@@ -86,6 +88,15 @@ const NotificationList = ({navigation}) => {
 
   const renderDesign = (item, index, showButtons) => {
     console.log(item);
+    const linkText = item?.payload?.notification?.body;
+    const startIndex = linkText?.indexOf('http://');
+    const endIndex = linkText?.indexOf(' ', startIndex);
+
+    const link = linkText.substring(
+      startIndex,
+      endIndex !== -1 ? endIndex : undefined,
+    );
+
     return (
       <View style={style.card}>
         <View>
@@ -126,6 +137,17 @@ const NotificationList = ({navigation}) => {
                   item.payload.notification.body
                 : item.reasone}
             </Text>
+            {link && item?.payload?.notification?.body !== link && (
+              <Text
+                style={{
+                  marginTop: '3%',
+                  fontFamily: 'Axiforma-SemiBold',
+                  color: 'blue',
+                }}
+                onPress={() => Linking.openURL(link)}>
+                {link}
+              </Text>
+            )}
           </View>
         </View>
         {item.isApprove && (

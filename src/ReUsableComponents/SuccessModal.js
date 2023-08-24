@@ -7,10 +7,15 @@ import AppButton from './AppButton';
 import {useNavigation} from '@react-navigation/native';
 import LogoutIcon from '../assets/images/LogoutIcon.svg';
 import {COLORS} from '../assets/theme';
-import {RemoveStoreData} from '../assets/services';
+import {
+  API_URL,
+  DeleteData,
+  RemoveStoreData,
+  getAsyncValue,
+} from '../assets/services';
 import {CommonActions} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 const SuccessModal = ({
   isVisible,
@@ -24,9 +29,27 @@ const SuccessModal = ({
 }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const {isAdmin} = useSelector(state => state.AuthReducer);
 
   const logout = async () => {
     onPress();
+    const OnBoard = await getAsyncValue('OnBoard');
+    let prefix = '';
+
+    if (OnBoard) {
+      // now check already login or not
+      const User = await getAsyncValue('user');
+      if (User) {
+        JSON.parse(User).data.userType === 'guard'
+          ? (prefix = 'guard')
+          : isAdmin
+          ? (prefix = 'admin')
+          : (prefix = 'user');
+      }
+    }
+    await DeleteData({
+      url: API_URL + `${prefix}/logout`,
+    });
     RemoveStoreData('user');
     dispatch({type: 'LOG_OUT'});
     setIsVisible(false),

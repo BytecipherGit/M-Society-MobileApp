@@ -44,41 +44,61 @@ const SocietyEditScreen = ({navigation, route}) => {
   const [loader, setLoader] = useState(false);
   const dispatch = useDispatch();
 
-  const pickImage = (type, setType) => {
+  const pickImage = (type, setType, multiple = false) => {
     // Image, Logo
     if (type === 'camera') {
-      launchCamera({}, response => {
+      launchCamera({quality: 0.5}, response => {
         if (response.didCancel) {
           console.log('Permission cancelled', response);
         } else if (response.error) {
           console.log('error =>', response);
         } else {
-          setImage(response.assets[0], setType);
+          setImage(response.assets[0], setType, multiple);
         }
       });
     } else {
-      launchImageLibrary({}, response => {
-        if (response.didCancel) {
-          console.log('Permission cancelled', response);
-        } else if (response.error) {
-          console.log('error =>', response);
-        } else {
-          setImage(response.assets[0], setType);
-        }
-      });
+      launchImageLibrary(
+        {selectionLimit: multiple ? 10 : 1, quality: 0.5},
+        response => {
+          if (response.didCancel) {
+            console.log('Permission cancelled', response);
+          } else if (response.error) {
+            console.log('error =>', response);
+          } else {
+            setImage(
+              multiple ? response.assets : response.assets[0],
+              setType,
+              multiple,
+            );
+          }
+        },
+      );
     }
   };
 
-  const setImage = (Imagedata, type) => {
+  const setImage = (Imagedata, type, multiple) => {
     if (type === 'Image') {
-      setSocietyImages([
-        ...societyImages,
-        {
-          uri: Imagedata.uri,
-          type: Imagedata.type,
-          name: Imagedata.fileName,
-        },
-      ]);
+      if (multiple) {
+        let arr = [];
+        arr = societyImages;
+        Imagedata.map(item => {
+          arr.push({
+            uri: item.uri,
+            type: item.type,
+            name: item.fileName,
+          });
+        });
+        setSocietyImages([...arr]);
+      } else {
+        setSocietyImages([
+          ...societyImages,
+          {
+            uri: Imagedata.uri,
+            type: Imagedata.type,
+            name: Imagedata.fileName,
+          },
+        ]);
+      }
     } else {
       setData({
         ...data,
@@ -157,7 +177,7 @@ const SocietyEditScreen = ({navigation, route}) => {
           <Text style={styles.attachFileTxt}>Pick Society View Images</Text>
           <AppFilePicker
             titleText={'Pick Society Images'}
-            onPress={op => pickImage(op, 'Image')}
+            onPress={op => pickImage(op, 'Image', true)}
           />
           {societyImages.length > 0 && (
             <FlatList
