@@ -193,6 +193,7 @@ const GuardHomeScreen = ({navigation}) => {
         'Something went wrong, please try again later for get visitors.',
       );
     }
+    setActionId('');
   };
 
   const onRefresh = () => {
