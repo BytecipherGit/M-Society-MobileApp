@@ -87,15 +87,17 @@ const NotificationList = ({navigation}) => {
   };
 
   const renderDesign = (item, index, showButtons) => {
-    console.log(item);
-    const linkText = item?.payload?.notification?.body;
-    const startIndex = linkText?.indexOf('http://');
-    const endIndex = linkText?.indexOf(' ', startIndex);
+    let link = '';
+    if (selectedTab === 'Notifications') {
+      const linkText = item?.payload?.notification?.body;
+      const startIndex = linkText?.indexOf('http://');
+      const endIndex = linkText?.indexOf(' ', startIndex);
 
-    const link = linkText.substring(
-      startIndex,
-      endIndex !== -1 ? endIndex : undefined,
-    );
+      link = linkText.substring(
+        startIndex,
+        endIndex !== -1 ? endIndex : undefined,
+      );
+    }
 
     return (
       <View style={style.card}>
