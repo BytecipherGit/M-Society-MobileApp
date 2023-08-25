@@ -11,8 +11,6 @@ export const GetData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
 
-  console.log(Token.accessToken);
-
   return axios
     .get(
       payload.url,

@@ -21,6 +21,7 @@ import {
   NOTICE_LIST_REQUEST_SILENT,
   SET_USER_TYPE,
   SOCIETY_DETAIL_REQUEST,
+  USER_DATA,
 } from '../redux/Actions';
 import {getAsyncValue} from '../assets/services';
 import TakePayment from '../assets/images/TakePayment.svg';
@@ -45,6 +46,7 @@ const HomeScreen = ({navigation}) => {
   });
   const [visitorsCheck, setVisitorsCheck] = useRecoilState(CheckVisitors);
   const state = useSelector(state => state.AuthReducer);
+  const basicState = useSelector(state => state.AuthReducer.userDetail);
   const Notice = useSelector(state => state.NoticeReducer);
   const stateForTheme = useSelector(state => state.AuthReducer.userDetail);
   const data = useSelector(state => state.SocietyReducer);
@@ -62,8 +64,17 @@ const HomeScreen = ({navigation}) => {
       setVisitorsCheck({
         visitors: visitorsCheck.visitors + 1,
       });
+      dispatch({type: SOCIETY_DETAIL_REQUEST, payload: SocietyId._id});
     }
   }, [isFocus]);
+
+  useEffect(() => {
+    if (data && data?.data && data?.data?.society) {
+      let detail = basicState;
+      detail.data.societyId = data?.data?.society;
+      dispatch({type: USER_DATA, payload: basicState});
+    }
+  }, [data?.data?.society]);
 
   useEffect(() => {
     if (data?.data?.society?._id) {

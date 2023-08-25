@@ -18,7 +18,7 @@ import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import {useDispatch, useSelector} from 'react-redux';
 import {API_URL, GetData} from '../../assets/services';
-import {SOCIETY_DETAIL_REQUEST} from '../../redux/Actions';
+import {SOCIETY_DETAIL_REQUEST, USER_DATA} from '../../redux/Actions';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import moment from 'moment';
 import {SocietyInfoArray} from '../../assets/Jsons';
@@ -30,6 +30,7 @@ const SocietyInfo = ({navigation, route}) => {
     state => state.AuthReducer.userDetail.data.societyId,
   );
   const data = useSelector(state => state.SocietyReducer);
+  const state = useSelector(state => state.AuthReducer.userDetail);
   const {isAdmin} = useSelector(state => state.AuthReducer);
 
   const dispatch = useDispatch();
@@ -39,6 +40,14 @@ const SocietyInfo = ({navigation, route}) => {
     isFocused &&
       dispatch({type: SOCIETY_DETAIL_REQUEST, payload: SocietyId._id});
   }, [isFocused]);
+
+  useEffect(() => {
+    if (data && data?.data && data?.data?.society) {
+      let detail = state;
+      detail.data.societyId = data?.data?.society;
+      dispatch({type: USER_DATA, payload: state});
+    }
+  }, [data?.data?.society]);
 
   return (
     <View style={globalStyle.cnt}>
