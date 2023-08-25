@@ -121,6 +121,97 @@ const EditDocument = ({navigation, route}) => {
     }
   }
 
+  const renderFile = () => {
+    let fileTyep =
+      data && data.documentImageFile && data.documentImageFile.name
+        ? data?.documentImageFile?.name?.slice(
+            data?.documentImageFile?.name.length - 3,
+            data?.documentImageFile?.name.length - 0,
+          )
+        : data?.documentImageFile?.uri?.slice(
+            data?.documentImageFile?.uri.length - 3,
+            data?.documentImageFile?.uri.length - 0,
+          );
+
+    return data.documentImageFile && data.documentImageFile.uri ? (
+      <View>
+        {fileTyep && fileTyep === 'pdf' ? (
+          <View
+            style={{
+              height: 200,
+              width: '100%',
+              borderRadius: 10,
+              borderWidth: 0.5,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text
+              style={{
+                color: COLORS.titleFont,
+                fontFamily: 'Axiforma-Bold',
+                fontSize: 15,
+              }}>
+              {data.documentImageFile.name}
+            </Text>
+            <Text
+              style={{
+                color: 'red',
+              }}>
+              No Preview Available
+            </Text>
+          </View>
+        ) : (
+          <Image
+            style={{height: 200, width: '100%', borderRadius: 10}}
+            source={{uri: data.documentImageFile.uri}}
+            resizeMode="contain"
+          />
+        )}
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            height: 30,
+            width: 30,
+            backgroundColor: COLORS.themeColor,
+            borderRadius: 1000,
+            alignSelf: 'flex-end',
+            marginTop: -10,
+            marginRight: -5,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          onPress={() => setData({...data, documentImageFile: {}})}>
+          <Entypo name="cross" size={23} color="red" />
+        </TouchableOpacity>
+      </View>
+    ) : (
+      <View
+        style={{
+          borderRadius: 10,
+          borderWidth: 2,
+          height: 130,
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginVertical: '1%',
+          borderColor: '#DEDEDE',
+          borderStyle: 'dashed',
+        }}>
+        <TouchableOpacity
+          onPress={() => pickDocument()}
+          style={{alignSelf: 'center'}}>
+          <AddFileIcon />
+        </TouchableOpacity>
+        <Text
+          style={{
+            color: COLORS.titleFont,
+            fontFamily: 'Axiforma-SemiBold',
+          }}>
+          Upload File
+        </Text>
+      </View>
+    );
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <AppHeader navigation={navigation} title={'Edit Document'} />
@@ -183,56 +274,7 @@ const EditDocument = ({navigation, route}) => {
                   })}
                 </View>
               ) : item.id === 4 ? (
-                data.documentImageFile && data.documentImageFile.uri ? (
-                  <View>
-                    <Image
-                      style={{height: 200, width: '100%', borderRadius: 10}}
-                      source={{uri: data.documentImageFile.uri}}
-                      resizeMode="contain"
-                    />
-                    <TouchableOpacity
-                      style={{
-                        position: 'absolute',
-                        height: 30,
-                        width: 30,
-                        backgroundColor: COLORS.themeColor,
-                        borderRadius: 1000,
-                        alignSelf: 'flex-end',
-                        marginTop: -10,
-                        marginRight: -5,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                      onPress={() => setData({...data, documentImageFile: {}})}>
-                      <Entypo name="cross" size={23} color="red" />
-                    </TouchableOpacity>
-                  </View>
-                ) : (
-                  <View
-                    style={{
-                      borderRadius: 10,
-                      borderWidth: 2,
-                      height: 130,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginVertical: '1%',
-                      borderColor: '#DEDEDE',
-                      borderStyle: 'dashed',
-                    }}>
-                    <TouchableOpacity
-                      onPress={() => pickDocument()}
-                      style={{alignSelf: 'center'}}>
-                      <AddFileIcon />
-                    </TouchableOpacity>
-                    <Text
-                      style={{
-                        color: COLORS.titleFont,
-                        fontFamily: 'Axiforma-SemiBold',
-                      }}>
-                      Upload File
-                    </Text>
-                  </View>
-                )
+                renderFile()
               ) : (
                 <View style={{...shadow}}>
                   <AppTextInput
@@ -254,7 +296,7 @@ const EditDocument = ({navigation, route}) => {
           marginBottom: '2%',
         }}
         btnLoader={loader}
-        buttonTitle="Create Notice"
+        buttonTitle="Edit Document"
         onPress={editDocument}
       />
     </View>

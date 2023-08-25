@@ -111,7 +111,7 @@ const CreateContact = ({navigation, route}) => {
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <AppHeader
         navigation={navigation}
-        title={isUpdate ? 'Update Contact' : 'Create New Contact'}
+        title={isUpdate ? 'Update Phone Directory' : 'Create New Contact'}
       />
       <FlatList
         data={[

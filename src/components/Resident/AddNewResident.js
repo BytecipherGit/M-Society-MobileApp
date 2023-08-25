@@ -208,8 +208,8 @@ const AddNewResident = ({navigation, route}) => {
               setData({
                 ...data,
                 [data.countryCode
-                  ? countryCode
-                  : ownerCountryCode]: `+${cn.callingCode[0]}`,
+                  ? data.countryCode
+                  : ownerDetail.ownerCountryCode]: `+${cn.callingCode[0]}`,
               })
             }
           />
@@ -262,7 +262,7 @@ const AddNewResident = ({navigation, route}) => {
     <View style={globalStyle.cnt}>
       <AppHeader
         navigation={navigation}
-        title={route && route.params ? 'View Residence' : 'Add Residence'}
+        title={route && route.params ? 'View Resident' : 'Add Resident'}
       />
       <DatePicker
         modal

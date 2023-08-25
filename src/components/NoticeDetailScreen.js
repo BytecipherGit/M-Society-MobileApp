@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import React, {Fragment} from 'react';
 import AppHeader from '../ReUsableComponents/AppHeader';
@@ -28,48 +29,64 @@ const NoticeDetailScreen = ({navigation, route}) => {
       <AppHeader title={'Notice'} navigation={navigation} />
       <FlatList
         data={[1]}
-        renderItem={() => (
-          <View style={style.card}>
-            <View style={style.dateCnt}>
-              <BellIcon />
-              <Text style={style.dateTxt}>
-                {moment(`${createdDate}`).format('DD/MMM/YYYY')}
-              </Text>
+        style={{flex: 1}}
+        renderItem={() => {
+          const Label = path !== 'pdf' ? TouchableOpacity : View;
+          return (
+            <View style={style.card}>
+              <View style={style.dateCnt}>
+                <BellIcon />
+                <Text style={style.dateTxt}>
+                  {moment(`${createdDate}`).format('DD/MMM/YYYY')}
+                </Text>
+              </View>
+              <Text style={style.title}>{title}</Text>
+              <Text style={style.desc}>{description}</Text>
+              {/* <Text style={style.secretory}>{'Secretory'}</Text>
+              <Text style={style.adminName}>{societyAdminId}</Text> */}
+              <Label
+                onPress={() =>
+                  path !== 'pdf' &&
+                  navigation.navigate('ImageViewScreen', {
+                    img: attachedFile,
+                  })
+                }
+                activeOpacity={0.8}
+                style={[style.imgCnt, path === 'pdf' && {height: 500}]}>
+                {path === 'pdf' ? (
+                  Platform.OS === 'ios' ? (
+                    <WebView
+                      source={{
+                        uri: attachedFile,
+                      }}
+                      style={{
+                        flex: 1,
+                      }}
+                    />
+                  ) : (
+                    <Pdf
+                      source={{
+                        uri: attachedFile,
+                      }}
+                      trustAllCerts={Platform.OS === 'ios'}
+                      style={{
+                        flex: 1,
+                      }}
+                    />
+                  )
+                ) : (
+                  <Image
+                    source={{
+                      uri: attachedFile,
+                    }}
+                    style={{height: '100%', width: '100%', borderRadius: 8}}
+                    resizeMode="contain"
+                  />
+                )}
+              </Label>
             </View>
-            <Text style={style.title}>{title}</Text>
-            <Text style={style.desc}>{description}</Text>
-            {/* <Text style={style.secretory}>{'Secretory'}</Text>
-            <Text style={style.adminName}>{societyAdminId}</Text> */}
-            <TouchableOpacity
-              onPress={() =>
-                path !== 'pdf' &&
-                navigation.navigate('ImageViewScreen', {
-                  img: attachedFile,
-                })
-              }
-              activeOpacity={0.8}
-              style={style.imgCnt}>
-              {path === 'pdf' ? (
-                <Pdf
-                  source={{
-                    uri: attachedFile,
-                  }}
-                  style={{
-                    flex: 1,
-                  }}
-                />
-              ) : (
-                <Image
-                  source={{
-                    uri: attachedFile,
-                  }}
-                  style={{height: '100%', width: '100%', borderRadius: 8}}
-                  resizeMode="contain"
-                />
-              )}
-            </TouchableOpacity>
-          </View>
-        )}
+          );
+        }}
       />
     </View>
   );

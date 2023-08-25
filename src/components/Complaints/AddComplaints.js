@@ -97,6 +97,7 @@ const AddComplaints = ({route}) => {
               let arr = [];
               arr = complaintImage;
               arr.push(response.assets[0]);
+              console.log(response.assets[0]);
               setData({...data, attachedImage: [...arr]});
             }
           },

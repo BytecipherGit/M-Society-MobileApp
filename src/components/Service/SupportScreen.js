@@ -10,7 +10,7 @@ const SupportScreen = ({navigation}) => {
       <AppHeader title={'Support'} navigation={navigation} />
       <TouchableOpacity
         style={{margin: 10, flexDirection: 'row', alignItems: 'center'}}
-        onPress={() => Linking.openURL(`tel:1234567890`)}>
+        onPress={() => Linking.openURL(`tel:8871865254`)}>
         <View
           style={{
             backgroundColor: COLORS.themeColor,
@@ -29,13 +29,13 @@ const SupportScreen = ({navigation}) => {
             fontFamily: 'Axiforma-Medium',
             color: COLORS.titleFont,
           }}>
-          +91 1234567890
+          +91 8871865254
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={{margin: 10, flexDirection: 'row', alignItems: 'center'}}
         onPress={() => {
-          const email = 'abc@gmail.com';
+          const email = 'support@msociety.in';
           const url = `googlegmail:///co?to=${email}`;
           Linking.canOpenURL(url)
             .then(supported => {
@@ -65,7 +65,7 @@ const SupportScreen = ({navigation}) => {
             fontFamily: 'Axiforma-Medium',
             color: COLORS.titleFont,
           }}>
-          support@msociety.com
+          support@msociety.in
         </Text>
       </TouchableOpacity>
       <Text

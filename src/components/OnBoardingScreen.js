@@ -28,13 +28,13 @@ const slides = [
   },
   {
     key: '2',
-    title: 'online society services',
+    title: 'Online Society Services',
     text: 'On the other hand, we denounce with righteous indignation and dislike men who are so beguiled ',
     Icon: <SearchSvg width={370} />,
   },
   {
     key: '3',
-    title: 'Playing and walking',
+    title: 'Playing And Walking',
     text: 'On the other hand, we denounce with righteous indignation and dislike men who are so beguiled ',
     Icon: <WalkSvg width={250} />,
   },

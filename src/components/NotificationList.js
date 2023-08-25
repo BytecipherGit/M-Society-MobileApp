@@ -16,6 +16,7 @@ import AppLoaderSrceen from '../ReUsableComponents/AppLoaderSrceen';
 import {useSelector} from 'react-redux';
 import AppButton from '../ReUsableComponents/AppButton';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import ViewMoreText from 'react-native-view-more-text';
 
 const NotificationList = ({navigation}) => {
   const [data, setData] = useState({
@@ -88,7 +89,11 @@ const NotificationList = ({navigation}) => {
 
   const renderDesign = (item, index, showButtons) => {
     let link = '';
-    if (selectedTab === 'Notifications') {
+    if (
+      selectedTab === 'Notifications' &&
+      !showButtons &&
+      item.topic === 'MaintancePayment'
+    ) {
       const linkText = item?.payload?.notification?.body;
       const startIndex = linkText?.indexOf('http://');
       const endIndex = linkText?.indexOf(' ', startIndex);
@@ -98,6 +103,22 @@ const NotificationList = ({navigation}) => {
         endIndex !== -1 ? endIndex : undefined,
       );
     }
+
+    if (!showButtons && item.topic === 'Visitor') {
+      return null;
+    }
+
+    const renderViewMore = onPress => (
+      <Text onPress={onPress} style={{color: 'blue'}}>
+        View more
+      </Text>
+    );
+
+    const renderViewLess = onPress => (
+      <Text onPress={onPress} style={{color: 'blue'}}>
+        View less
+      </Text>
+    );
 
     return (
       <View style={style.card}>
@@ -131,27 +152,32 @@ const NotificationList = ({navigation}) => {
             resizeMode="contain"
           />
           <View style={style.cardDescCnt}>
-            <Text style={style.cardDesc}>
-              {!showButtons
-                ? item &&
-                  item.payload &&
-                  item.payload.notification &&
-                  item.payload.notification.body
-                : item.reasone}
-            </Text>
-            {link && item?.payload?.notification?.body !== link && (
-              <Text
-                style={{
-                  marginTop: '3%',
-                  fontFamily: 'Axiforma-SemiBold',
-                  color: 'blue',
-                }}
-                onPress={() => Linking.openURL(link)}>
-                {link}
+            <ViewMoreText
+              numberOfLines={3}
+              renderViewMore={renderViewMore}
+              renderViewLess={renderViewLess}>
+              <Text style={style.cardDesc}>
+                {!showButtons
+                  ? item &&
+                    item.payload &&
+                    item.payload.notification &&
+                    item.payload.notification.body
+                  : item.reasone}
               </Text>
-            )}
+            </ViewMoreText>
           </View>
         </View>
+        {link && item?.payload?.notification?.body !== link && (
+          <Text
+            style={{
+              marginTop: '3%',
+              fontFamily: 'Axiforma-SemiBold',
+              color: 'blue',
+            }}
+            onPress={() => Linking.openURL(link)}>
+            {link}
+          </Text>
+        )}
         {item.isApprove && (
           <View
             style={{
@@ -339,7 +365,7 @@ const style = StyleSheet.create({
   cardDesc: {
     fontFamily: 'Axiforma-medium',
     fontSize: 13,
-    marginTop: '2%',
+    // marginTop: '2%',
     color: 'black',
   },
   actionBtnCnt: {

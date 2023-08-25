@@ -79,6 +79,15 @@ const CreateDocument = ({navigation}) => {
     }
   }
 
+  let fileTyep =
+    data &&
+    data.documentImageFile &&
+    data.documentImageFile.uri &&
+    data?.documentImageFile?.type?.slice(
+      data?.documentImageFile?.type.length - 3,
+      data?.documentImageFile?.type.length - 0,
+    );
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <AppHeader navigation={navigation} title={'Create New Document'} />
@@ -143,11 +152,38 @@ const CreateDocument = ({navigation}) => {
               ) : item.id === 4 ? (
                 data.documentImageFile && data.documentImageFile.uri ? (
                   <View>
-                    <Image
-                      style={{height: 200, width: '100%', borderRadius: 10}}
-                      source={{uri: data.documentImageFile.uri}}
-                      resizeMode="contain"
-                    />
+                    {fileTyep && fileTyep === 'pdf' ? (
+                      <View
+                        style={{
+                          height: 200,
+                          width: '100%',
+                          borderRadius: 10,
+                          borderWidth: 0.5,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Text
+                          style={{
+                            color: COLORS.titleFont,
+                            fontFamily: 'Axiforma-Bold',
+                            fontSize: 15,
+                          }}>
+                          {data.documentImageFile.name}
+                        </Text>
+                        <Text
+                          style={{
+                            color: 'red',
+                          }}>
+                          No Preview Available
+                        </Text>
+                      </View>
+                    ) : (
+                      <Image
+                        style={{height: 200, width: '100%', borderRadius: 10}}
+                        source={{uri: data.documentImageFile.uri}}
+                        resizeMode="contain"
+                      />
+                    )}
                     <TouchableOpacity
                       style={{
                         position: 'absolute',

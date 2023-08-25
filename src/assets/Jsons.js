@@ -20,6 +20,7 @@ import {COLORS} from './theme';
 import PhoneSvg from '../assets/images/PhoneSvg.svg';
 import FaqIcon from '../assets/images/FaqIcon.svg';
 import TermService from '../assets/images/TermServiceIcon.svg';
+import SupportIcon from '../assets/images/SupportIcon.svg';
 
 export const inputFields = [
   {
@@ -280,7 +281,7 @@ export const profileOptions = [
     navigationScreen: 'Webview',
     icon: <FaqIcon />,
     param: {screenName: 'FAQ'},
-    urlParam: 'http://43.231.127.169:9004/faqs',
+    urlParam: 'http://msociety.in/faqs-mobile',
   },
   {
     id: 3,
@@ -319,13 +320,21 @@ export const profileOptions = [
     navigationScreen: 'Webview',
     icon: <TermService />,
     param: {screenName: 'Terms & Conditions'},
-    urlParam: 'http://43.231.127.169:9004/terms-conditions',
+    urlParam: 'http://msociety.in/terms-conditions-mobile',
+  },
+  {
+    id: 11,
+    title: 'Privacy Policy',
+    navigationScreen: 'Webview',
+    icon: <TermService />,
+    param: {screenName: 'Privacy Policy'},
+    urlParam: 'http://msociety.in/privacy-policy-mobile',
   },
   {
     id: 10,
     title: 'Support',
     navigationScreen: 'SupportScreen',
-    icon: <TermService />,
+    icon: <SupportIcon />,
     param: {screenName: 'Support'},
   },
   // {

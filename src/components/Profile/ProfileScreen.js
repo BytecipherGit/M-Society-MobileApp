@@ -152,6 +152,7 @@ const ProfileScreen = ({navigation, route}) => {
               name="logout"
               style={{
                 fontSize: 15,
+                alignSelf: 'center',
                 marginRight: 10,
                 color: 'white',
               }}

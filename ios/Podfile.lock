@@ -349,7 +349,7 @@ PODS:
   - React-jsinspector (0.71.1)
   - React-logger (0.71.1):
     - glog
-  - react-native-blob-util (0.18.3):
+  - react-native-blob-util (0.18.6):
     - React-Core
   - react-native-date-picker (4.2.13):
     - React-Core
@@ -696,7 +696,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 60cf272aababc5212410e4249d17cea14fc36caa
   React-jsinspector: ff56004b0c974b688a6548c156d5830ad751ae07
   React-logger: 60a0b5f8bed667ecf9e24fecca1f30d125de6d75
-  react-native-blob-util: 2d36383bb52c15c5451be81cb7ddf22bc34a12a6
+  react-native-blob-util: c5430d091e011b7fc57f888c356da2a2ff8dc8ad
   react-native-date-picker: 04e866ba4e7857f83abd504ad42e787f0f02ae00
   react-native-document-picker: 69ca2094d8780cfc1e7e613894d15290fdc54bba
   react-native-image-picker: c33d4e79f0a14a2b66e5065e14946ae63749660b

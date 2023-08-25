@@ -77,6 +77,7 @@ const AppTextInput = ({
         editable={stopEditable ? false : true}
         keyboardType={item.keyboardType}
         secureTextEntry={item.secureTextEntry}
+        autoCapitalize="words"
         placeholderTextColor={COLORS.inputPlaceholder}
         defaultValue={value}
         multiline={multiline}

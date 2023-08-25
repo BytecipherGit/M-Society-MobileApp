@@ -109,6 +109,17 @@ const EditNotice = ({navigation, route}) => {
     }
   }
 
+  let fileTyep =
+    data && data.attachedFile && data.attachedFile.name
+      ? data?.attachedFile?.name?.slice(
+          data?.attachedFile?.name.length - 3,
+          data?.attachedFile?.name.length - 0,
+        )
+      : data?.attachedFile?.uri?.slice(
+          data?.attachedFile?.uri.length - 3,
+          data?.attachedFile?.uri.length - 0,
+        );
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <AppHeader navigation={navigation} title={'Edit Notice'} />
@@ -168,11 +179,39 @@ const EditNotice = ({navigation, route}) => {
               ) : item.id === 4 ? (
                 data.attachedFile && data.attachedFile.uri ? (
                   <View>
-                    <Image
-                      style={{height: 200, width: '100%', borderRadius: 10}}
-                      source={{uri: data.attachedFile.uri}}
-                      resizeMode="contain"
-                    />
+                    {fileTyep && fileTyep === 'pdf' ? (
+                      <View
+                        style={{
+                          height: 200,
+                          width: '100%',
+                          borderRadius: 10,
+                          borderWidth: 0.5,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Text
+                          style={{
+                            color: COLORS.titleFont,
+                            fontFamily: 'Axiforma-Bold',
+                            fontSize: 15,
+                            alignSelf: 'center',
+                          }}>
+                          {data.attachedFile.name}
+                        </Text>
+                        <Text
+                          style={{
+                            color: 'red',
+                          }}>
+                          No Preview Available
+                        </Text>
+                      </View>
+                    ) : (
+                      <Image
+                        style={{height: 200, width: '100%', borderRadius: 10}}
+                        source={{uri: data.attachedFile.uri}}
+                        resizeMode="contain"
+                      />
+                    )}
                     <TouchableOpacity
                       style={{
                         position: 'absolute',
