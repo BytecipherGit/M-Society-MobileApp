@@ -7,7 +7,7 @@ import {allReducer} from './src/redux/MainReducer';
 import RootSaga from './src/redux/rootSaga';
 import {Provider} from 'react-redux';
 import SplashScreen from 'react-native-splash-screen';
-import {Alert, Image, StatusBar, View} from 'react-native';
+import {Image, Platform, View} from 'react-native';
 import AppAlert from './src/ReUsableComponents/AppAlert';
 import {RecoilRoot} from 'recoil';
 import NetInfo from '@react-native-community/netinfo';
@@ -25,8 +25,8 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      // SplashScreen.hide();
-    }, 2000);
+      Platform.OS === 'android' && SplashScreen.hide();
+    }, 1000);
     NetInfo.addEventListener(state => {
       setIsInternet(state.isConnected);
     });
