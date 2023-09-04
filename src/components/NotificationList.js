@@ -128,7 +128,7 @@ const NotificationList = ({navigation}) => {
               ? item &&
                 item.payload &&
                 item.payload.notification &&
-                item.payload.notification.title
+                item?.payload?.notification?.title
               : item.name}
             <Text style={{fontSize: 12, color: 'red'}}>
               {` (`}

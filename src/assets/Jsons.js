@@ -350,7 +350,13 @@ export const GuardprofileOptions = [
     id: 1,
     title: 'Your Details',
     navigationScreen: 'GuardEditProfileScreen',
-    icon: <DocumentIcon />,
+    icon: <User />,
+  },
+  {
+    id: 2,
+    title: 'Society Guards',
+    navigationScreen: 'GuardListScreen',
+    icon: <User />,
   },
   // {
   //   id: 5,

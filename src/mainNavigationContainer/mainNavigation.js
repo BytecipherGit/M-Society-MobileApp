@@ -50,6 +50,7 @@ import ServiceDetail from '../components/Service/ServiceDetail';
 import SupportScreen from '../components/Service/SupportScreen';
 import ServiceCategories from '../components/Society/ServiceCategories';
 import DeveloperMode from '../components/Profile/DeveloperMode';
+import ReportList from '../components/Service/ReportList';
 
 const Stack = createNativeStackNavigator();
 
@@ -149,6 +150,7 @@ const mainNavigation = () => {
       {stackScreenWithNoHeader('ContactDetailScreen', ContactDetail)}
       {stackScreenWithNoHeader('ServiceCategories', ServiceCategories)}
       {stackScreenWithNoHeader('ServiceDetailScreen', ServiceDetail)}
+      {stackScreenWithNoHeader('ReportList', ReportList)}
       {stackScreenWithNoHeader('CreateContact', CreateContact)}
       {stackScreenWithNoHeader('ProfileStackScreen', ProfileStackNavigator)}
       {stackScreenWithNoHeader('PaymentHistoryScreen', PaymentHistory)}

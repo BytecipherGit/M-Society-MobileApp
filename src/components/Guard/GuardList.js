@@ -12,7 +12,13 @@ import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
 import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
-import {API_URL, DeleteData, GetData, SnackError} from '../../assets/services';
+import {
+  API_URL,
+  DeleteData,
+  GetData,
+  SnackError,
+  getAsyncValue,
+} from '../../assets/services';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
@@ -36,10 +42,19 @@ const GuardList = ({navigation}) => {
   const [deleteLoader, setDeleteLoader] = useState('');
   const focused = useIsFocused();
   const {isAdmin} = useSelector(state => state.AuthReducer);
+  const [apiType, setApiType] = useState('');
+
+  useEffect(async () => {
+    const User = await getAsyncValue('user');
+    JSON.parse(User)?.data?.userType === 'guard'
+      ? setApiType('list')
+      : setApiType('all');
+    // focused && getGuardsList();
+  }, [focused]);
 
   useEffect(() => {
-    focused && getGuardsList();
-  }, [focused]);
+    getGuardsList();
+  }, [apiType]);
 
   const getGuardsList = async () => {
     setData({
@@ -48,7 +63,9 @@ const GuardList = ({navigation}) => {
       data: [],
     });
     try {
-      const Result = await GetData({url: API_URL + 'guard/app/all'});
+      const Result = await GetData({
+        url: API_URL + `guard/app/${apiType}`,
+      });
       if (Result.data.success) {
         if (Result.data.data.length > 0) {
           setData({
@@ -164,7 +181,7 @@ const GuardList = ({navigation}) => {
                     </TouchableOpacity>
                   </View>
                 </View>
-                {isAdmin && (
+                {isAdmin && apiType !== 'list' && (
                   <AppCrudActionButton
                     item={item}
                     index={index}

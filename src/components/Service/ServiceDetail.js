@@ -16,6 +16,10 @@ import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import Rating from 'react-native-rating';
 import {Easing} from 'react-native';
 import AppReviewModal from '../../ReUsableComponents/AppReviewModal';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import ServiceReportModal from '../../ReUsableComponents/ServiceReportModal';
+import {useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
 
 const ServiceDetail = ({navigation, route}) => {
   const [data, setData] = useState({
@@ -24,11 +28,20 @@ const ServiceDetail = ({navigation, route}) => {
     loading: false,
   });
   const [reviewModal, setReviewModal] = useState(false);
+  const [reportModal, setReportModal] = useState(false);
+  const isFocus = useIsFocused();
+
+  const SocietyId = useSelector(
+    state => state.AuthReducer.userDetail.data.societyId,
+  );
+  const {isAdmin} = useSelector(state => state.AuthReducer);
 
   useEffect(() => {
-    getDetail();
-    postCount();
-  }, []);
+    if (isFocus) {
+      getDetail();
+      postCount();
+    }
+  }, [isFocus]);
 
   const postCount = async silent => {
     try {
@@ -43,10 +56,15 @@ const ServiceDetail = ({navigation, route}) => {
 
   const getDetail = async silent => {
     try {
-      changeDatavalue(true, {}, '');
+      changeDatavalue(silent ? false : true, data.data, '');
 
       const Result = await GetData({
-        url: API_URL + 'serviceProvider/' + route.params.detail._id,
+        url:
+          API_URL +
+          'serviceProvider/' +
+          route.params.detail._id +
+          '/?societyId=' +
+          SocietyId._id,
       });
 
       if (Result.response) {
@@ -80,12 +98,19 @@ const ServiceDetail = ({navigation, route}) => {
         reviews={data.data?.review}
         onRefresh={() => getDetail('silent')}
       />
+      <ServiceReportModal
+        reportModal={reportModal}
+        setReportModal={setReportModal}
+        servicePorviderId={route.params.detail._id}
+        onSuccess={() => getDetail(true)}
+      />
       <AppHeader navigation={navigation} title={'Service Detail'} />
       {data.loading || data.error ? (
         <AppLoaderSrceen loader={data.loading} error={data.error} />
       ) : (
         <FlatList
           data={[1]}
+          showsVerticalScrollIndicator={false}
           style={{flex: 1}}
           renderItem={() => (
             <>
@@ -128,18 +153,34 @@ const ServiceDetail = ({navigation, route}) => {
                   <PhoneIcon />
                   <Text style={style.tapToCall}>Tap To Call Now</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={style.reportButton}
+                  onPress={() => setReportModal(true)}>
+                  <MaterialIcons name="report" size={25} color="red" />
+                  <Text style={{color: 'red'}}>Report</Text>
+                </TouchableOpacity>
               </View>
               <TouchableOpacity
                 style={style.cardCnt}
                 activeOpacity={0.7}
                 onPress={() => setReviewModal(true)}>
-                <Text
-                  style={[
-                    style.detailTitle,
-                    {fontWeight: '700', color: 'black'},
-                  ]}>
-                  Review
-                </Text>
+                <View style={style.moreCard}>
+                  <Text
+                    style={[
+                      style.detailTitle,
+                      {fontWeight: '700', color: 'black'},
+                    ]}>
+                    Review
+                  </Text>
+                  <MaterialIcons
+                    name="chevron-right"
+                    style={{
+                      fontSize: 20,
+                      marginTop: '-1.7%',
+                    }}
+                  />
+                </View>
                 <Rating
                   onChange={rating => console.log(rating)}
                   selectedStar={require('../../assets/images/likeHighlight.png')}
@@ -151,14 +192,71 @@ const ServiceDetail = ({navigation, route}) => {
                   initial={data.data?.user?.rating}
                   stagger={80}
                   maxScale={0.5}
-                  starStyle={{
-                    width: 25,
-                    height: 20,
-                    marginTop: '1%',
-                  }}
+                  starStyle={style.rating}
                   editable={false}
                 />
               </TouchableOpacity>
+              {isAdmin &&
+                data?.data &&
+                data?.data?.report &&
+                data?.data?.report.length > 0 && (
+                  <TouchableOpacity
+                    style={[style.cardCnt]}
+                    activeOpacity={0.7}
+                    onPress={() => {
+                      let showBlockInput = false;
+                      if (data.data.blockedSociety.length > 0) {
+                        for (
+                          let i = 0;
+                          i < data.data.blockedSociety.length;
+                          i++
+                        ) {
+                          if (
+                            data.data.blockedSociety[i].societyId ===
+                            SocietyId._id
+                          ) {
+                            showBlockInput = true;
+                            break;
+                          }
+                        }
+                      }
+                      navigation.navigate('ReportList', {
+                        reportList: data.data.report,
+                        servicePorviderId: route.params.detail._id,
+                        showBlockInput: showBlockInput,
+                      });
+                    }}>
+                    <View style={style.moreCard}>
+                      <Text
+                        style={[
+                          style.detailTitle,
+                          {fontWeight: '700', color: 'black'},
+                        ]}>
+                        Reports
+                      </Text>
+                      <MaterialIcons
+                        name="chevron-right"
+                        style={{
+                          fontSize: 20,
+                          marginTop: '-1.7%',
+                        }}
+                      />
+                    </View>
+                    <Text
+                      style={{
+                        fontFamily: 'Axiforma-SemiBold',
+                        marginTop: '4%',
+                        color:
+                          data?.data?.report?.length > 1
+                            ? 'red'
+                            : COLORS.titleFont,
+                      }}>
+                      {data?.data?.report?.length} Report found for this service
+                      provider.
+                    </Text>
+                  </TouchableOpacity>
+                )}
+
               <View style={style.cardCnt}>
                 <Text
                   style={[
@@ -169,14 +267,7 @@ const ServiceDetail = ({navigation, route}) => {
                 </Text>
                 <Image
                   source={{uri: data.data?.user?.idProof}}
-                  // source={{
-                  //   uri: 'https://2.bp.blogspot.com/-w9UpeoC8I48/U0TjA2de28I/AAAAAAAAAEU/bvoeL3jH4i4/s1600/scan0001.jpg',
-                  // }}
-                  style={{
-                    height: 200,
-                    width: '90%',
-                    marginTop: '2%',
-                  }}
+                  style={style.idProof}
                   resizeMode="contain"
                 />
               </View>
@@ -192,14 +283,7 @@ const ServiceDetail = ({navigation, route}) => {
                   return (
                     <Image
                       source={{uri: imgItem}}
-                      // source={{
-                      //   uri: 'https://2.bp.blogspot.com/-w9UpeoC8I48/U0TjA2de28I/AAAAAAAAAEU/bvoeL3jH4i4/s1600/scan0001.jpg',
-                      // }}
-                      style={{
-                        height: 200,
-                        width: '90%',
-                        marginTop: '2%',
-                      }}
+                      style={style.userImage}
                       resizeMode="contain"
                     />
                   );
@@ -250,5 +334,30 @@ const style = StyleSheet.create({
     fontSize: 15,
     marginLeft: '3%',
     color: COLORS.blackFont,
+  },
+  reportButton: {
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+  },
+  moreCard: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  rating: {
+    width: 25,
+    height: 20,
+    marginTop: '1%',
+  },
+  idProof: {
+    height: 200,
+    width: '90%',
+    marginTop: '2%',
+    backgroundColor: '#F9F9F9',
+    borderRadius: 10,
+  },
+  userImage: {
+    height: 200,
+    width: '90%',
+    marginTop: '2%',
   },
 });

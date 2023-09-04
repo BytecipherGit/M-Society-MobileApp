@@ -10,17 +10,13 @@ import {
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
-import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
 import {API_URL, GetData} from '../../assets/services';
 import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
-import Moon from '../../assets/images/Moon.svg';
-import Sun from '../../assets/images/Sun.svg';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import {useSelector} from 'react-redux';
-import moment from 'moment';
 
 const VisitorsList = ({navigation}) => {
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
@@ -80,21 +76,7 @@ const VisitorsList = ({navigation}) => {
       <View style={style.card}>
         <Image style={style.visitorProfilePic} source={{uri: item?.image}} />
         <View style={style.detailCnt}>
-          <TitleText
-            text={
-              item?.name +
-              ' ' +
-              `(${item.inTime} ${item.outTime ? '- ' + item.outTime : ''})`
-            }
-            style={style.visitorTitle}
-          />
-
-          <DescriptionText
-            text={
-              (item.countryCode ? item.countryCode : '') + '' + item.phoneNumber
-            }
-            style={style.desc}
-          />
+          <TitleText text={item?.name + ' '} style={style.visitorTitle} />
           <DescriptionText
             text={'Reason:-' + item.reasone}
             style={style.reason}
@@ -109,15 +91,30 @@ const VisitorsList = ({navigation}) => {
                 ? item.byApprove.charAt(0).toUpperCase() +
                   item.byApprove.slice(1).toLowerCase()
                 : '-'}
-            </Text>
-            <Text style={style.status}>
-              Status :{' '}
-              {item?.isApprove
-                ? item.isApprove.charAt(0).toUpperCase() +
-                  item.isApprove.slice(1).toLowerCase()
-                : 'Pending'}
+              <Text style={style.status}>
+                {' '}
+                || Status :{' '}
+                {item?.isApprove
+                  ? item.isApprove.charAt(0).toUpperCase() +
+                    item.isApprove.slice(1).toLowerCase()
+                  : 'Pending'}
+              </Text>
             </Text>
           </View>
+          <Text
+            style={{
+              fontFamily: 'Inter-Medium',
+              color: COLORS.titleFont,
+            }}>
+            {item.inTime} {item.outTime ? '- ' + item.outTime : ''}
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'Inter-Medium',
+              color: COLORS.titleFont,
+            }}>
+            {(item.countryCode ? item.countryCode : '') + '' + item.phoneNumber}
+          </Text>
         </View>
       </View>
     );
@@ -155,13 +152,15 @@ const style = StyleSheet.create({
     marginHorizontal: 2,
     borderRadius: 5,
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   visitorProfilePic: {
     height: 60,
     width: 60,
     backgroundColor: COLORS.themeColor,
     borderRadius: 10000,
+    borderWidth: 0.5,
+    borderColor: 'lightgrey',
   },
   detailCnt: {
     flex: 1,
@@ -180,12 +179,14 @@ const style = StyleSheet.create({
   },
   reason: {
     marginLeft: '1%',
-    color: COLORS.buttonColor,
+    marginVertical: '1%',
+    color: COLORS.titleFont,
+    fontFamily: 'Inter-Medium',
   },
   approvedBy: {
     fontFamily: 'Axiforma-Medium',
     color: COLORS.titleFont,
-    marginBottom: '2%',
+    // marginBottom: '2%',
   },
   status: {
     fontFamily: 'Axiforma-Medium',
