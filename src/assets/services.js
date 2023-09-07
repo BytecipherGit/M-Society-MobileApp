@@ -1,4 +1,4 @@
-export const API_URL = 'https://d18e-122-175-237-30.ngrok-free.app/api/';
+export const API_URL = 'https://bbae-122-175-237-30.ngrok-free.app/api/';
 // export const API_URL = 'http://msociety.in:9001/api/';
 
 // swagger http://msociety.in:9001/api-docs/#/

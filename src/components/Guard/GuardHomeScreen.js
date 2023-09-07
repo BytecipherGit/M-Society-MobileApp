@@ -9,6 +9,7 @@ import {
   ImageBackground,
   Alert,
   RefreshControl,
+  Permission,
 } from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
@@ -38,8 +39,11 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AppButton from '../../ReUsableComponents/AppButton';
 import {useIsFocused} from '@react-navigation/native';
+import GuardPresentModel from './GuardPresentModel';
+import Camera from 'react-native-camera';
 
 const GuardHomeScreen = ({navigation}) => {
   const state = useSelector(state => state.AuthReducer);
@@ -57,6 +61,7 @@ const GuardHomeScreen = ({navigation}) => {
   const [actionId, setActionId] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [visitorsCheck, setVisitorsCheck] = useRecoilState(CheckVisitors);
+  const [presentyModel, setPresentyModel] = useState(false);
 
   const dispatch = useDispatch();
   const visitors = useSelector(state => state.GuardReducer);
@@ -331,6 +336,11 @@ const GuardHomeScreen = ({navigation}) => {
       colors={['#AFDBFF80', '#F9F9F9', '#F9F9F9']}
       style={styles.leanerCnt}>
       <SafeAreaView style={{flex: 1}}>
+        <GuardPresentModel
+          isVisible={presentyModel}
+          setIsVisible={setPresentyModel}
+        />
+
         <View
           style={{
             height: '5%',
@@ -368,6 +378,37 @@ const GuardHomeScreen = ({navigation}) => {
                 }
                 style={styles.headerShiftIcon}
               />
+              <TouchableOpacity
+                onPress={() => {
+                  async function checkCameraPermission() {
+                    // try {
+                    //   const status = await Permission.check('camera');
+                    //   if (status === 'authorized') {
+                    //     console.log('Camera permission granted');
+                    //   } else {
+                    //     console.log('Camera permission denied');
+                    //   }
+                    // } catch (err) {
+                    //   console.warn(err);
+                    // }
+                  }
+
+                  // Check camera permissions when needed
+                  checkCameraPermission();
+                  setPresentyModel(!presentyModel);
+                }}>
+                <MaterialCommunityIcons
+                  name="qrcode-scan"
+                  style={[styles.headerShiftIcon, {marginLeft: 10}]}
+                />
+              </TouchableOpacity>
+              {/* <TouchableOpacity
+                onPress={() => setPresentyModel(!presentyModel)}>
+                <MaterialCommunityIcons
+                  name="timetable"
+                  style={[styles.headerShiftIcon, {marginLeft: 10}]}
+                />
+              </TouchableOpacity> */}
             </View>
             <View style={{height: 200}} />
           </ImageBackground>

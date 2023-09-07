@@ -16,11 +16,15 @@ const AppButton = ({
   renderIcon = () => null,
   TouchableStyle = {},
   colorArray = [],
+  activeOpacity = 0.5,
 }) => {
   const state = useSelector(state => state.AuthReducer.userDetail);
 
   return (
-    <TouchableOpacity onPress={onPress} style={TouchableStyle}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={TouchableStyle}
+      activeOpacity={activeOpacity}>
       <LinearGradient
         colors={
           colorArray.length > 0

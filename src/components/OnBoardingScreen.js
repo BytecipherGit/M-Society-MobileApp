@@ -22,20 +22,20 @@ import LinearGradient from 'react-native-linear-gradient';
 const slides = [
   {
     key: '1',
-    title: 'Our Society',
-    text: 'On the other hand, we denounce with righteous indignation and dislike men who are so beguiled ',
+    title: '',
+    text: 'Paying bills, managing budgets, collecting rent & maintenance fees. ',
     Icon: <HomeSvg width={370} />,
   },
   {
     key: '2',
-    title: 'Online Society Services',
-    text: 'On the other hand, we denounce with righteous indignation and dislike men who are so beguiled ',
+    title: '',
+    text: 'Providing administrative support, security, and access control.',
     Icon: <SearchSvg width={370} />,
   },
   {
     key: '3',
-    title: 'Playing And Walking',
-    text: 'On the other hand, we denounce with righteous indignation and dislike men who are so beguiled ',
+    title: '',
+    text: 'A seamless vendor management system for various community needs.',
     Icon: <WalkSvg width={250} />,
   },
 ];
@@ -85,7 +85,7 @@ const OnboardingScreen = ({navigation, route}) => {
               padding: 14,
               borderRadius: 25,
             }}>
-            <Text
+            {/* <Text
               style={{
                 fontFamily: 'Axiforma-SemiBold',
                 fontSize: 26,
@@ -93,13 +93,14 @@ const OnboardingScreen = ({navigation, route}) => {
                 marginVertical: '2%',
               }}>
               {item.title}
-            </Text>
+            </Text> */}
             <Text
               style={{
                 fontFamily: 'Axiforma-Regular',
                 fontSize: 13,
                 lineHeight: 22,
                 color: COLORS.descFont,
+                marginVertical: '2%',
               }}
               numberOfLines={4}>
               {item?.text}
