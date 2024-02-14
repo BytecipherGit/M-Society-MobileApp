@@ -125,7 +125,7 @@ const OnboardingScreen = ({navigation, route}) => {
               }}>
               <TouchableOpacity onPress={slideView}>
                 <Image
-                  source={require('../assets/images/NextAerrow.png')}
+                  source={require('../assets/images/nextAerrow.png')}
                   style={{width: 22.09, height: 24}}
                   resizeMode="contain"
                 />

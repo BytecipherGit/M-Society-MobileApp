@@ -44,7 +44,7 @@ const LoginScreen = ({navigation}) => {
   const [inputFieldsClone, setInputFieldsClone] = useState(inputFields);
   const [fcmToken, setFcmTooken] = useRecoilState(DeviceFcmToken);
   const dispatch = useDispatch();
-  loginOption = useSelector(state => state.AuthReducer);
+  const loginOption = useSelector(state => state.AuthReducer);
 
   const login = async () => {
     if (!data.phoneNumber) {
@@ -195,7 +195,7 @@ const LoginScreen = ({navigation}) => {
               <ActivityIndicator size={'small'} color={'white'} />
             ) : (
               <Image
-                source={require('../assets/images/NextAerrow.png')}
+                source={require('..//assets/images/nextAerrow.png')}
                 style={{width: 22.09, height: 24}}
                 resizeMode="contain"
               />
