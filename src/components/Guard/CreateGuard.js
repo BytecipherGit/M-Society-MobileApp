@@ -85,9 +85,9 @@ const CreateGuard = ({navigation, route}) => {
         },
         response => {
           if (response.didCancel) {
-            console.log('Permission cancelled', response);
+            // console.log('Permission cancelled', response);
           } else if (response.error) {
-            console.log('error =>', response);
+            // console.log('error =>', response);
           } else {
             setImage(response.assets[0], setType);
           }
@@ -100,9 +100,9 @@ const CreateGuard = ({navigation, route}) => {
         },
         response => {
           if (response.didCancel) {
-            console.log('Permission cancelled', response, param);
+            // console.log('Permission cancelled', response, param);
           } else if (response.error) {
-            console.log('error =>', response);
+            // console.log('error =>', response);
           } else {
             setImage(response.assets[0], setType, param);
           }

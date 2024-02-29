@@ -37,7 +37,7 @@ const VisitorsModal = () => {
     if (OnBoard) {
       const User = await getAsyncValue('user');
       if (User) {
-        if (JSON.parse(User).data.userType !== 'guard') {
+        if (JSON.parse(User)?.data?.userType === 'guard') {
           try {
             const Result = await GetData({
               url: API_URL + 'visitor/list',

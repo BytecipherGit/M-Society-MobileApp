@@ -5,11 +5,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
-  Dimensions,
   Image,
   ImageBackground,
   Platform,
-  Alert,
   ActivityIndicator,
   Linking,
 } from 'react-native';
@@ -29,10 +27,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import HomeNoticeCrousal from './HomeNoticeCrousal';
 import {useIsFocused} from '@react-navigation/native';
-import axios from 'axios';
+// import axios from 'axios';
 import ReactNativeModal from 'react-native-modal';
 import AppButton from '../ReUsableComponents/AppButton';
-import VisitorsModal from '../ReUsableComponents/VisitorsModal';
+// import VisitorsModal from '../ReUsableComponents/VisitorsModal';
 import {useRecoilState} from 'recoil';
 import {CheckVisitors} from '../assets/GlobalStates/RecoilGloabalState';
 
@@ -45,14 +43,15 @@ const HomeScreen = ({navigation}) => {
     type: '',
   });
   const [visitorsCheck, setVisitorsCheck] = useRecoilState(CheckVisitors);
-  const state = useSelector(state => state.AuthReducer);
-  const basicState = useSelector(state => state.AuthReducer.userDetail);
-  const Notice = useSelector(state => state.NoticeReducer);
-  const stateForTheme = useSelector(state => state.AuthReducer.userDetail);
-  const data = useSelector(state => state.SocietyReducer);
+  const state = useSelector(({AuthReducer}) => AuthReducer);
+  const basicState = useSelector(({AuthReducer}) => AuthReducer?.userDetail);
+  const Notice = useSelector(({NoticeReducer}) => NoticeReducer);
+  const stateForTheme = useSelector(({AuthReducer}) => AuthReducer?.userDetail);
+  const data = useSelector(({SocietyReducer}) => SocietyReducer);
   const SocietyId = useSelector(
-    state => state.AuthReducer.userDetail.data.societyId,
+    ({AuthReducer}) => AuthReducer?.userDetail?.data?.societyId,
   );
+  // console.log('state', state);
   const isFocus = useIsFocused();
   const dispatch = useDispatch();
 
@@ -64,8 +63,11 @@ const HomeScreen = ({navigation}) => {
       setVisitorsCheck({
         visitors: visitorsCheck.visitors + 1,
       });
-      dispatch({type: SOCIETY_DETAIL_REQUEST, payload: SocietyId._id});
+      if (SocietyId?._id) {
+        dispatch({type: SOCIETY_DETAIL_REQUEST, payload: SocietyId?._id});
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocus]);
 
   useEffect(() => {
@@ -105,10 +107,10 @@ const HomeScreen = ({navigation}) => {
   }, [data]);
 
   const getSocietyInfo = () => {
-    if (SocietyId._id) {
+    if (SocietyId?._id) {
       dispatch({
         type: SOCIETY_DETAIL_REQUEST,
-        payload: SocietyId._id,
+        payload: SocietyId?._id,
       });
     }
   };

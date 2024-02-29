@@ -43,6 +43,7 @@ const AppTextInput = ({
           borderRadius: 10,
           marginVertical: 2,
           height: 50,
+          // minHeight: multiline ? 100 : 50,
         },
         cntStyle,
       ]}>
@@ -84,13 +85,12 @@ const AppTextInput = ({
         onChangeText={setValue}
         style={[
           {
-            // marginVertical: 10,
             fontSize: 14,
             color: COLORS.titleFont,
             flex: 1,
             fontFamily: 'Axiforma-Regular',
-            // height: 50,
           },
+          // multiline && {height: '100%'}, // Set height to fill parent for multiline input
           style && style,
         ]}
       />

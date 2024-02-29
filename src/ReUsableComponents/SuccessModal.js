@@ -83,8 +83,8 @@ const SuccessModal = ({
           style={{
             color: iconType === 'error' ? 'red' : '#595959',
             alignSelf: 'center',
-            marginVertical: '2%',
-            width: '60%',
+            marginVertical: '5%',
+            width: '80%',
             textAlign: 'center',
             fontFamily: 'Axiforma-Bold',
             lineHeight: 25,

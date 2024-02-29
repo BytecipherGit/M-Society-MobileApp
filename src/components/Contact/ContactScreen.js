@@ -1,37 +1,33 @@
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
-  TextInput,
   TouchableOpacity,
-  Image,
   FlatList,
-  Linking,
   Platform,
   StyleSheet,
 } from 'react-native';
-import React, {Fragment, useEffect, useState} from 'react';
-import {COLORS, globalStyle, shadow} from '../../assets/theme';
-import AppHeader from '../../ReUsableComponents/AppHeader';
-import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
-import LocationIcon from '../../assets/images/LocationIcon.svg';
-import PhoneIcon from '../../assets/images/PhoneIcon.svg';
-import {API_URL, DeleteData, GetData, SnackError} from '../../assets/services';
-import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
-import {useRecoilState} from 'recoil';
-import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
-import AppRoundAddActionButton from '../../ReUsableComponents/AppRoundAddActionButton';
-import {useIsFocused} from '@react-navigation/native';
-import AppCrudActionButton from '../../ReUsableComponents/AppCrudActionButton';
 import {useSelector} from 'react-redux';
 import Rating from 'react-native-rating';
 import {Easing} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
+import {useRecoilState} from 'recoil';
+import {COLORS, globalStyle, shadow} from '../../assets/theme';
+import AppHeader from '../../ReUsableComponents/AppHeader';
+// import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
+// import LocationIcon from '../../assets/images/LocationIcon.svg';
+import PhoneIcon from '../../assets/images/PhoneIcon.svg';
+import {API_URL, DeleteData, GetData, SnackError} from '../../assets/services';
+import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
+import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
+import AppRoundAddActionButton from '../../ReUsableComponents/AppRoundAddActionButton';
+import AppCrudActionButton from '../../ReUsableComponents/AppCrudActionButton';
 
 const ContactScreen = ({navigation, route}) => {
   const [loader, setLoader] = useState(false);
   const [data, setData] = useState([]);
   const [error, setError] = useState('');
-  const [professionArray, setProfessionArray] = useState([]);
+  // const [professionArray, setProfessionArray] = useState([]);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
   const [deleteLoader, setDeleteLoader] = useState('');
   const isFocused = useIsFocused();
@@ -49,6 +45,7 @@ const ContactScreen = ({navigation, route}) => {
       };
       try {
         const Result = await GetData(payload);
+        // console.log('Result', Result?.data);
         if (Result && Result.data && Result.data.success) {
           if (Result.data.data.length > 0) {
             if (route?.params?.screenName === 'Service') {
@@ -80,7 +77,12 @@ const ContactScreen = ({navigation, route}) => {
       setLoader(false);
     };
     isFocused && getContactDetails();
-  }, [isFocused]);
+  }, [
+    isFocused,
+    route?.params?.screenName,
+    route?.params?.serviceName,
+    setAlertData,
+  ]);
 
   const doActions = async (item, type, index) => {
     //Edit,Delete
@@ -106,9 +108,8 @@ const ContactScreen = ({navigation, route}) => {
             : Result.response.data.message,
         );
       } else {
-        if (Result.success == true) {
+        if (Result.success === true) {
           let arr = data;
-
           arr.splice(index, 1);
           setData([...arr]);
         } else {
@@ -167,7 +168,7 @@ const ContactScreen = ({navigation, route}) => {
                     marginVertical: '3%',
                   }}>
                   <Rating
-                    onChange={rating => console.log(rating)}
+                    // onChange={rating => console.log(rating)}
                     selectedStar={require('../../assets/images/likeHighlight.png')}
                     unselectedStar={require('../../assets/images/likeUnhighlight.png')}
                     config={{
@@ -185,7 +186,6 @@ const ContactScreen = ({navigation, route}) => {
                   />
                 </View>
               )}
-
               {route?.params?.screenName !== 'Service' && isAdmin && (
                 <AppCrudActionButton
                   item={item}

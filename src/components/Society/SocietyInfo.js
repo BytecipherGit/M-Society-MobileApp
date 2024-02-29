@@ -38,7 +38,7 @@ const SocietyInfo = ({navigation, route}) => {
 
   useEffect(() => {
     isFocused &&
-      dispatch({type: SOCIETY_DETAIL_REQUEST, payload: SocietyId._id});
+      dispatch({type: SOCIETY_DETAIL_REQUEST, payload: SocietyId?._id});
   }, [isFocused]);
 
   useEffect(() => {
@@ -59,8 +59,10 @@ const SocietyInfo = ({navigation, route}) => {
             : 'https://img.freepik.com/free-photo/analog-landscape-city-with-buildings_23-2149661456.jpg?w=1800&t=st=1681467853~exp=1681468453~hmac=2a4d43b5ce3021fa00974f7761f613faf74ba2e68427231142da0ae1a17a11f4',
         }}
         style={{
-          height: 347,
+          height: 357,
+          alignContent: 'center',
           backgroundColor: COLORS.themeColor,
+          resizeMode: 'contain', // Ensures the image maintains its aspect ratio
         }}>
         <SafeAreaView style={{flex: 1, backgroundColor: 'rgba(0,0,0,.4)'}}>
           <Text
@@ -95,6 +97,7 @@ const SocietyInfo = ({navigation, route}) => {
           data={[1]}
           showsVerticalScrollIndicator={false}
           style={{marginTop: '-18%'}}
+          // keyExtractor={item => item?._id}
           renderItem={() => {
             const {
               registrationNumber,
@@ -147,7 +150,8 @@ const SocietyInfo = ({navigation, route}) => {
                   <View
                     style={{
                       flexDirection: 'row',
-                    }}>
+                    }}
+                    key={`list ${index}`}>
                     <View style={{width: '65%'}}>
                       <Text style={styles.detailTitle}>{item.first.label}</Text>
                       <Text style={styles.detailDesc}>{item.first.value}</Text>

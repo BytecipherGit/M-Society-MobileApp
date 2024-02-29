@@ -46,9 +46,9 @@ const AddVisitor = ({navigation, route}) => {
   const [isFocus, setIsFocus] = useState(false);
   const state = useSelector(state => state);
 
-  console.log('====================================');
-  console.log(data);
-  console.log('====================================');
+  // console.log('====================================');
+  // console.log(data);
+  // console.log('====================================');
 
   useEffect(() => {
     getSocietyRooms();
@@ -65,14 +65,14 @@ const AddVisitor = ({navigation, route}) => {
       if (Result.response) {
         SnackError(Result.reasone.data.message);
       } else {
-        console.log('====================================');
-        console.log('rooms =>', Result.data.data);
+        // console.log('====================================');
+        // console.log('rooms =>', Result.data.data);
         let arr = [];
         Result.data.data.map(item => {
           arr.push({label: item, value: item});
         });
         setSocietyRooms([...arr]);
-        console.log('====================================');
+        // console.log('====================================');
       }
     } catch (e) {
       SnackError('Something went wrong please try again later.');
@@ -84,9 +84,9 @@ const AddVisitor = ({navigation, route}) => {
 
   const checkImage = response => {
     if (response.didCancel) {
-      console.log('Permission cancelled', response);
+      // console.log('Permission cancelled', response);
     } else if (response.error) {
-      console.log('error =>', response);
+      // console.log('error =>', response);
     } else {
       const source = {uri: response.uri};
       if (response && response?.assets?.length > 0) {

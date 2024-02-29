@@ -320,7 +320,7 @@ export const profileOptions = [
     navigationScreen: 'Webview',
     icon: <TermService />,
     param: {screenName: 'Terms & Conditions'},
-    urlParam: 'http://msociety.in:3000/terms-conditions',
+    urlParam: 'http://msociety.in/terms-conditions',
   },
   {
     id: 11,
@@ -328,7 +328,7 @@ export const profileOptions = [
     navigationScreen: 'Webview',
     icon: <TermService />,
     param: {screenName: 'Privacy Policy'},
-    urlParam: 'http://msociety.in:3000/privacy-policy-mobile',
+    urlParam: 'http://msociety.in/privacy-policy-mobile',
   },
   {
     id: 10,

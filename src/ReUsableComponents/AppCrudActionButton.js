@@ -29,7 +29,9 @@ const AppCrudActionButton = ({
         {
           flexDirection: 'row',
           justifyContent: 'space-around',
-          marginBottom: 20,
+          marginVertical: 10,
+          // marginBottom: 20,
+          // marginTop: 10,
         },
         array.length === 1 && {justifyContent: 'flex-start', marginLeft: '6%'},
       ]}>
@@ -54,7 +56,7 @@ const AppCrudActionButton = ({
                 ? Alert.alert('', 'Are you sure you want to delete?', [
                     {
                       text: 'Cancel',
-                      onPress: () => console.log('Cancel Pressed'),
+                      // onPress: () => console.log('Cancel Pressed'),
                       style: 'cancel',
                     },
                     {

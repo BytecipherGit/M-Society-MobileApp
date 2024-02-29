@@ -67,10 +67,10 @@ const CreateNotice = ({navigation}) => {
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         // User cancelled the picker
-        console.log('User cancelled document picker.');
+        // console.log('User cancelled document picker.');
       } else {
         // Error!
-        console.log('Error picking document:', err);
+        // console.log('Error picking document:', err);
       }
     }
   }

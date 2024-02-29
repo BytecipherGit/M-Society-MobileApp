@@ -9,13 +9,13 @@ const DeveloperMode = ({navigation}) => {
     // Reload the app manually
     if (__DEV__) {
       // Code to execute only in development mode
-      console.log('Running in development mode');
+      // console.log('Running in development mode');
       Alert.alert(
         'Still we found developer option on, if you phased any issue than close the application from background and open again.',
       );
     } else {
       // Code to execute only in production mode
-      console.log('Running in production mode');
+      // console.log('Running in production mode');
       getUser();
     }
     const getUser = async () => {

@@ -1,29 +1,29 @@
-// export const API_URL = 'https://bbae-122-175-237-30.ngrok-free.app/api/';
-export const API_URL = 'http://msociety.in:9001/api/';
-
-// swagger http://msociety.in:9001/api-docs/#/
-
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Snackbar from 'react-native-snackbar';
+// export const API_URL = 'https://bbae-122-175-237-30.ngrok-free.app/api/';
+export const API_URL = 'http://192.168.1.165:5000/api/';
 
 export const GetData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
-
-  return axios
-    .get(
-      payload.url,
-      Token && {
-        headers: {
-          Authorization: 'Bearer ' + Token.accessToken,
-        },
-      },
-    )
+  console.log('token', Token?.accessToken);
+  let config = {
+    method: 'GET',
+    url: payload?.url,
+    headers: {
+      Authorization: `Bearer ${Token?.accessToken ? Token?.accessToken : null}`,
+      'Content-Type': 'application/json',
+    },
+  };
+  console.log('config+++> get', config);
+  return axios(config)
     .then(res => {
+      console.log('response+++> get', payload, ' res', res);
       return res;
     })
     .catch(e => {
+      console.log('error+++> get', payload, ' res', e);
       return e;
     });
 };
@@ -31,20 +31,23 @@ export const GetData = async payload => {
 export const PostData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
-  return axios
-    .post(
-      payload.url,
-      payload.body,
-      Token && {
-        headers: {
-          Authorization: 'Bearer ' + Token.accessToken,
-        },
-      },
-    )
+  let config = {
+    method: 'POST',
+    url: payload?.url,
+    headers: {
+      Authorization: `Bearer ${Token?.accessToken ? Token?.accessToken : null}`,
+      'Content-Type': 'application/json',
+    },
+    data: payload?.body,
+  };
+  // console.log('config', config);
+  return axios(config)
     .then(res => {
+      // console.log('response+++> post', config, ' res', res);
       return res;
     })
     .catch(e => {
+      // console.log('response+++> post error', config, ' error', e);
       return e;
     });
 };
@@ -52,16 +55,16 @@ export const PostData = async payload => {
 export const PutData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
+  // console.log('config+++> put', payload);
   return axios
-    .put(
-      payload.url,
-      payload.body,
-      Token && {
-        headers: {
-          Authorization: 'Bearer ' + Token.accessToken,
-        },
+    .put(payload.url, payload.body, {
+      headers: {
+        Authorization: `Bearer ${
+          Token?.accessToken ? Token?.accessToken : null
+        }`,
+        'ngrok-skip-browser-warning': 'your-custom-value',
       },
-    )
+    })
     .then(res => {
       return res;
     })
@@ -79,7 +82,7 @@ export const DeleteData = async payload => {
   //     payload.body,
   //     Token && {
   //       headers: {
-  //         Authorization: 'Bearer ' + Token.accessToken,
+  //         Authorization: 'Bearer ' + Token?.accessToken ? Token?.accessToken : null,
   //       },
   //     },
   //   )
@@ -91,8 +94,12 @@ export const DeleteData = async payload => {
   //   });
 
   var myHeaders = new Headers();
-  myHeaders.append('Authorization', 'Bearer ' + Token.accessToken);
+  myHeaders.append(
+    'Authorization',
+    `Bearer ${Token?.accessToken ? Token?.accessToken : null}`,
+  );
   myHeaders.append('Content-Type', 'application/json');
+  myHeaders.append('ngrok-skip-browser-warning', 'your-custom-value');
 
   var raw = JSON.stringify(payload.body);
 
@@ -103,6 +110,7 @@ export const DeleteData = async payload => {
     redirect: 'follow',
   };
 
+  // console.log('config+++> delete', requestOptions);
   return fetch(payload.url, requestOptions)
     .then(response => response.json())
     .then(result => {
@@ -142,18 +150,22 @@ export const postFormData = async (payload, type) => {
   var requestOptions = {
     method: type ? type : 'POST',
     headers: {
-      Authorization: 'Bearer ' + Token.accessToken,
+      Authorization: `Bearer ${Token?.accessToken ? Token?.accessToken : null}`,
     },
     body: formData,
     redirect: 'follow',
   };
 
+  console.log('config+++> putForm Data', requestOptions);
+
   return fetch(payload.url, requestOptions)
     .then(response => response.json())
     .then(result => {
+      console.log('putForm response+++> get', payload, ' res', result);
       return result;
     })
     .catch(error => {
+      console.log('putForm response+++> error', payload, ' res', error);
       return error;
     });
 };
@@ -180,10 +192,14 @@ export const updatProfile = async payload => {
   formData.append('phoneNumber', payload.data.phoneNumber);
   formData.append('id', payload.data._id);
 
+  // console.log('config+++> updatProfile Data', formData);
+
   return axios
     .put(API_URL + 'user/', formData, {
       headers: {
-        Authorization: 'Bearer ' + Token.accessToken,
+        Authorization: `Bearer ${
+          Token?.accessToken ? Token?.accessToken : null
+        }`,
       },
     })
     .then(res => {
@@ -211,12 +227,12 @@ export const addVisitorFormData = async payload => {
   var requestOptions = {
     method: 'POST',
     headers: {
-      Authorization: 'Bearer ' + Token.accessToken,
+      Authorization: `Bearer ${Token?.accessToken ? Token?.accessToken : null}`,
     },
     body: formData,
     redirect: 'follow',
   };
-
+  // console.log('config+++> addVisitorFormData Data', requestOptions);
   return fetch(API_URL + 'visitor/', requestOptions)
     .then(response => response.json())
     .then(result => {
@@ -247,12 +263,13 @@ export const CreateSociety = async (payload, edit, editstatus) => {
   var requestOptions = {
     method: edit ? 'PUT' : 'POST',
     headers: {
-      Authorization: 'Bearer ' + Token.accessToken,
+      Authorization: `Bearer ${Token?.accessToken ? Token?.accessToken : null}`,
     },
     body: formData,
     redirect: 'follow',
   };
 
+  // console.log('config+++> CreateSociety Data', requestOptions);
   return fetch(API_URL + (edit ? 'notice/update' : 'notice/'), requestOptions)
     .then(response => response.json())
     .then(result => {
@@ -283,12 +300,13 @@ export const CreateDocumentAPI = async (payload, edit, editstatus) => {
   var requestOptions = {
     method: edit ? 'PUT' : 'POST',
     headers: {
-      Authorization: 'Bearer ' + Token.accessToken,
+      Authorization: `Bearer ${Token?.accessToken ? Token?.accessToken : null}`,
     },
     body: formData,
     redirect: 'follow',
   };
 
+  // console.log('config+++> CreateDocumentAPI Data', requestOptions);
   return fetch(API_URL + 'document/', requestOptions)
     .then(response => response.json())
     .then(result => {
@@ -349,11 +367,12 @@ export const putSocietyImages = async ({url, body}) => {
   formData.append('buttonHoverBgColour', body.buttonHoverBgColour);
   formData.append('buttonHoverfontColour', body.buttonHoverfontColour);
   formData.append('fontColour', body.fontColour);
-
+  // console.log('config+++> putSocietyImages Data', formData);
   return axios.put(url, formData, {
     headers: {
-      Authorization: 'Bearer ' + Token.accessToken,
+      Authorization: `Bearer ${Token?.accessToken ? Token?.accessToken : null}`,
       'Content-Type': 'multipart/form-data',
+      'ngrok-skip-browser-warning': 'your-custom-value',
     },
   });
 };
@@ -362,7 +381,7 @@ export const CreateGuardAPI = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
 
-  console.log(Token.accessToken);
+  // console.log(Token.accessToken);
 
   const formData = new FormData();
   [payload.body].map(item => {
@@ -370,18 +389,18 @@ export const CreateGuardAPI = async payload => {
       formData.append(key, item[key]);
     });
   });
+  // console.log('config+++> CreateGuardAPI Data', formData);
   if (payload.update) {
     return axios
-      .put(
-        payload.url,
-        formData,
-        Token && {
-          headers: {
-            Authorization: 'Bearer ' + Token.accessToken,
-            'Content-Type': 'multipart/form-data',
-          },
+      .put(payload.url, formData, {
+        headers: {
+          Authorization: `Bearer ${
+            Token?.accessToken ? Token?.accessToken : null
+          }`,
+          'Content-Type': 'multipart/form-data',
+          'ngrok-skip-browser-warning': 'your-custom-value',
         },
-      )
+      })
       .then(res => {
         return res;
       })
@@ -390,16 +409,15 @@ export const CreateGuardAPI = async payload => {
       });
   } else {
     return axios
-      .post(
-        payload.url,
-        formData,
-        Token && {
-          headers: {
-            Authorization: 'Bearer ' + Token.accessToken,
-            'Content-Type': 'multipart/form-data',
-          },
+      .post(payload.url, formData, {
+        headers: {
+          Authorization: `Bearer ${
+            Token?.accessToken ? Token?.accessToken : null
+          }`,
+          'Content-Type': 'multipart/form-data',
+          'ngrok-skip-browser-warning': 'your-custom-value',
         },
-      )
+      })
       .then(res => {
         return res;
       })

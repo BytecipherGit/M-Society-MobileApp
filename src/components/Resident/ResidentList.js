@@ -1,45 +1,41 @@
+import React, {useEffect, useState} from 'react';
 import {
   View,
-  Text,
-  SafeAreaView,
-  Switch,
   FlatList,
   StyleSheet,
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import React, {Fragment, useEffect, useState} from 'react';
+import LinearGradient from 'react-native-linear-gradient';
+import {useIsFocused} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import ToggleSwitch from 'toggle-switch-react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useRecoilState} from 'recoil';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
-import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
+// import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
 import AppHeader from '../../ReUsableComponents/AppHeader';
 import AppRoundAddActionButton from '../../ReUsableComponents/AppRoundAddActionButton';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
-import ToggleSwitch from 'toggle-switch-react-native';
-import {useDispatch, useSelector} from 'react-redux';
 import {
-  EDIT_RESIDENT_USER_REQUEST,
+  // EDIT_RESIDENT_USER_REQUEST,
   GET_RESIDENTSLIST_REQUEST,
 } from '../../redux/Actions';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import {API_URL, DeleteData, PostData, PutData} from '../../assets/services';
-import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
-import LinearGradient from 'react-native-linear-gradient';
-import {useIsFocused} from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const ResidentList = ({navigation}) => {
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
 
-  const state = useSelector(state => state.ResidentReducer);
-  const isAdmin = useSelector(state => state.AuthReducer.isAdmin);
-  const user = useSelector(state => state.AuthReducer.userDetail.data);
+  const state = useSelector(({ResidentReducer}) => ResidentReducer);
+  const isAdmin = useSelector(({AuthReducer}) => AuthReducer?.isAdmin);
+  const user = useSelector(({AuthReducer}) => AuthReducer.userDetail.data);
   const isFocus = useIsFocused();
-
-  const stateForTheme = useSelector(state => state.AuthReducer.userDetail);
+  const stateForTheme = useSelector(({AuthReducer}) => AuthReducer.userDetail);
 
   useEffect(() => {
     getResidentsList();
@@ -108,7 +104,7 @@ const ResidentList = ({navigation}) => {
   const exitUser = async (item, index) => {
     try {
       const Result = await PutData({
-        url: API_URL + `user`,
+        url: API_URL + 'user',
         body: {id: item._id, stayOut: true},
       });
 
@@ -163,7 +159,7 @@ const ResidentList = ({navigation}) => {
                 Alert.alert('', 'Are you sure you want to update the Status?', [
                   {
                     text: 'Cancel',
-                    onPress: () => console.log('Cancel Pressed'),
+                    // onPress: () => console.log('Cancel Pressed'),
                     style: 'cancel',
                   },
                   {
@@ -179,7 +175,7 @@ const ResidentList = ({navigation}) => {
                   Alert.alert('', 'Are you sure you want to Exit this user?', [
                     {
                       text: 'Cancel',
-                      onPress: () => console.log('Cancel Pressed'),
+                      // onPress: () => console.log('Cancel Pressed'),
                       style: 'cancel',
                     },
                     {
@@ -221,7 +217,7 @@ const ResidentList = ({navigation}) => {
                       : Alert.alert('', 'Are you sure you want to delete?', [
                           {
                             text: 'Cancel',
-                            onPress: () => console.log('Cancel Pressed'),
+                            // onPress: () => console.log('Cancel Pressed'),
                             style: 'cancel',
                           },
                           {

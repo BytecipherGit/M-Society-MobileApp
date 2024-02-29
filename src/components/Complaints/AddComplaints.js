@@ -1,31 +1,31 @@
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   FlatList,
   TouchableOpacity,
-  Image,
+  // Image,
   StyleSheet,
   ImageBackground,
   Appearance,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {COLORS, globalStyle, shadow} from '../../assets/theme';
-import AppHeader from '../../ReUsableComponents/AppHeader';
-import AddFileIcon from '../../assets/images/AddFileIcon.svg';
-import AppButton from '../../ReUsableComponents/AppButton';
-import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useNavigation} from '@react-navigation/native';
+import Entypo from 'react-native-vector-icons/Entypo';
+import {useRecoilState} from 'recoil';
+import {Dropdown} from 'react-native-element-dropdown';
+import {COLORS, globalStyle, shadow} from '../../assets/theme';
+import AppHeader from '../../ReUsableComponents/AppHeader';
+// import AddFileIcon from '../../assets/images/AddFileIcon.svg';
+import AppButton from '../../ReUsableComponents/AppButton';
+// import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
 import SuccessModal from '../../ReUsableComponents/SuccessModal';
 import {useSelector} from 'react-redux';
 import {API_URL, SnackError, postFormData} from '../../assets/services';
-import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
-import {useRecoilState} from 'recoil';
+// import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 import AppTextInput from '../../ReUsableComponents/AppTextInput';
-import {Dropdown} from 'react-native-element-dropdown';
 import AppFilePicker from '../../ReUsableComponents/AppFilePicker';
-import Entypo from 'react-native-vector-icons/Entypo';
 
 const AddComplaints = ({route}) => {
   const navigation = useNavigation();
@@ -69,9 +69,9 @@ const AddComplaints = ({route}) => {
           response => {
             // setPhotoURI(response.uri); // update the local state, this will rerender your TomarFoto component with the photo uri path.
             if (response.didCancel) {
-              console.log('Permission cancelled', response);
+              // console.log('Permission cancelled', response);
             } else if (response.error) {
-              console.log('error =>', response);
+              // console.log('error =>', response);
             } else {
               const source = {uri: response.uri};
               if (response && response?.assets?.length > 0) {
@@ -90,14 +90,14 @@ const AddComplaints = ({route}) => {
           },
           response => {
             if (response.didCancel) {
-              console.log('Permission cancelled', response);
+              // console.log('Permission cancelled', response);
             } else if (response.error) {
-              console.log('error =>', response);
+              // console.log('error =>', response);
             } else {
               let arr = [];
               arr = complaintImage;
               arr.push(response.assets[0]);
-              console.log(response.assets[0]);
+              // console.log(response.assets[0]);
               setData({...data, attachedImage: [...arr]});
             }
           },
@@ -137,7 +137,7 @@ const AddComplaints = ({route}) => {
           body: payloadData,
         };
 
-        console.log(payload);
+        // console.log(payload);
         setLoader(true);
         const Result = await postFormData(payload, 'PUT');
         if (Result.success) {
@@ -159,7 +159,7 @@ const AddComplaints = ({route}) => {
           url: API_URL + 'complaint/',
           body: data,
         };
-        console.log(payload);
+        // console.log(payload);
         setLoader(true);
         const Result = await postFormData(payload);
 
@@ -237,11 +237,11 @@ const AddComplaints = ({route}) => {
                   <Text style={styles.note}>Note</Text>
                   <AppTextInput
                     item={{title: 'Note'}}
-                    multiline
+                    multiline={true}
                     value={data.description}
                     setValue={text => setData({...data, description: text})}
                     cntStyle={{
-                      height: 129,
+                      // height: 129,
                       alignItems: 'flex-start',
                     }}
                   />
@@ -341,7 +341,7 @@ const AddComplaints = ({route}) => {
             }}
           />
         </View>
-        <View style={styles.cnt}></View>
+        {/* <View style={styles.cnt}></View> */}
       </View>
     </>
   );

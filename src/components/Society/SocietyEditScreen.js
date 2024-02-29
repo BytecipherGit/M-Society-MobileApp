@@ -49,9 +49,9 @@ const SocietyEditScreen = ({navigation, route}) => {
     if (type === 'camera') {
       launchCamera({quality: 0.5}, response => {
         if (response.didCancel) {
-          console.log('Permission cancelled', response);
+          // console.log('Permission cancelled', response);
         } else if (response.error) {
-          console.log('error =>', response);
+          // console.log('error =>', response);
         } else {
           setImage(response.assets[0], setType, multiple);
         }
@@ -61,9 +61,9 @@ const SocietyEditScreen = ({navigation, route}) => {
         {selectionLimit: multiple ? 10 : 1, quality: 0.5},
         response => {
           if (response.didCancel) {
-            console.log('Permission cancelled', response);
+            // console.log('Permission cancelled', response);
           } else if (response.error) {
-            console.log('error =>', response);
+            // console.log('error =>', response);
           } else {
             setImage(
               multiple ? response.assets : response.assets[0],

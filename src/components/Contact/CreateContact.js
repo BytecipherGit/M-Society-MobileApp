@@ -37,7 +37,7 @@ const CreateContact = ({navigation, route}) => {
         url: API_URL + 'directory/profession',
       });
 
-      console.log(Result.data);
+      // console.log(Result.data);
 
       if (Result.response) {
       } else {
@@ -98,6 +98,7 @@ const CreateContact = ({navigation, route}) => {
       }
       setLoader(false);
     } catch (e) {
+      console.log('e', e);
       setLoader(false);
       SnackError('Something Went wrong, please try again later.');
     }

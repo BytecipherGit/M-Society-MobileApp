@@ -16,9 +16,11 @@ function* getResidentList(action) {
 
     const Data = yield call(GetData, payload);
 
+    // console.log('Daata', Data?.data?.data);
+
     if (Data.data.success === true) {
-      console.log('Statet data =>', Data?.data?.data);
-      Data?.data?.data.length
+      // console.log('Statet data =>', Data?.data?.data);
+      Data?.data?.data.length > 0
         ? yield put({
             type: GET_RESIDENTSLIST_SUCCESS,
             payload: Data?.data?.data,

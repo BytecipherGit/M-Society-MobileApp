@@ -16,6 +16,7 @@ let initialState = {
 export const AuthReducer = (state = initialState, action) => {
   switch (action.type) {
     case USER_DATA:
+      // console.log(' action.payload.data.', action.payload.data);
       return {
         ...state,
         loader: false,
@@ -23,7 +24,7 @@ export const AuthReducer = (state = initialState, action) => {
         error: '',
         isAdmin:
           action.payload.data.isAdmin === 0 ||
-          action.payload.data.isAdmin === '0'
+          action.payload.data.isAdmin?.toString() === '0'
             ? false
             : true,
       };

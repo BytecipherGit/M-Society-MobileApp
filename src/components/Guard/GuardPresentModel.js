@@ -22,7 +22,7 @@ const GuardPresentModel = ({isVisible, setIsVisible}) => {
 
   const onSuccess = e => {
     // Handle the scanned QR code data here
-    console.log(e.data);
+    // console.log(e.data);
     setLoader(true);
     setStatus({...status, status: 'inProgress', msg: 'Please Wait...'});
     setTimeout(() => {
@@ -93,9 +93,9 @@ const GuardPresentModel = ({isVisible, setIsVisible}) => {
         style={{flex: 1, width: '100%'}}
         captureAudio={false}
         onBarCodeRead={qr => {
-          console.log('====================================');
-          console.log(qr);
-          console.log('====================================');
+          // console.log('====================================');
+          // console.log(qr);
+          // console.log('====================================');
           setScanStatus('Scanned');
         }}>
         <SafeAreaView

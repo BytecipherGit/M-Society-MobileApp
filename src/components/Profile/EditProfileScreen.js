@@ -95,9 +95,9 @@ const EditProfileScreen = ({navigation, route}) => {
       launchCamera({quality: 0.5}, response => {
         // setPhotoURI(response.uri); // update the local state, this will rerender your TomarFoto component with the photo uri path.
         if (response.didCancel) {
-          console.log('Permission cancelled', response);
+          // console.log('Permission cancelled', response);
         } else if (response.error) {
-          console.log('error =>', response);
+          // console.log('error =>', response);
         } else {
           const source = {uri: response.uri};
           if (response && response?.assets?.length > 0) {
@@ -113,9 +113,9 @@ const EditProfileScreen = ({navigation, route}) => {
     } else {
       launchImageLibrary({quality: 0.5}, response => {
         if (response.didCancel) {
-          console.log('Permission cancelled', response);
+          // console.log('Permission cancelled', response);
         } else if (response.error) {
-          console.log('error =>', response);
+          // console.log('error =>', response);
         } else {
           setData({...data, profileImage: response.assets[0].uri});
           let arr = [];
@@ -179,7 +179,7 @@ const EditProfileScreen = ({navigation, route}) => {
         navigation.goBack();
       }
     } catch (e) {
-      console.log(e.response);
+      // console.log(e.response);
       SnackError('Something went wrong. Please try again later.');
     }
     setSaveLoader(false);

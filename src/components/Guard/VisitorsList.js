@@ -67,7 +67,7 @@ const VisitorsList = ({navigation}) => {
         message: 'Something Went Wrong, Please Try Again Later.',
         iconType: 'error',
       });
-      console.log(e);
+      // console.log(e);
     }
   };
 

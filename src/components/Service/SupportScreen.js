@@ -40,7 +40,7 @@ const SupportScreen = ({navigation}) => {
           Linking.canOpenURL(url)
             .then(supported => {
               if (!supported) {
-                console.log('Gmail is not installed');
+                // console.log('Gmail is not installed');
               } else {
                 return Linking.openURL(url);
               }

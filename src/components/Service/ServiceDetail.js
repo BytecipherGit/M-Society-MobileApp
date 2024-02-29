@@ -182,7 +182,7 @@ const ServiceDetail = ({navigation, route}) => {
                   />
                 </View>
                 <Rating
-                  onChange={rating => console.log(rating)}
+                  // onChange={rating => console.log(rating)}
                   selectedStar={require('../../assets/images/likeHighlight.png')}
                   unselectedStar={require('../../assets/images/likeUnhighlight.png')}
                   config={{

@@ -18,7 +18,7 @@ const Notificatrion = () => {
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-      console.log('Authorization status:', authStatus);
+      // console.log('Authorization status:', authStatus);
     }
   };
 
@@ -31,7 +31,7 @@ const Notificatrion = () => {
           setFcmTooken({token: token});
         });
     } else {
-      console.log('Fail token status');
+      // console.log('Fail token status');
     }
   }, []);
 

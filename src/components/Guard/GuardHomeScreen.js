@@ -87,7 +87,7 @@ const GuardHomeScreen = ({navigation}) => {
       if (Result.response) {
         // SnackError('something went wrong to get permission data from server');
       } else {
-        console.log(Result.data.data);
+        // console.log(Result.data.data);
         Result.data.data &&
           Result.data.data.guardApproveSetting === true &&
           setPermission(true);

@@ -1,39 +1,37 @@
+import React, {useEffect, useState} from 'react';
 import {
   View,
-  Text,
-  SafeAreaView,
   FlatList,
   Image,
   StyleSheet,
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import React, {Fragment, useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
+import {useRecoilState} from 'recoil';
+import LinearGradient from 'react-native-linear-gradient';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
-import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
+// import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
 import {
   API_URL,
   DeleteData,
   GetData,
   SnackError,
-  getAsyncValue,
+  // getAsyncValue,
 } from '../../assets/services';
-import {useRecoilState} from 'recoil';
-import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
+// import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import Moon from '../../assets/images/Moon.svg';
 import Sun from '../../assets/images/Sun.svg';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
-import LinearGradient from 'react-native-linear-gradient';
 import AppRoundAddActionButton from '../../ReUsableComponents/AppRoundAddActionButton';
-import {useIsFocused} from '@react-navigation/native';
 import AppCrudActionButton from '../../ReUsableComponents/AppCrudActionButton';
-import {useSelector} from 'react-redux';
 
 const GuardList = ({navigation}) => {
-  const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
+  // const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
   const [data, setData] = useState({
     error: '',
     loader: '',
@@ -43,14 +41,13 @@ const GuardList = ({navigation}) => {
   const focused = useIsFocused();
   const {isAdmin} = useSelector(state => state.AuthReducer);
   const [apiType, setApiType] = useState('');
+  const user = useSelector(({AuthReducer}) => AuthReducer?.userDetail?.data);
+  // console.log('user', user);
 
-  useEffect(async () => {
-    const User = await getAsyncValue('user');
-    JSON.parse(User)?.data?.userType === 'guard'
-      ? setApiType('list')
-      : setApiType('all');
+  useEffect(() => {
+    user?.userType === 'guard' ? setApiType('list') : setApiType('all');
     // focused && getGuardsList();
-  }, [focused]);
+  }, [focused, user?.userType]);
 
   useEffect(() => {
     getGuardsList();

@@ -56,7 +56,7 @@ const ReportList = ({navigation, route}) => {
       if (Result.response) {
         SnackError(Result.response.data.message);
       } else {
-        console.log(Result.data);
+        // console.log(Result.data);
         setShowBlockInput(true);
         setCommentError(false);
         setComment('');
