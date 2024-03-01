@@ -26,10 +26,10 @@ import {useIsFocused} from '@react-navigation/native';
 const ProfileScreen = ({navigation, route}) => {
   const [logoutPopup, setLogoutPopup] = useState(false);
   const focus = useIsFocused();
-  const User = useSelector(state => state.AuthReducer.userDetail);
+  const User = useSelector(({AuthReducer}) => AuthReducer.userDetail);
   const dispatch = useDispatch();
   let array =
-    User.data.userType === 'guard' ? GuardprofileOptions : profileOptions;
+    User?.data?.userType === 'guard' ? GuardprofileOptions : profileOptions;
 
   const logout = () => {
     dispatch({type: 'LOG_OUT'});
@@ -37,7 +37,7 @@ const ProfileScreen = ({navigation, route}) => {
 
   useEffect(() => {
     array =
-      User.data.userType === 'guard' ? GuardprofileOptions : profileOptions;
+      User?.data?.userType === 'guard' ? GuardprofileOptions : profileOptions;
   }, [focus]);
 
   const renderOptions = () => {

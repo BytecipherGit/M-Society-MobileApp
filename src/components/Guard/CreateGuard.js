@@ -5,9 +5,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
-  Alert,
+  Image,
+  // Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 import {COLORS, globalStyle} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
 import {AddGuardJson} from '../../assets/Jsons';
@@ -16,19 +18,21 @@ import AppTextInput from '../../ReUsableComponents/AppTextInput';
 import AppButton from '../../ReUsableComponents/AppButton';
 import AppFilePicker from '../../ReUsableComponents/AppFilePicker';
 import DatePicker from 'react-native-date-picker';
-import moment from 'moment';
+// import moment from 'moment';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {
   API_URL,
   CreateGuardAPI,
-  PostData,
-  PutData,
+  GetData,
+  // PostData,
+  // PutData,
   SnackError,
   SuccessAlert,
 } from '../../assets/services';
 
 const CreateGuard = ({navigation, route}) => {
+  const user = useSelector(({AuthReducer}) => AuthReducer?.userDetail?.data);
   const isEditable = route && route.params && route.params.data ? true : false;
   const [data, setData] = useState({
     name: '',
@@ -150,6 +154,11 @@ const CreateGuard = ({navigation, route}) => {
         SnackError(Result.response.data.message);
       } else {
         SuccessAlert('Guard Created Sucessfully.');
+        await GetData({
+          url:
+            API_URL +
+            `guard/app/${user?.userType === 'guard' ? 'list' : 'all'}`,
+        });
         navigation.goBack();
       }
     } catch (e) {
@@ -216,7 +225,7 @@ const CreateGuard = ({navigation, route}) => {
   const eighteenYearsAgo = new Date();
   eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <View style={globalStyle.cnt}>
@@ -283,7 +292,7 @@ const CreateGuard = ({navigation, route}) => {
               ) : item.param === 'profileImage' || item.param === 'idProof' ? (
                 (cloneProfileImg && item.param === 'profileImage') ||
                 (cloneIdProof && item.param === 'idProof') ? (
-                  <ImageBackground
+                  <Image
                     source={{
                       uri:
                         item.param === 'profileImage'
@@ -306,7 +315,7 @@ const CreateGuard = ({navigation, route}) => {
                         color={COLORS.buttonColor}
                       />
                     </TouchableOpacity>
-                  </ImageBackground>
+                  </Image>
                 ) : renderImage(item) ? (
                   <ImageBackground
                     source={{
