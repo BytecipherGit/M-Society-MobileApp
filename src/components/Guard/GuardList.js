@@ -47,11 +47,13 @@ const GuardList = ({navigation}) => {
   useEffect(() => {
     user?.userType === 'guard' ? setApiType('list') : setApiType('all');
     // focused && getGuardsList();
-  }, [focused, user?.userType]);
-
-  useEffect(() => {
     getGuardsList();
-  }, [apiType]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focused, user?.userType, apiType]);
+
+  // useEffect(() => {
+  //   getGuardsList();
+  // }, [apiType]);
 
   const getGuardsList = async () => {
     setData({

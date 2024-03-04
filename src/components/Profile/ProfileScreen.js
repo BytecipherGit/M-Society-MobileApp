@@ -1,27 +1,24 @@
 import {
   View,
   Text,
-  SafeAreaView,
-  Image,
   ImageBackground,
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useIsFocused} from '@react-navigation/native';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
-import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
+// import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import {GuardprofileOptions, profileOptions} from '../../assets/Jsons';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
-import ForwardAerrow from '../../assets/images/ForwardAerrow.svg';
+// import ForwardAerrow from '../../assets/images/ForwardAerrow.svg';
 import SuccessModal from '../../ReUsableComponents/SuccessModal';
-import {useDispatch, useSelector} from 'react-redux';
 import AppButton from '../../ReUsableComponents/AppButton';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useIsFocused} from '@react-navigation/native';
 
 const ProfileScreen = ({navigation, route}) => {
   const [logoutPopup, setLogoutPopup] = useState(false);
@@ -120,7 +117,9 @@ const ProfileScreen = ({navigation, route}) => {
                     !User.data.profileImage && {tintColor: COLORS.buttonColor},
                   ]}
                   source={{
-                    uri: User.data.profileImage,
+                    uri: User.data.profileImage
+                      ? User.data.profileImage
+                      : undefined,
                   }}
                 />
                 <Text style={styles.userName}>{User.data.name}</Text>

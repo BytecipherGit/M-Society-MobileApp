@@ -19,7 +19,6 @@ import Pdf from 'react-native-pdf';
 const NoticeDetailScreen = ({navigation, route}) => {
   const {title, description, createdDate, attachedFile, societyAdminId} =
     route?.params?.item;
-
   let path = attachedFile ? attachedFile.split('.') : '';
   if (path.length > 0) {
     path = path[path.length - 1];

@@ -1,27 +1,25 @@
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   Image,
-  TextInput,
   FlatList,
   TouchableOpacity,
   StyleSheet,
   Platform,
 } from 'react-native';
-import React, {Fragment, useEffect} from 'react';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useDispatch, useSelector} from 'react-redux';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
-import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
-import LinkAerrow from '../../assets/images/LinkAerrow.svg';
-import {useDispatch, useSelector} from 'react-redux';
+// import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
+// import LinkAerrow from '../../assets/images/LinkAerrow.svg';
 import {GET_MAINTANCE_USER_REQUEST} from '../../redux/Actions';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import AppTextInput from '../../ReUsableComponents/AppTextInput';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 
-const searchIcon = 'https://cdn-icons-png.flaticon.com/512/54/54481.png';
+// const searchIcon = 'https://cdn-icons-png.flaticon.com/512/54/54481.png';
 
 const TakePaymentScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -67,7 +65,9 @@ const TakePaymentScreen = ({navigation}) => {
               <View style={styles.cardContainer}>
                 <Image
                   style={styles.profilePic}
-                  source={{uri: users.profileImage}}
+                  source={{
+                    uri: item?.profileImage ? item?.profileImage : undefined,
+                  }}
                 />
                 <View style={{width: '75%'}}>
                   <Text style={styles.userName}>{item.name}</Text>

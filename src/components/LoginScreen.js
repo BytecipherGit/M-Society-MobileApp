@@ -84,7 +84,6 @@ const LoginScreen = ({navigation}) => {
         // console.log('paylaod', payload);
 
         const Result = await PostData(payload);
-        console.log('result', Result?.data);
         if (Result && Result.data.success) {
           StoreData('user', JSON.stringify(Result.data));
           // console.log(Result.data);

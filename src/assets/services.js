@@ -7,7 +7,7 @@ export const API_URL = 'http://192.168.1.165:5000/api/';
 export const GetData = async payload => {
   let Token = await getAsyncValue('user');
   Token = JSON.parse(Token);
-  console.log('token', Token?.accessToken);
+  // console.log('token', Token?.accessToken);
   let config = {
     method: 'GET',
     url: payload?.url,
@@ -16,14 +16,14 @@ export const GetData = async payload => {
       'Content-Type': 'application/json',
     },
   };
-  console.log('config+++> get', config);
+  // console.log('config+++> get', config);
   return axios(config)
     .then(res => {
-      console.log('response+++> get', payload, ' res', res);
+      // console.log('response+++> get', payload, ' res', res?.data);
       return res;
     })
     .catch(e => {
-      console.log('error+++> get', payload, ' res', e);
+      // console.log('error+++> get', payload, ' res', e);
       return e;
     });
 };

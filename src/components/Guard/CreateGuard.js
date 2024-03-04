@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -5,11 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
-  Image,
-  // Alert,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
+import DatePicker from 'react-native-date-picker';
+// import moment from 'moment';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {COLORS, globalStyle} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
 import {AddGuardJson} from '../../assets/Jsons';
@@ -17,16 +19,10 @@ import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import AppTextInput from '../../ReUsableComponents/AppTextInput';
 import AppButton from '../../ReUsableComponents/AppButton';
 import AppFilePicker from '../../ReUsableComponents/AppFilePicker';
-import DatePicker from 'react-native-date-picker';
-// import moment from 'moment';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {
   API_URL,
   CreateGuardAPI,
   GetData,
-  // PostData,
-  // PutData,
   SnackError,
   SuccessAlert,
 } from '../../assets/services';
@@ -72,11 +68,9 @@ const CreateGuard = ({navigation, route}) => {
 
   const formatDate = dateString => {
     const date = new Date(dateString);
-
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-
     return `${day}-${month}-${year}`;
   };
 
@@ -187,9 +181,7 @@ const CreateGuard = ({navigation, route}) => {
     if (!cloneIdProof && !data?.idProof?.uri) {
       return SnackError('Please Upload Id proof first');
     }
-
     setLoader(true);
-
     try {
       const Result = await CreateGuardAPI({
         url: API_URL + 'guard',
@@ -204,6 +196,11 @@ const CreateGuard = ({navigation, route}) => {
         SnackError(Result.response.data.message);
       } else {
         SuccessAlert('Updated successfully.');
+        await GetData({
+          url:
+            API_URL +
+            `guard/app/${user?.userType === 'guard' ? 'list' : 'all'}`,
+        });
         navigation.goBack();
       }
     } catch (e) {
@@ -224,8 +221,6 @@ const CreateGuard = ({navigation, route}) => {
 
   const eighteenYearsAgo = new Date();
   eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
-
-  // console.log(data);
 
   return (
     <View style={globalStyle.cnt}>
@@ -292,7 +287,7 @@ const CreateGuard = ({navigation, route}) => {
               ) : item.param === 'profileImage' || item.param === 'idProof' ? (
                 (cloneProfileImg && item.param === 'profileImage') ||
                 (cloneIdProof && item.param === 'idProof') ? (
-                  <Image
+                  <ImageBackground
                     source={{
                       uri:
                         item.param === 'profileImage'
@@ -300,8 +295,7 @@ const CreateGuard = ({navigation, route}) => {
                           : cloneIdProof,
                     }}
                     style={{height: 135, width: '100%', borderRadius: 10}}
-                    imageStyle={{borderRadius: 10}}
-                    resizeMode="contain">
+                    imageStyle={{borderRadius: 10}}>
                     <TouchableOpacity
                       style={style.logoImg}
                       onPress={() => {
@@ -315,7 +309,7 @@ const CreateGuard = ({navigation, route}) => {
                         color={COLORS.buttonColor}
                       />
                     </TouchableOpacity>
-                  </Image>
+                  </ImageBackground>
                 ) : renderImage(item) ? (
                   <ImageBackground
                     source={{

@@ -13,24 +13,19 @@ import ToggleSwitch from 'toggle-switch-react-native';
 import {useRecoilState} from 'recoil';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
-// import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
 import AppHeader from '../../ReUsableComponents/AppHeader';
 import AppRoundAddActionButton from '../../ReUsableComponents/AppRoundAddActionButton';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
-import {
-  // EDIT_RESIDENT_USER_REQUEST,
-  GET_RESIDENTSLIST_REQUEST,
-} from '../../redux/Actions';
+import {GET_RESIDENTSLIST_REQUEST} from '../../redux/Actions';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
-import {API_URL, DeleteData, PostData, PutData} from '../../assets/services';
+import {API_URL, DeleteData, PutData} from '../../assets/services';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 
 const ResidentList = ({navigation}) => {
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
-
   const state = useSelector(({ResidentReducer}) => ResidentReducer);
   const isAdmin = useSelector(({AuthReducer}) => AuthReducer?.isAdmin);
   const user = useSelector(({AuthReducer}) => AuthReducer.userDetail.data);
@@ -58,7 +53,6 @@ const ResidentList = ({navigation}) => {
           status: item.status === 'active' ? 'inactive' : 'active',
         },
       });
-
       if (Result.data.success) {
         let arr = [];
         arr = data;

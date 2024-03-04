@@ -1,5 +1,5 @@
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
 import {COLORS} from '../../assets/theme';
 import Caledor from '../../assets/images/CalendorWithTheme.svg';

@@ -1,48 +1,47 @@
+import React, {Fragment, useEffect, useState} from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
-  Image,
+  // SafeAreaView,
+  // Image,
   ImageBackground,
   FlatList,
   StyleSheet,
   ScrollView,
-  TextInput,
+  // TextInput,
   TouchableOpacity,
-  Alert,
+  // Alert,
   ActivityIndicator,
   Platform,
 } from 'react-native';
-import React, {Fragment, useEffect, useState} from 'react';
-import {COLORS, globalStyle, shadow} from '../../assets/theme';
-import AppHeader from '../../ReUsableComponents/AppHeader';
-import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
-import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
-import CameraIconSvg from '../../assets/images/CameraIconSvg.svg';
-import AppButton from '../../ReUsableComponents/AppButton';
 import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
+import {useRecoilState} from 'recoil';
+import LinearGradient from 'react-native-linear-gradient';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import axios from 'axios';
+import {COLORS, globalStyle, shadow} from '../../assets/theme';
+import AppHeader from '../../ReUsableComponents/AppHeader';
+// import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
+// import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
+// import CameraIconSvg from '../../assets/images/CameraIconSvg.svg';
+import AppButton from '../../ReUsableComponents/AppButton';
+
 import {
   API_URL,
   GetData,
-  PostData,
-  PutData,
   SnackError,
   StoreData,
   getAsyncValue,
-  updatProfile,
 } from '../../assets/services';
-import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
+// import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import {editUserJson} from '../../assets/Jsons';
 import {USER_DATA} from '../../redux/Actions';
-import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
-import LinearGradient from 'react-native-linear-gradient';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import AppTextInput from '../../ReUsableComponents/AppTextInput';
-import axios from 'axios';
 
 const EditProfileScreen = ({navigation, route}) => {
   const [visible, setVisible] = useState(false);
@@ -52,11 +51,11 @@ const EditProfileScreen = ({navigation, route}) => {
   const [profilePic, setProfilePic] = useState([]);
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
 
-  const User = useSelector(state => state.AuthReducer.userDetail);
+  const User = useSelector(({AuthReducer}) => AuthReducer.userDetail?.data);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    getUserData(User.data._id);
+    getUserData(User?._id);
   }, []);
 
   const errorAlert = msg => {
@@ -75,16 +74,18 @@ const EditProfileScreen = ({navigation, route}) => {
 
     try {
       const Result = await GetData(payload);
-      if (Result && Result.data && Result.data.success) {
-        setData(Result.data.data);
+      if (Result && Result?.data && Result?.data?.success) {
+        setData(Result?.data?.data);
+        setTimeout(() => {
+          setLoader(false);
+        }, 500);
       } else {
-        errorAlert(Result.data.message);
+        errorAlert(Result?.data?.message);
       }
     } catch (e) {
+      setLoader(false);
       errorAlert('Something went wrong, please try again later.');
     }
-
-    setLoader(false);
   };
 
   const hideMenu = () => setVisible(false);
@@ -209,7 +210,6 @@ const EditProfileScreen = ({navigation, route}) => {
                     marginBottom: '2%',
                   }}
                 />
-
                 <AppTextInput
                   item={item}
                   value={data[item.param]}
@@ -236,7 +236,7 @@ const EditProfileScreen = ({navigation, route}) => {
       <AppHeader title={'Edit Profile'} navigation={navigation} />
       {loader ? (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <ActivityIndicator color={'white'} style={{marginTop: '-25%'}} />
+          <ActivityIndicator color={'red'} style={{marginTop: '-25%'}} />
         </View>
       ) : (
         <ScrollView
@@ -253,11 +253,16 @@ const EditProfileScreen = ({navigation, route}) => {
                     style={styles.profileImg}
                     imageStyle={[
                       {borderRadius: 30},
-                      !data.profileImage && {tintColor: COLORS.buttonColor},
+                      !User.profileImage && {tintColor: COLORS.buttonColor},
                     ]}
                     source={{
-                      uri: data.profileImage,
-                    }}></ImageBackground>
+                      uri: data?.profileImage
+                        ? data?.profileImage
+                        : User?.profileImage
+                        ? User?.profileImage
+                        : undefined,
+                    }}
+                  />
                   <TouchableOpacity
                     style={styles.optionButton}
                     onPress={showMenu}>
@@ -289,7 +294,7 @@ const EditProfileScreen = ({navigation, route}) => {
                           setTimeout(() => {
                             item === 'View'
                               ? navigation.navigate('ImageViewScreen', {
-                                  img: data.profileImage,
+                                  img: data?.profileImage,
                                 })
                               : pickImage(item);
                           }, 500);

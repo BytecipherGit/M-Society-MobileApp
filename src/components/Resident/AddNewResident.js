@@ -1,22 +1,21 @@
 import {
   View,
   Text,
-  SafeAreaView,
   TextInput,
   ScrollView,
   StyleSheet,
   Appearance,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
-import React, {Fragment, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
+import PhoneInput from 'react-native-phone-number-input';
+import {Dropdown} from 'react-native-element-dropdown';
+import DatePicker from 'react-native-date-picker';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
 import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import {AddResidenceUserJson} from '../../assets/Jsons';
-import PhoneInput from 'react-native-phone-number-input';
-import {Dropdown} from 'react-native-element-dropdown';
 import {
   API_URL,
   GetData,
@@ -25,8 +24,7 @@ import {
   SuccessAlert,
 } from '../../assets/services';
 import AppButton from '../../ReUsableComponents/AppButton';
-import DatePicker from 'react-native-date-picker';
-import moment from 'moment';
+// import moment from 'moment';
 
 const AddNewResident = ({navigation, route}) => {
   const [showData, setShowData] = useState(AddResidenceUserJson);
@@ -152,14 +150,11 @@ const AddNewResident = ({navigation, route}) => {
               ...ownerDetail,
             }
           : {...data};
-
       delete bodyforapi.role;
-
       const Result = await PostData({
         url: API_URL + 'admin/residentialUser/add',
         body: bodyforapi,
       });
-
       setLoader(false);
       if (Result.data.success) {
         SuccessAlert('Your Data Was Created.');
@@ -175,9 +170,17 @@ const AddNewResident = ({navigation, route}) => {
   };
 
   const renderUI = (item, index, data, setData) => {
+
     return (
       <View style={{marginTop: '5%'}} key={index}>
-        <TitleText text={item.title} />
+        <TitleText
+          text={
+            route?.params?.item && item.title === 'Maintenance Pending From'
+              ? null
+              : item.title
+          }
+        />
+
         {item.type === 'Input' && (
           <TextInput
             placeholder={item.title}
@@ -198,9 +201,8 @@ const AddNewResident = ({navigation, route}) => {
             textContainerStyle={styles.phoneTextContainerStyle}
             textInputStyle={{}}
             codeTextStyle={{}}
-            dropdownStyle={{
-              height: 50,
-            }}
+            dropdownStyle={{height: 50}}
+            disabled={route?.params ? true : false}
             country={'IN'}
             value={data[item.param]}
             onChangeText={phone => setData({...data, [item.param]: phone})}
@@ -238,9 +240,10 @@ const AddNewResident = ({navigation, route}) => {
               setData({...data, [item.param]: i.value});
               // setIsFocus(false);
             }}
+            disable={route?.params ? true : false}
           />
         )}
-        {item.type === 'YearAndMonth' && (
+        {item.type === 'YearAndMonth' && !route?.params?.item && (
           <TouchableOpacity
             onPress={() => !route?.params?.item && setDateModal(true)}>
             <TextInput
@@ -271,13 +274,11 @@ const AddNewResident = ({navigation, route}) => {
         date={new Date()}
         onConfirm={date => {
           setDateModal(false);
-
           setData({
             ...data,
-            maintenancePendingFrom:
-              new Date(`${date}`).getFullYear() +
-              '-' +
-              new Date(`${date}`).getMonth(),
+            maintenancePendingFrom: `${new Date(date).getFullYear()}-${
+              new Date(date).getMonth() + 1
+            }`,
           });
         }}
         onCancel={() => {
