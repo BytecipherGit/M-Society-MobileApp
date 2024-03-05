@@ -10,10 +10,10 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {COLORS, globalStyle} from '../assets/theme';
-import {images} from '../assets/images/image';
-import AuthCard from '../ReUsableComponents/AuthCard';
+// import {images} from '../assets/images/image';
+// import AuthCard from '../ReUsableComponents/AuthCard';
 import AppTextInput from '../ReUsableComponents/AppTextInput';
 import {inputFields} from '../assets/Jsons';
 import {API_URL, PostData, StoreData} from '../assets/services';
@@ -26,9 +26,9 @@ import {
 } from '../assets/GlobalStates/RecoilGloabalState';
 import DescriptionText from "../ReUsableComponents/Text's/DescriptionText";
 import {CommonActions} from '@react-navigation/native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
-import AppButton from '../ReUsableComponents/AppButton';
+// import AppButton from '../ReUsableComponents/AppButton';
 
 const LoginScreen = ({navigation}) => {
   const [data, setData] = useState({

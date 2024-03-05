@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,13 +10,15 @@ import {
   Platform,
   Appearance,
 } from 'react-native';
-import React, {Fragment, useEffect, useState} from 'react';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
+import {useSelector} from 'react-redux';
+import {useRecoilState} from 'recoil';
+import {Dropdown} from 'react-native-element-dropdown';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
 import {AddVisitorFields} from '../../assets/Jsons';
-import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
 import CameraIcon from '../../assets/images/CameraIcon.svg';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import AppButton from '../../ReUsableComponents/AppButton';
 import {
   API_URL,
@@ -23,11 +26,8 @@ import {
   SnackError,
   addVisitorFormData,
 } from '../../assets/services';
-import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
 import AppTextInput from '../../ReUsableComponents/AppTextInput';
-import {useSelector} from 'react-redux';
-import {Dropdown} from 'react-native-element-dropdown';
 
 const AddVisitor = ({navigation, route}) => {
   const [visible, setVisible] = useState(false);
@@ -44,11 +44,9 @@ const AddVisitor = ({navigation, route}) => {
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
   const colorScheme = Appearance.getColorScheme();
   const [isFocus, setIsFocus] = useState(false);
-  const state = useSelector(state => state);
-
-  // console.log('====================================');
-  // console.log(data);
-  // console.log('====================================');
+  const adminUser = useSelector(
+    ({AuthReducer}) => AuthReducer?.userDetail?.data,
+  );
 
   useEffect(() => {
     getSocietyRooms();
@@ -57,13 +55,11 @@ const AddVisitor = ({navigation, route}) => {
   const getSocietyRooms = async () => {
     try {
       const Result = await GetData({
-        url:
-          API_URL +
-          `admin/houseNumberList/${state?.AuthReducer?.userDetail?.data?.societyId?._id}`,
+        url: API_URL + `admin/houseNumberList/${adminUser?.societyId?._id}`,
       });
 
       if (Result.response) {
-        SnackError(Result.reasone.data.message);
+        SnackError(Result?.reasone?.data?.message);
       } else {
         // console.log('====================================');
         // console.log('rooms =>', Result.data.data);

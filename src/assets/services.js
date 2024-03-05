@@ -2,7 +2,10 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Snackbar from 'react-native-snackbar';
 // export const API_URL = 'https://bbae-122-175-237-30.ngrok-free.app/api/';
-export const API_URL = 'http://192.168.1.165:5000/api/';
+// export const API_URL = 'http://192.168.1.166:5000/api/';
+export const API_URL = 'https://msociety.in:9001/api/';
+
+// https://msociety.in:9001/api/user/login
 
 export const GetData = async payload => {
   let Token = await getAsyncValue('user');
@@ -40,7 +43,7 @@ export const PostData = async payload => {
     },
     data: payload?.body,
   };
-  // console.log('config', config);
+  console.log('config', config);
   return axios(config)
     .then(res => {
       // console.log('response+++> post', config, ' res', res);
@@ -156,16 +159,16 @@ export const postFormData = async (payload, type) => {
     redirect: 'follow',
   };
 
-  console.log('config+++> putForm Data', requestOptions);
+  // console.log('config+++> putForm Data', requestOptions);
 
   return fetch(payload.url, requestOptions)
     .then(response => response.json())
     .then(result => {
-      console.log('putForm response+++> get', payload, ' res', result);
+      // console.log('putForm response+++> get', payload, ' res', result);
       return result;
     })
     .catch(error => {
-      console.log('putForm response+++> error', payload, ' res', error);
+      // console.log('putForm response+++> error', payload, ' res', error);
       return error;
     });
 };

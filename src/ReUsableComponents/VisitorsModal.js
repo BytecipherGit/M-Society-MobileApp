@@ -4,7 +4,6 @@ import {
   Image,
   StyleSheet,
   FlatList,
-  Alert,
   SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -36,23 +35,27 @@ const VisitorsModal = () => {
     const OnBoard = await getAsyncValue('OnBoard');
     if (OnBoard) {
       const User = await getAsyncValue('user');
+      // console.log('User', User);
       if (User) {
-        if (JSON.parse(User)?.data?.userType === 'guard') {
+        // if (JSON.parse(User)?.data?.userType === 'owner') {
+        if (JSON.parse(User)?.data?.userType === 'owner') {
           try {
             const Result = await GetData({
               url: API_URL + 'visitor/list',
             });
 
-            if (Result.response) {
+            if (Result?.response) {
               SnackError('There is an some problem to get visitors list');
+              setVisitorsList([]);
             } else {
-              setVisitorsList(Result.data.data);
-              Result.data.data.length > 0
+              setVisitorsList(Result?.data?.data || []);
+              Result?.data?.data?.length > 0
                 ? setShowModal(true)
                 : setShowModal(false);
             }
           } catch (e) {
             SnackError('Something went wrong please try again later.');
+            setVisitorsList([]);
           }
         }
       }
@@ -91,112 +94,121 @@ const VisitorsModal = () => {
           color={COLORS.white}
           onPress={() => setShowModal(false)}
         />
-        <FlatList
-          data={visitorsList}
-          showsVerticalScrollIndicator={false}
-          style={{
-            flex: 1,
-          }}
-          ListHeaderComponent={
-            () => visitorsList.length === 1 && null
-            // <View
-            //   style={{
-            //     height: '40%',
-            //   }}
-            // />
-          }
-          renderItem={({item, index}) => (
-            <View style={style.card}>
-              <View style={style.subCard}>
-                <Image
-                  source={require('../assets/images/Visitor.png')}
-                  style={style.visitorIcon}
-                />
-                <Text style={style.subCardTitle}>Guest Visit Alert !!</Text>
-              </View>
-              <View style={{marginVertical: 20}}>
-                <View style={style.detailCnt}>
+        {visitorsList?.length > 0 ? (
+          <FlatList
+            data={visitorsList}
+            showsVerticalScrollIndicator={false}
+            style={{
+              flex: 1,
+            }}
+            ListHeaderComponent={
+              () => visitorsList?.length === 1 && null
+              // <View
+              //   style={{
+              //     height: '40%',
+              //   }}
+              // />
+            }
+            renderItem={({item, index}) => (
+              <View style={style.card}>
+                <View style={style.subCard}>
                   <Image
-                    style={style.visitorProfilePic}
-                    source={{uri: item?.image}}
+                    source={require('../assets/images/Visitor.png')}
+                    style={style.visitorIcon}
                   />
-                  <View style={{marginLeft: '2%'}}>
-                    <Text style={style.visitorName}>{item?.name}</Text>
-                    <Text style={style.visitorContactNumber}>
-                      {item?.countryCode} {item?.phoneNumber}
+                  <Text style={style.subCardTitle}>Guest Visit Alert !!</Text>
+                </View>
+                <View style={{marginVertical: 20}}>
+                  <View style={style.detailCnt}>
+                    <Image
+                      style={style.visitorProfilePic}
+                      source={{uri: item?.image}}
+                    />
+                    <View style={{marginLeft: '2%'}}>
+                      <Text style={style.visitorName}>{item?.name}</Text>
+                      <Text style={style.visitorContactNumber}>
+                        {item?.countryCode} {item?.phoneNumber}
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      marginTop: '4%',
+                    }}>
+                    <Text style={style.visitorReason}>
+                      Reason -{' '}
+                      <Text
+                        style={{
+                          color: '#535353',
+                        }}>
+                        {item?.reasone}
+                      </Text>
                     </Text>
                   </View>
                 </View>
-                <View
-                  style={{
-                    marginTop: '4%',
-                  }}>
-                  <Text style={style.visitorReason}>
-                    Reason -{' '}
-                    <Text
-                      style={{
-                        color: '#535353',
-                      }}>
-                      {item?.reasone}
-                    </Text>
+                {actionId === item._id ? (
+                  <Text
+                    style={{
+                      fontFamily: 'Axiforma-SemiBold',
+                      color: 'red',
+                      alignSelf: 'center',
+                    }}>
+                    Sending msg to Guard, Please Wait...
                   </Text>
-                </View>
+                ) : (
+                  <View style={style.buttonCnt}>
+                    <AppButton
+                      buttonTitle={'Disallow'}
+                      TouchableStyle={{
+                        flex: 0.48,
+                        ...shadow,
+                      }}
+                      TextStyle={{
+                        color: '#535353',
+                      }}
+                      onPress={() => {
+                        if (!actionId) {
+                          setActionId(item._id);
+                          DoAction('disallow', item._id);
+                        }
+                      }}
+                      colorArray={['#f7f7f7', '#f7f7f7']}
+                    />
+                    <AppButton
+                      buttonTitle={'Allow'}
+                      renderIcon={() => (
+                        <AntDesign
+                          name="checkcircleo"
+                          color={'white'}
+                          style={{
+                            marginRight: 5,
+                            alignSelf: 'center',
+                            fontSize: 15,
+                          }}
+                        />
+                      )}
+                      onPress={() => {
+                        if (!actionId) {
+                          setActionId(item._id);
+                          DoAction('allow', item._id);
+                        }
+                      }}
+                      TouchableStyle={{
+                        flex: 0.48,
+                      }}
+                    />
+                  </View>
+                )}
               </View>
-              {actionId === item._id ? (
-                <Text
-                  style={{
-                    fontFamily: 'Axiforma-SemiBold',
-                    color: 'red',
-                    alignSelf: 'center',
-                  }}>
-                  Sending msg to Guard, Please Wait...
-                </Text>
-              ) : (
-                <View style={style.buttonCnt}>
-                  <AppButton
-                    buttonTitle={'Disallowed'}
-                    TouchableStyle={{
-                      flex: 0.48,
-                      ...shadow,
-                    }}
-                    TextStyle={{
-                      color: '#535353',
-                    }}
-                    onPress={() => {
-                      if (!actionId) {
-                        setActionId(item._id);
-                        DoAction('disallow', item._id);
-                      }
-                    }}
-                    colorArray={['#f7f7f7', '#f7f7f7']}
-                  />
-                  <AppButton
-                    buttonTitle={'Allowed'}
-                    renderIcon={() => (
-                      <AntDesign
-                        name="checkcircleo"
-                        color={'white'}
-                        style={{
-                          marginRight: 5,
-                          fontSize: 15,
-                        }}
-                      />
-                    )}
-                    onPress={() => {
-                      if (!actionId) {
-                        setActionId(item._id);
-                        DoAction('allow', item._id);
-                      }
-                    }}
-                    TouchableStyle={{
-                      flex: 0.48,
-                    }}
-                  />
-                </View>
-              )}
-            </View>
-          )}
-        />
+            )}
+          />
+        ) : (
+          <View style={style.noVisitorMessageContainer}>
+            <Text style={style.noVisitorMessage}>
+              No visitor records found.
+            </Text>
+          </View>
+        )}
       </SafeAreaView>
     </ReactNativeModal>
   );

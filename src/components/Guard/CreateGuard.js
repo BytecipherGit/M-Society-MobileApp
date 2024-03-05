@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -26,6 +26,8 @@ import {
   SnackError,
   SuccessAlert,
 } from '../../assets/services';
+import PhoneInput from 'react-native-phone-number-input';
+// import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 const CreateGuard = ({navigation, route}) => {
   const user = useSelector(({AuthReducer}) => AuthReducer?.userDetail?.data);
@@ -48,6 +50,7 @@ const CreateGuard = ({navigation, route}) => {
   const [loader, setLoader] = useState(false);
   const [cloneProfileImg, setCloneProfileImg] = useState('');
   const [cloneIdProof, setCloneIdProof] = useState('');
+  const phoneInput = useRef(null);
 
   useEffect(() => {
     if (isEditable) {
@@ -143,6 +146,7 @@ const CreateGuard = ({navigation, route}) => {
           countryCode: '+' + data.countryCode,
         },
       });
+      // console.log('data.countryCode', data.countryCode);
 
       if (Result.response) {
         SnackError(Result.response.data.message);
@@ -274,15 +278,43 @@ const CreateGuard = ({navigation, route}) => {
             <View style={{width: '90%', alignSelf: 'center'}} key={item.id}>
               <DescriptionText text={item.title} style={style.detailTitle} />
               {item.param === 'phoneNumber' ? (
-                <AppTextInput
-                  item={{title: item.placeHolder, ...item}}
-                  value={data[item.param]}
-                  stopEditable={isEditable}
-                  countryCode={data.countryCode}
-                  onSelectCountry={e => {
-                    setData({...data, countryCode: e.callingCode});
+                // <AppTextInput
+                //   item={{title: item.placeHolder, ...item}}
+                //   value={data[item.param]}
+                //   stopEditable={isEditable}
+                //   countryCode={data.countryCode}
+                //   onSelectCountry={e => {
+                //     setData({...data, countryCode: e.callingCode});
+                //   }}
+                //   setValue={txt => setData({...data, [item.param]: txt})}
+                // />
+                <PhoneInput
+                  ref={phoneInput}
+                  layout="second"
+                  inputStyle={{color: 'green'}}
+                  containerStyle={style.phoneContainerStyle}
+                  buttonStyle={{}}
+                  textContainerStyle={style.phoneTextContainerStyle}
+                  textInputStyle={{}}
+                  codeTextStyle={{}}
+                  dropdownStyle={{height: 50}}
+                  disabled={route?.params ? true : false}
+                  country={'IN'}
+                  value={data[item?.param]}
+                  countryPickerButtonStyle={{border: 'none'}}
+                  onChangeText={phone => {
+                    const sanitizedValue = phone?.replace(/[^0-9]/g, '');
+                    setData({...data, [item.param]: sanitizedValue});
                   }}
-                  setValue={txt => setData({...data, [item.param]: txt})}
+                  onChangeCountry={cn =>
+                    setData({
+                      ...data,
+                      [data.countryCode
+                        ? data.countryCode
+                        : route.params.item
+                            .countryCode]: `+${cn.callingCode[0]}`,
+                    })
+                  }
                 />
               ) : item.param === 'profileImage' || item.param === 'idProof' ? (
                 (cloneProfileImg && item.param === 'profileImage') ||
@@ -456,5 +488,26 @@ const style = StyleSheet.create({
     width: '90%',
     alignSelf: 'center',
     marginBottom: '3%',
+  },
+  phoneContainerStyle: {
+    // ...shadow,
+    // shadowOpacity: 0.1,
+    // shadowRadius: 2,
+    borderWidth: 0.2,
+    borderRadius: 5,
+    borderColor: COLORS.inputBorder,
+    marginLeft: '.5%',
+    marginTop: '3%',
+    width: '97%',
+    backgroundColor: COLORS.inputBackground,
+    color: COLORS.inputtext,
+  },
+  phoneTextContainerStyle: {
+    backgroundColor: COLORS.inputBackground,
+    borderLeftWidth: 0.2,
+    // borderColor: COLORS.inputBorder,
+    borderTopRightRadius: 5,
+    borderBottomRightRadius: 5,
+    paddingVertical: 15,
   },
 });

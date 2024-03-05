@@ -14,7 +14,7 @@ function* getVisitorsList(action) {
     };
 
     const Data = yield call(GetData, payload);
-    if (Data.data.success === true) {
+    if (Data?.data?.success === true) {
       yield put({type: GET_VISITORS_LIST_SUCCESS, payload: Data?.data?.data});
     } else {
       yield put({type: GET_VISITORS_LIST_FAIL, payload: Data?.data?.message});

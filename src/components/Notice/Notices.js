@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import React, {Fragment, useEffect, useState} from 'react';
+import React, { useEffect} from 'react';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
 import Calendor from '../assets/images/Caledor.svg';

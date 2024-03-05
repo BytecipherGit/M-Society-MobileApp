@@ -1,5 +1,5 @@
-import {View, Text, SafeAreaView} from 'react-native';
-import React, {useEffect} from 'react';
+// import {View, Text, SafeAreaView} from 'react-native';
+import {useEffect} from 'react';
 import {getAsyncValue} from '../assets/services';
 import {useDispatch} from 'react-redux';
 import {USER_DATA} from '../redux/Actions';

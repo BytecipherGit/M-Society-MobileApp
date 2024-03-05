@@ -16,14 +16,14 @@ import AppHeader from '../../ReUsableComponents/AppHeader';
 // import LinkAerrow from '../../assets/images/LinkAerrow.svg';
 import {GET_MAINTANCE_USER_REQUEST} from '../../redux/Actions';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
-import TitleText from "../../ReUsableComponents/Text's/TitleText";
-import AppTextInput from '../../ReUsableComponents/AppTextInput';
+// import TitleText from "../../ReUsableComponents/Text's/TitleText";
+// import AppTextInput from '../../ReUsableComponents/AppTextInput';
 
 // const searchIcon = 'https://cdn-icons-png.flaticon.com/512/54/54481.png';
 
 const TakePaymentScreen = ({navigation}) => {
   const dispatch = useDispatch();
-  const users = useSelector(state => state.PaymentReducer);
+  const users = useSelector(({PaymentReducer}) => PaymentReducer);
 
   useEffect(() => {
     dispatch({type: GET_MAINTANCE_USER_REQUEST});
@@ -33,7 +33,7 @@ const TakePaymentScreen = ({navigation}) => {
     <View style={[globalStyle.cnt, {backgroundColor: 'white'}]}>
       <AppHeader title={'Take Payment'} navigation={navigation} />
       <View style={{flex: 1}}>
-        <AppTextInput
+        {/* <AppTextInput
           item={{title: 'Search'}}
           renderIcon={() => (
             <AntDesign
@@ -47,13 +47,13 @@ const TakePaymentScreen = ({navigation}) => {
           )}
           cntStyle={{marginHorizontal: '4%', marginTop: '7%'}}
         />
-        <TitleText style={styles.title} text="Results" />
+        <TitleText style={styles.title} text="Results" /> */}
 
         <FlatList
-          data={users.data}
+          data={users?.data}
           style={{flex: 1}}
           ListEmptyComponent={() => (
-            <AppLoaderSrceen loader={users.loader} error={users.error} />
+            <AppLoaderSrceen loader={users?.loader} error={users?.error} />
           )}
           renderItem={({item, index}) => (
             <TouchableOpacity

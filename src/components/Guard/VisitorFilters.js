@@ -8,11 +8,14 @@ import moment from 'moment';
 
 const VisitorFilters = ({filters, setFilters}) => {
   const [modal, setModal] = useState(false);
-  const [status, setStatus] = useState({
-    status: '',
-    From: '',
-    To: '',
-  });
+  // const [status, setStatus] = useState({
+  //   status: '',
+  //   From: '',
+  //   To: '',
+  // });
+
+  // console.log('status', status);
+  // console.log('filters', filters);
 
   return (
     <View style={styles.filterCnt}>
@@ -28,12 +31,14 @@ const VisitorFilters = ({filters, setFilters}) => {
             activeOpacity={0.8}
             style={styles.datePickerButton}
             onPress={() => {
-              setModal(true), setStatus({...status, status: item});
+              setModal(true);
+              // setStatus({...status, status: item});
+              setFilters({...filters, status: item});
             }}>
             <DescriptionText
               text={
-                status[item]
-                  ? moment(`${status[item]}`).format('DD/MM/YYYY')
+                filters[item]
+                  ? moment(`${filters[item]}`).format('DD/MM/YYYY')
                   : 'DD/MM/YYYY'
               }
               style={styles.datePickerButtonTitle}
@@ -49,8 +54,8 @@ const VisitorFilters = ({filters, setFilters}) => {
         date={new Date()}
         onConfirm={date => {
           setModal(false);
-          setStatus({...status, [status.status]: date});
-          setFilters({...filters, [status.status]: date});
+          // setStatus({...status, [status.status]: date});
+          setFilters({...filters, [filters.status]: date});
         }}
         onCancel={() => {
           setModal(false);

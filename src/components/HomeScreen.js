@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,10 +12,14 @@ import {
   ActivityIndicator,
   Linking,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
+import ReactNativeModal from 'react-native-modal';
+import {useRecoilState} from 'recoil';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {COLORS} from '../assets/theme';
 import {SocietyOptions} from '../assets/Jsons';
-import {useDispatch, useSelector} from 'react-redux';
 import {
   NOTICE_LIST_REQUEST_SILENT,
   SET_USER_TYPE,
@@ -23,15 +28,10 @@ import {
 } from '../redux/Actions';
 import {getAsyncValue} from '../assets/services';
 import TakePayment from '../assets/images/TakePayment.svg';
-import LinearGradient from 'react-native-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import HomeNoticeCrousal from './HomeNoticeCrousal';
-import {useIsFocused} from '@react-navigation/native';
 // import axios from 'axios';
-import ReactNativeModal from 'react-native-modal';
 import AppButton from '../ReUsableComponents/AppButton';
 // import VisitorsModal from '../ReUsableComponents/VisitorsModal';
-import {useRecoilState} from 'recoil';
 import {CheckVisitors} from '../assets/GlobalStates/RecoilGloabalState';
 
 const HomeScreen = ({navigation}) => {
@@ -76,7 +76,7 @@ const HomeScreen = ({navigation}) => {
       detail.data.societyId = data?.data?.society;
       dispatch({type: USER_DATA, payload: basicState});
     }
-  }, [data?.data?.society]);
+  }, [basicState, data, data?.data?.society, dispatch]);
 
   useEffect(() => {
     if (data?.data?.society?._id) {
@@ -293,7 +293,7 @@ const HomeScreen = ({navigation}) => {
               </TouchableOpacity>
             </View>
             {/* Notice lists in card */}
-            {Notice.data.length > 0 && (
+            {Notice?.data?.length > 0 && (
               <HomeNoticeCrousal
                 Notices={Notice?.data}
                 activeIndex={activeIndex}

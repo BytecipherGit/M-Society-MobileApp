@@ -1,32 +1,25 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
-} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList} from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
-import {COLORS, globalStyle, shadow} from '../../assets/theme';
-import AppHeader from '../../ReUsableComponents/AppHeader';
-import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
-import DocumentSvg from '../../assets/images/Document.svg';
-import TitleText from "../../ReUsableComponents/Text's/TitleText";
-import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
-import {API_URL, DeleteData, GetData, SnackError} from '../../assets/services';
+import {useSelector} from 'react-redux';
 import moment from 'moment';
+import {useIsFocused} from '@react-navigation/native';
+import {globalStyle, shadow} from '../../assets/theme';
+import AppHeader from '../../ReUsableComponents/AppHeader';
+// import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
+import DocumentSvg from '../../assets/images/Document.svg';
+// import TitleText from "../../ReUsableComponents/Text's/TitleText";
+// import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
+import {API_URL, DeleteData, GetData, SnackError} from '../../assets/services';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
 import AppRoundAddActionButton from '../../ReUsableComponents/AppRoundAddActionButton';
-import {useSelector} from 'react-redux';
 import AppCrudActionButton from '../../ReUsableComponents/AppCrudActionButton';
-import {useIsFocused} from '@react-navigation/native';
 
 const DocumentList = ({navigation}) => {
+  const {isAdmin} = useSelector(state => state.AuthReducer);
   const [documents, setDocuments] = useState([]);
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState('');
   const [deleteLoader, setDeleteLoader] = useState('');
-  const {isAdmin} = useSelector(state => state.AuthReducer);
   const isFocus = useIsFocused();
   useEffect(() => {
     isFocus && getDocuments();
@@ -40,13 +33,13 @@ const DocumentList = ({navigation}) => {
     try {
       const Result = await GetData(payload);
 
-      if (Result.data.success) {
-        setDocuments(Result.data.data);
-        Result.data.data.length > 0
+      if (Result?.data?.success) {
+        setDocuments(Result?.data?.data);
+        Result?.data?.data?.length > 0
           ? setError('')
           : setError('No document list was found.');
       } else {
-        setError(Result.data.message);
+        setError(Result?.data?.message);
       }
     } catch (e) {
       setError('Something Went Wrong please try again later.');
@@ -137,6 +130,7 @@ const DocumentList = ({navigation}) => {
                 index={index}
                 loaderIndex={deleteLoader}
                 doActions={doActions}
+                hideEditLoader={true}
               />
             )}
           </>

@@ -33,6 +33,7 @@ import {
   GetData,
   SnackError,
   StoreData,
+  SuccessAlert,
   getAsyncValue,
 } from '../../assets/services';
 // import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
@@ -152,12 +153,21 @@ const EditProfileScreen = ({navigation, route}) => {
       formData.append('phoneNumber', payload.data.phoneNumber);
       formData.append('id', payload.data._id);
 
-      const response = await axios.put(API_URL + 'user/', formData, {
-        headers: {
-          Authorization: 'Bearer ' + parsedToken.accessToken,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios
+        .put(API_URL + 'user/', formData, {
+          headers: {
+            Authorization: `Bearer ${parsedToken?.accessToken}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then(res => {
+          return res;
+        })
+        .catch(e => {
+          return e;
+        });
+
+      console.log('updatae', response?.data);
 
       return response.data;
     } catch (error) {
@@ -169,18 +179,20 @@ const EditProfileScreen = ({navigation, route}) => {
     setSaveLoader(true);
     try {
       const Result = await updatProfileAndroid();
+      // console.log('result', Result);
       if (Result.response) {
         SnackError(Result.response.data.message);
       } else {
         let obj = User;
-        obj.data = {...Result.data, societyId: User.data.societyId};
+        obj.data = {...Result.data, societyId: User?.data?.societyId};
 
         dispatch({type: USER_DATA, payload: obj});
         StoreData('user', JSON.stringify(obj));
+        SuccessAlert('Updated Sucessfully.');
         navigation.goBack();
       }
     } catch (e) {
-      // console.log(e.response);
+      console.log(e);
       SnackError('Something went wrong. Please try again later.');
     }
     setSaveLoader(false);

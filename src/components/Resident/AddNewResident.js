@@ -35,6 +35,7 @@ const AddNewResident = ({navigation, route}) => {
           countryCode: '+91',
         },
   );
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [ownerDetail, setOwnerDetail] = useState(
     route && route.params
       ? {
@@ -170,7 +171,6 @@ const AddNewResident = ({navigation, route}) => {
   };
 
   const renderUI = (item, index, data, setData) => {
-
     return (
       <View style={{marginTop: '5%'}} key={index}>
         <TitleText
@@ -204,8 +204,13 @@ const AddNewResident = ({navigation, route}) => {
             dropdownStyle={{height: 50}}
             disabled={route?.params ? true : false}
             country={'IN'}
-            value={data[item.param]}
-            onChangeText={phone => setData({...data, [item.param]: phone})}
+            value={data[item?.param]}
+            onChangeText={phone => {
+              const sanitizedValue = phone?.replace(/[^0-9]/g, '');
+              setPhoneNumber(sanitizedValue);
+              // console.log('phone', sanitizedValue);
+              setData({...data, [item.param]: sanitizedValue});
+            }}
             onChangeCountry={cn =>
               setData({
                 ...data,
@@ -385,6 +390,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.inputBorder,
     borderTopRightRadius: 5,
     borderBottomRightRadius: 5,
+    paddingVertical: 5,
   },
   dropdown: {
     ...shadow,

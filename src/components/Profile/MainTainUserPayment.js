@@ -1,35 +1,32 @@
 import {
   View,
   Text,
-  SafeAreaView,
-  ScrollView,
   Image,
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import React, {Fragment, useEffect, useState} from 'react';
+import {useRecoilState} from 'recoil';
+import {useDispatch, useSelector} from 'react-redux';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {COLORS, globalStyle, shadow} from '../../assets/theme';
 import AppHeader from '../../ReUsableComponents/AppHeader';
-import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
+// import FullCardBackground from '../../ReUsableComponents/FullCardBackground';
 import AppButton from '../../ReUsableComponents/AppButton';
 import TitleText from "../../ReUsableComponents/Text's/TitleText";
 import DescriptionText from "../../ReUsableComponents/Text's/DescriptionText";
-import RightIcon from '../../assets/images/RightIcon.svg';
-import {API_URL, GetData, PostData} from '../../assets/services';
-import {useDispatch, useSelector} from 'react-redux';
+// import RightIcon from '../../assets/images/RightIcon.svg';
+import {API_URL, PostData} from '../../assets/services';
 import {
   PAYMENT_DETAIL_REQUEST,
   PRE_PAYMENT_DETAIL_REQUEST,
 } from '../../redux/Actions';
 import AppLoaderSrceen from '../../ReUsableComponents/AppLoaderSrceen';
-import {useRecoilState} from 'recoil';
 import {GlobalAppAlert} from '../../assets/GlobalStates/RecoilGloabalState';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const MainTainUserPayment = ({navigation, route}) => {
-  const {name, houseNumber, _id} = route.params.user;
+  const {name, houseNumber, _id, profileImage} = route?.params?.user;
   const [paymentData, setPaymentData] = useState([]);
   const [lastSelectedIndex, setLastSelectedIndex] = useState(null);
   const payment = useSelector(state => state.PaymentReducer);
@@ -104,7 +101,12 @@ const MainTainUserPayment = ({navigation, route}) => {
       <AppHeader navigation={navigation} title="Maintenance Charge" />
       <View style={{flex: 1}}>
         <View style={style.userDetailCnt}>
-          <Image style={style.userImage} />
+          <Image
+            style={style.userImage}
+            source={{
+              uri: profileImage ? profileImage : undefined,
+            }}
+          />
 
           <DescriptionText style={style.userName} text={name} />
           <DescriptionText

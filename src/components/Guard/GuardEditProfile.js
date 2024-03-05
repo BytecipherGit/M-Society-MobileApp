@@ -21,7 +21,7 @@ const GuardEditProfile = ({navigation, route}) => {
   const [loader, setLoader] = useState(false);
   const [data, setData] = useState({});
   const [error, setError] = useState('');
-  const state = useSelector(state => state.AuthReducer);
+  const state = useSelector(({AuthReducer}) => AuthReducer);
   useEffect(() => {
     getDetail();
   }, []);
@@ -29,15 +29,15 @@ const GuardEditProfile = ({navigation, route}) => {
   const getDetail = async () => {
     try {
       const payload = {
-        url: API_URL + `guard/${state.userDetail.data._id}`,
+        url: API_URL + `guard/${state?.userDetail.data._id}`,
       };
       setError('');
       const Result = await GetData(payload);
 
-      if (Result.data.success) {
-        setData(Result.data.data);
+      if (Result?.data?.success) {
+        setData(Result?.data?.data);
       } else {
-        setError(Result.data);
+        setError(Result?.data);
       }
     } catch (e) {
       setError('Something went wrong please try again later');
@@ -106,8 +106,10 @@ const GuardEditProfile = ({navigation, route}) => {
                   <DescriptionText
                     style={{color: '#6B737F', flex: 1}}
                     text={
-                      item.id === 1 || item.id === 4
-                        ? moment(`${data[item.param]}`).format('DD/MMM/YYYY')
+                      (item?.id === 1 || item?.id === 4) && data[item.param]
+                        ? moment(data[item.param], 'YYYY-MM-DD').format(
+                            'DD/MMM/YYYY',
+                          )
                         : data[item.param]
                     }
                   />

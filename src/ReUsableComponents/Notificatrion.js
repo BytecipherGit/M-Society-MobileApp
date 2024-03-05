@@ -22,7 +22,7 @@ const Notificatrion = () => {
     }
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     if (requestUserPermission()) {
       messaging()
         .getToken()
@@ -33,7 +33,7 @@ const Notificatrion = () => {
     } else {
       // console.log('Fail token status');
     }
-  }, []);
+  }, [setFcmTooken]);
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {

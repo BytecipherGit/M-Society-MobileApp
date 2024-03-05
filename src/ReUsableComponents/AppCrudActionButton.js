@@ -17,7 +17,7 @@ const AppCrudActionButton = ({
   hideEdit = false,
   hideDelete = false,
 }) => {
-  const state = useSelector(state => state.AuthReducer.userDetail);
+  const state = useSelector(({AuthReducer}) => AuthReducer?.userDetail);
   const array = hideEdit
     ? ['Delete']
     : hideDelete
@@ -35,7 +35,7 @@ const AppCrudActionButton = ({
         },
         array.length === 1 && {justifyContent: 'flex-start', marginLeft: '6%'},
       ]}>
-      {array.map((action, i) => {
+      {array?.map((action, i) => {
         return (
           <TouchableOpacity
             style={{
@@ -66,7 +66,7 @@ const AppCrudActionButton = ({
                   ])
                 : doActions(item, action, index)
             }>
-            {loaderIndex === item._id ? (
+            {action === 'Delete' && loaderIndex === item._id ? (
               <ActivityIndicator color={'white'} />
             ) : (
               <Text

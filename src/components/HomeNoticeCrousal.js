@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -5,13 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
-import {COLORS} from '../assets/theme';
-import Calendor from '../assets/images/Caledor.svg';
 import moment from 'moment';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import {COLORS} from '../assets/theme';
+import Calendor from '../assets/images/Caledor.svg';
 
 const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
   const stateForTheme = useSelector(state => state.AuthReducer.userDetail);
@@ -21,7 +21,7 @@ const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
   useEffect(() => {
     let arr = [];
 
-    Notices.map((item, index) => {
+    Notices?.map((item, index) => {
       if (item.status !== 'draft') {
         arr.push(item);
       }
@@ -47,8 +47,6 @@ const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
         Society Notice
       </Text>
       <Carousel
-        layout={'default'}
-        ref={ref => null}
         data={publishNotices}
         sliderWidth={Dimensions.get('window').width / 1.02}
         itemWidth={Dimensions.get('window').width / 1}
@@ -73,7 +71,7 @@ const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
                 <Text style={style.cardTitle} numberOfLines={1}>
                   {item.title}
                 </Text>
-                <Text numberOfLines={1} styl={style.cardDesc}>
+                <Text numberOfLines={1} style={style.cardDesc}>
                   {item.description}
                 </Text>
               </View>
@@ -85,11 +83,7 @@ const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
       <Pagination
         dotsLength={publishNotices?.length}
         activeDotIndex={activeIndex}
-        containerStyle={
-          {
-            // backgroundColor: 'rgba(0, 0, 0, 0.75)',
-          }
-        }
+        containerStyle={{}}
         dotStyle={{
           width: 15,
           height: 7,
@@ -100,11 +94,7 @@ const HomeNoticeCrousal = ({Notices, setActiveIndex, activeIndex}) => {
               ? stateForTheme.data.societyId.primaryColour
               : 'white',
         }}
-        activeDotStyle={
-          {
-            // Define styles for inactive dots here
-          }
-        }
+        activeDotStyle={{}}
         inactiveDotOpacity={0.8}
         inactiveDotScale={0.5}
       />
@@ -122,7 +112,6 @@ const style = StyleSheet.create({
   },
   cardCnt: {
     width: Dimensions.get('window').width / 1.07,
-    // height: 230,
     backgroundColor: 'white',
     marginTop: 15,
     borderRadius: 20,

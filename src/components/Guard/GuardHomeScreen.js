@@ -43,13 +43,14 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import AppButton from '../../ReUsableComponents/AppButton';
 import {useIsFocused} from '@react-navigation/native';
 import GuardPresentModel from './GuardPresentModel';
-import Camera from 'react-native-camera';
+// import Camera from 'react-native-camera';
 
 const GuardHomeScreen = ({navigation}) => {
-  const state = useSelector(state => state.AuthReducer);
+  const state = useSelector(({AuthReducer}) => AuthReducer);
   const [filters, setFilters] = useState({
     From: '',
     To: '',
+    status: '',
   });
   const [filter, setFilter] = useState({
     loader: false,
@@ -64,7 +65,7 @@ const GuardHomeScreen = ({navigation}) => {
   const [presentyModel, setPresentyModel] = useState(false);
 
   const dispatch = useDispatch();
-  const visitors = useSelector(state => state.GuardReducer);
+  const visitors = useSelector(({GuardReducer}) => GuardReducer);
   const isFocus = useIsFocused();
 
   useEffect(() => {
@@ -84,12 +85,12 @@ const GuardHomeScreen = ({navigation}) => {
       const Result = await GetData({
         url: API_URL + 'guard/setting',
       });
-      if (Result.response) {
+      if (Result?.response) {
         // SnackError('something went wrong to get permission data from server');
       } else {
         // console.log(Result.data.data);
-        Result.data.data &&
-          Result.data.data.guardApproveSetting === true &&
+        Result?.data?.data &&
+          Result?.data?.data?.guardApproveSetting === true &&
           setPermission(true);
       }
     } catch (e) {
@@ -125,9 +126,9 @@ const GuardHomeScreen = ({navigation}) => {
 
           try {
             const Result = await PutData(payload);
-            if (Result.data.success) {
-              if (filter.data.length > 0) {
-                const arr = filter.data;
+            if (Result?.data?.success) {
+              if (filter?.data?.length > 0) {
+                const arr = filter?.data;
                 arr[index].outTime = moment().format('HH:MM a');
                 setFilter({...filter, data: [...arr]});
               } else {
@@ -161,12 +162,12 @@ const GuardHomeScreen = ({navigation}) => {
     try {
       const Result = await GetData(payload);
       if (Result.data.success) {
-        if (Result.data.data.length > 0) {
-          setFilter({loader: false, data: Result.data.data});
+        if (Result?.data?.data?.length > 0) {
+          setFilter({loader: false, data: Result?.data?.data});
         } else {
           SnackError('No Filter Data Found.');
           setFilter({loader: false, data: []});
-          setFilters({From: '', To: ''});
+          setFilters({From: '', To: '', status: ''});
         }
       } else {
         errorAlert(Result.data.message);
@@ -189,7 +190,7 @@ const GuardHomeScreen = ({navigation}) => {
         },
       });
       if (Result.response) {
-        SnackError(Result.reasone.data.message);
+        SnackError(Result?.reasone?.data?.message);
       } else {
         getVisitorsList();
       }
@@ -415,7 +416,7 @@ const GuardHomeScreen = ({navigation}) => {
         </View>
 
         <VisitorFilters filters={filters} setFilters={setFilters} />
-        {filters.From && filters.To && (
+        {filters?.From && filters?.To && (
           <View
             style={{
               flexDirection: 'row',
@@ -424,8 +425,8 @@ const GuardHomeScreen = ({navigation}) => {
             }}>
             <TouchableOpacity
               onPress={() => {
-                setFilter({loader: false, data: []}),
-                  setFilters({From: '', To: ''});
+                setFilter({loader: false, data: []});
+                setFilters({From: '', To: '', status: ''});
               }}>
               <TitleText
                 style={[styles.applyFilterTxt]}
