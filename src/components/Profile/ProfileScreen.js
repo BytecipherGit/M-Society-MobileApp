@@ -114,18 +114,18 @@ const ProfileScreen = ({navigation, route}) => {
                   style={[styles.profileImageCnt]}
                   imageStyle={[
                     {borderRadius: 30},
-                    !User.data.profileImage && {tintColor: COLORS.buttonColor},
+                    !User?.data?.profileImage && {tintColor: COLORS.buttonColor},
                   ]}
                   source={{
-                    uri: User.data.profileImage
-                      ? User.data.profileImage
+                    uri: User?.data?.profileImage
+                      ? User?.data?.profileImage
                       : undefined,
                   }}
                 />
-                <Text style={styles.userName}>{User.data.name}</Text>
+                <Text style={styles.userName}>{User?.data?.name}</Text>
                 <DescriptionText
                   style={styles.userContact}
-                  text={`${User.data.countryCode} ${User.data.phoneNumber}`}
+                  text={`${User?.data?.countryCode} ${User?.data?.phoneNumber}`}
                 />
               </View>
               {renderOptions()}

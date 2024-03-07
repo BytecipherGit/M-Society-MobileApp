@@ -1,9 +1,9 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Snackbar from 'react-native-snackbar';
-// export const API_URL = 'https://bbae-122-175-237-30.ngrok-free.app/api/';
-// export const API_URL = 'http://192.168.1.166:5000/api/';
-export const API_URL = 'https://msociety.in:9001/api/';
+// export const API_URL = 'https://1282-182-70-139-206.ngrok-free.app/api/';
+export const API_URL = 'http://192.168.1.167:5000/api/';
+// export const API_URL = 'https://msociety.in:9001/api/';
 
 // https://msociety.in:9001/api/user/login
 

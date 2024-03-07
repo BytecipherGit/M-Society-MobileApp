@@ -53,6 +53,8 @@ const EditProfileScreen = ({navigation, route}) => {
   const [alertData, setAlertData] = useRecoilState(GlobalAppAlert);
 
   const User = useSelector(({AuthReducer}) => AuthReducer.userDetail?.data);
+  const Auth = useSelector(({AuthReducer}) => AuthReducer);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -167,8 +169,6 @@ const EditProfileScreen = ({navigation, route}) => {
           return e;
         });
 
-      console.log('updatae', response?.data);
-
       return response.data;
     } catch (error) {
       throw error;
@@ -179,12 +179,15 @@ const EditProfileScreen = ({navigation, route}) => {
     setSaveLoader(true);
     try {
       const Result = await updatProfileAndroid();
-      // console.log('result', Result);
       if (Result.response) {
         SnackError(Result.response.data.message);
       } else {
-        let obj = User;
-        obj.data = {...Result.data, societyId: User?.data?.societyId};
+        let obj = Auth?.userDetail;
+        obj.data = {
+          ...User,
+          ...Result.data,
+          societyId: User?.data?.societyId,
+        };
 
         dispatch({type: USER_DATA, payload: obj});
         StoreData('user', JSON.stringify(obj));
@@ -265,7 +268,7 @@ const EditProfileScreen = ({navigation, route}) => {
                     style={styles.profileImg}
                     imageStyle={[
                       {borderRadius: 30},
-                      !User.profileImage && {tintColor: COLORS.buttonColor},
+                      !User?.profileImage && {tintColor: COLORS.buttonColor},
                     ]}
                     source={{
                       uri: data?.profileImage
