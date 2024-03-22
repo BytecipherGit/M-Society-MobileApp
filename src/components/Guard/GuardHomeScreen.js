@@ -373,13 +373,13 @@ const GuardHomeScreen = ({navigation}) => {
                 </View>
               </View>
 
-              <FontAwesome
+              {/* <FontAwesome
                 name={
                   state?.userDetail?.data?.shift === 'day' ? 'sun-o' : 'moon-o'
                 }
                 style={styles.headerShiftIcon}
-              />
-              <TouchableOpacity
+              /> */}
+              {/* <TouchableOpacity
                 onPress={() => {
                   async function checkCameraPermission() {
                     // try {
@@ -402,7 +402,7 @@ const GuardHomeScreen = ({navigation}) => {
                   name="qrcode-scan"
                   style={[styles.headerShiftIcon, {marginLeft: 10}]}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               {/* <TouchableOpacity
                 onPress={() => setPresentyModel(!presentyModel)}>
                 <MaterialCommunityIcons
